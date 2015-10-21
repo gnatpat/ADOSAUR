@@ -1,0 +1,77 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww24200\viewh17760\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 Information on SAD-Learning study face data\
+July 15, 2015\
+created by Leonie Koban (leonie.koban@colorado.edu)\
+\
+\
+\
+
+\b \ul General study information\ulnone :\
+
+\b0 \
+This study investigates how socially anxious (SAD) versus healthy control participants (HC) experience a stressful social speech task and how they respond to and learn from social feedback regarding this speech task.\
+We are currently writing a manuscript describing the behavioral results (Koban, et al. in prep.).\
+\
+Facial expressions were recorded using a webcam while participants were sitting in front of a computer screen and performing the feedback task. Facet was used to automatically encode intensity and evidence of facial expressions (contact Yoni Ashar for more information, yoniashar@gmail.com).\
+Given that triggering was not working correctly, trial timings were reconstructed using eprime output and timing of first response in video data.\
+These timings were then used to segment the facial expression data into epochs (for each trial). Each epoch starts at the time of feedback presentation (?verify with Yoni).\
+\
+\
+\
+
+\b \ul Files in FaceData_Sharing folder\ulnone :
+\b0 \
+\
+
+\b FeedbackTaskDesign.pptx	
+\b0 	illustrates the design of the feedback task\
+\
+
+\b SADparticipant_group_LKcorrected.csv 
+\b0  	contains information about group status of each participant (P = patient/SAD, C = healthy control)\
+\
+
+\b 1XX_facet_output.txt
+\b0  	files contain output (processed) time-series data from individual participants (headers should be self-explaining) across the whole duration of the feedback task\
+\
+
+\b trial_frames_evidence.mat
+\b0  	contains epoched (trial-wise) evidence time-series data for each participant\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf0 trial_frames_intensity.mat 	
+\b0 contains epoched (trial-wise) intensity  time-series data for each participant\
+\
+
+\b behavioral.mat
+\b0  	contains other (behavioral) data from the feedback task that is hypothetically influencing emotional state and expressions of the 55 participants (one additional participant, #102, does not have facial expression data):\
+	fbdata.selfevalr is the participants own evaluation on each trial (each cell contains data from each participant\'92s ratings in 58 trials)\
+	fbdata.selfevalrt are the reaction times (RTs) for these self-evaluations \
+	fbdata.selfevalr_t2 is the second evaluation for this specific item (in a second round of the task 20min later)\
+	fbdata.selfeval_adj is the difference between fbdata.selfevalr_t2 and fbdata.selfevalr (how much participants change their self-evaluation from time 1 to time 2)\
+	fbdata.judgeevalr is the feedback from the judges\
+	fbdata.selffeel is the trial wise rating of how participants feel about themselves\
+	fbdata.selffeelrt is the corresponding RTs\
+	fbdata.judgefeel is the trial wise rating of how participants feel about the judges\
+	fbdata.judgefeelrt is the corresponding RTs\
+	fbdata.fbpe is the difference between judges feedback and self-evaluation (fbdata.judgeevalr - fbdata.selfevalr)\
+	fbdata.selffeelchange is the trial wise change in feeling about the self\
+	fbdata.judgefeelchange is the trial wise change in feeling about the judges\
+\
+	\
+\
+
+\b \ul Potential questions to ask
+\b0 \ulnone :\
+Can facial expression data overall separate patients from controls?\
+Can facial expression responses to feedback separate patients from controls?\
+Can facial expressions predict what kind of feedback people got from judges (fbdata.judgeevalr)?\
+Can facial expressions predict how they rate their feelings towards the self (fbdata.selffeel) / towards the judges (fbdata.judgefeel)?\
+Can facial expressions predict how they change their performance ratings (fbdata.selfeval_adj)?\
+etc.\
+	}
