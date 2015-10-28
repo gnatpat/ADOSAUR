@@ -12,22 +12,25 @@
 
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  
+
   <!-- jQuery and Materialize -->
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="node_modules/materialize-css/dist/js/materialize.min.js"></script>
   <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link type="text/css" rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css"  media="screen,projection"/>
-  
+
   <!-- app js -->
   <script src="js/routes.js"></script>
-  
+
   <!-- Controllers -->
   <script src="components/home/homeCtrl.js"></script>
+  <script src="components/realTime/realTimeCtrl.js"></script>
+  <script src="components/upload/uploadCtrl.js"></script>
 
+  <script src="http://code.highcharts.com/highcharts.js"></script>
 </head>
 <body ng-app="adosaur">
-  
+
   <!-- Navigation Bar -->
   <nav class="green darken-3" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="#/" class="brand-logo"><img style="height:50px; margin-top:5px; margin-bottom:5px" src="assets/img/t-rex.png"></img></a>
@@ -40,7 +43,7 @@
 
   <!-- Content gets inserted here -->
   <div ui-view></div>
-  
+
   <!-- Footer -->
   <footer class="page-footer green darken-3">
     <div class="container">
@@ -52,6 +55,6 @@
       </div>
     </div>
   </footer>
-  
+
 </body>
 </html>
