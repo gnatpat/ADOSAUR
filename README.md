@@ -1,7 +1,7 @@
-# Automatic Detection of Social Anxiety Symptoms using Speech and Facial Recognition
+# Real-Time Detection of Emotions using Facial and Speech Recognition
 
 To install dependencies run in `app/`:
-> `$ npm install`
+> `$ sudo npm install`
 
 To start the server run:
 > `$ npm start`
