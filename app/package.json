@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/gnatpat/ADOSAUR",
   "dependencies": {
-    "angular-ui-router": "^0.2.15"
+    "angular-ui-router": "^0.2.15",
+    "materialize-css": "^0.97.1"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
