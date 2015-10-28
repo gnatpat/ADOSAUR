@@ -1,0 +1,27 @@
+{
+  "name": "Adosaur",
+  "version": "0.0.1",
+  "description": "Real time recognition of emotions",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "http-server -a localhost -p 8100 -c-1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gnatpat/ADOSAUR.git"
+  },
+  "author": "Llama & Poisson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gnatpat/ADOSAUR/issues"
+  },
+  "homepage": "https://github.com/gnatpat/ADOSAUR",
+  "dependencies": {
+    "angular-ui-router": "^0.2.15"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "http-server": "^0.8.5"
+  }
+}
