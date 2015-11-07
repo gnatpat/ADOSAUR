@@ -1,39 +1,39 @@
-import theano.tensor as T
-from theano import function
 import numpy as np
-import math
 
 
-def sigmoid(x):
+def sigmoid(x, derivative=False):
+    if derivative:
+        return 
     return 1 / (1 + math.exp(-x)) 
 
-x = T.scalar()
-y = T.scalar()
-z = x * y
-multi = function([x,y], z)
-print multi(3,3)
-
-x = T.matrix()
-y = T.matrix()
-z = x * y
-multi = function([x,y], z)
-print multi([[1,2],[3,4]],[[1,2],[3,4]])
-
-a = T.vector()
-b = T.vector()
-quad = a**2 + 2*a*b + b**2
-print quad.eval({a : [0,1,2], b : [0,1,2]})
 
 class NeuralNet():
 
-    def __init__(self, num_input, num_hidden, num_output):
-        self.num_input = num_input
-        self.num_hidden = num_hidden
-        self.num_output = num_output
+    self.UPDATE_CYCLES = 10000
 
-    def feed_forward(*inputs):
-        assert len(inputs) == num_input
+    def run(*X, *Y):
+    
+        # no hidden layers
+        num_inputs = len(X)
+        num_outputs = len(Y)
+
+        # weights from layer 0 to layer 1
+        syn0 = 2*np.random.random((num_inputs, num_outputs))-1
+
+        for _ in xrange(self.UPDATE_CYCLES):
+
+            l0 = X
+            l1 = np.dot(l0, syn0)
 
 
-# if __name__ == "__main__":
-#     print multi(3,3)
+
+
+
+
+
+
+
+
+
+
+
