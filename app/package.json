@@ -1,7 +1,7 @@
 {
-  "name": "Adosaur",
+  "name": "ADOSAUR",
   "version": "0.0.1",
-  "description": "Real time recognition of emotions",
+  "description": "Automatic detection of depression",
   "main": "index.js",
   "scripts": {
     "test": "test",
@@ -11,7 +11,14 @@
     "type": "git",
     "url": "https://github.com/gnatpat/ADOSAUR.git"
   },
-  "author": "Llama & Poisson",
+  "contributors": [
+    { "name" : "Tom Bartissol" },
+    { "name" : "Sacha Cohen-Scali" },
+    { "name" : "Dane Sherburn" },
+    { "name" : "Roxana Ursu" },
+    { "name" : "Hyun Ah Lee" },
+    { "name" : "Nathan Patel" }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gnatpat/ADOSAUR/issues"
