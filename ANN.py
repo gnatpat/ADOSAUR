@@ -8,24 +8,24 @@ def sigmoid(x, derivative=False):
     return 1 / (1 + np.exp(-x))
 
 
-class NeuralNet():
+class ANN(object):
 
-    def __init__(self, num_inputs, num_hidden, num_outputs, eta=0.1):
+    def __init__(self, num_inputs, num_hidden, num_outputs, eta=0.1, cycles=1000):
         # user determined
         self.num_inputs = num_inputs
         self.num_hidden = num_hidden
         self.num_outputs = num_outputs
         self.eta = eta
+        self.cycles = cycles
 
         # common to all
         self.syn0 = 2 * np.random.rand(num_inputs, num_hidden) - 1  # input - hidden weights
         self.syn1 = 2 * np.random.rand(num_hidden, num_outputs) - 1  # hidden - output weights
-        self.UPDATE_CYCLES = 10000
 
     def learn_from(self, input, expected_output):
         # takes input vector x and adjusts weights according to y
 
-        for iteration in range(self.UPDATE_CYCLES):
+        for iteration in range(self.cycles):
 
             # forward propagation
             l0 = input  # input layer
@@ -48,7 +48,7 @@ class NeuralNet():
             self.syn1 += self.eta * np.dot(l1.T, l2_delta)
             self.syn0 += self.eta * np.dot(l0.T, l1_delta)
 
-            if iteration % 1000 == 0:
+            if iteration % 10 == 0:
                 print "Error:\t", np.mean(np.abs(l2_error))
 
         return np.around(l2)  # output layer
@@ -66,7 +66,7 @@ class NeuralNet():
 # y = np.array([[0,0,0,1],[0,1,1,0]]).T
 #
 # # create net and test output
-# net = NeuralNet(3,9,2)
+# net = ANN(3,5,2)
 # net.learn_from(X,y)
 #
 # # print net.run(np.array([[0,1,1]]))
