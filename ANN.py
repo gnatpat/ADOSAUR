@@ -10,15 +10,17 @@ def sigmoid(x, derivative=False):
 
 class NeuralNet():
 
-    def __init__(self, num_inputs, num_outputs, eta=0.1):
+    def __init__(self, num_inputs, num_hidden, num_outputs, eta=0.1):
         # user determined
         self.num_inputs = num_inputs
+        self.num_hidden = num_hidden
         self.num_outputs = num_outputs
         self.eta = eta
 
         # common to all
-        self.weights = 2 * np.random.rand(num_inputs, num_outputs) - 1
-        self.UPDATE_CYCLES = 200
+        self.syn0 = 2 * np.random.rand(num_inputs, num_hidden) - 1  # input - hidden weights
+        self.syn1 = 2 * np.random.rand(num_hidden, num_outputs) - 1  # hidden - output weights
+        self.UPDATE_CYCLES = 10000
 
     def learn_from(self, input, expected_output):
         # takes input vector x and adjusts weights according to y
@@ -26,23 +28,33 @@ class NeuralNet():
         for iteration in range(self.UPDATE_CYCLES):
 
             # forward propagation
-            actual_output = sigmoid(np.dot(input, self.weights))
+            l0 = input  # input layer
+            l1 = sigmoid(np.dot(input, self.syn0))  # hidden layer
+            l2 = sigmoid(np.dot(l1, self.syn1))  # output layer
 
             # compute error
-            error = expected_output - actual_output
+            l2_error = expected_output - l2
 
             # weight change vector by certainty
-            delta = error * sigmoid(actual_output, True)
+            l2_delta = l2_error * sigmoid(l2, True)
+
+            # calculate contribution of error for each hidden node
+            l1_error = l2_delta.dot(self.syn1.T)
+
+            # weight error contribution by certainty
+            l1_delta = l1_error * sigmoid(l1, True)
 
             # update weights
-            self.weights += self.eta * np.dot(input.T, delta)
+            self.syn1 += self.eta * np.dot(l1.T, l2_delta)
+            self.syn0 += self.eta * np.dot(l0.T, l1_delta)
 
-            if iteration % 50 == 0:
-                print "Iteration:", iteration
-                print np.around(actual_output)
-                print  # new line
+            if iteration % 1000 == 0:
+                print "Error:\t", np.mean(np.abs(l2_error))
 
-        return actual_output
+        return np.around(l2)  # output layer
+
+    def run(self, input):
+        return sigmoid(np.dot(sigmoid(np.dot(input, self.syn0)),self.syn1))
 
 # input
 X = np.array([ [0,0,1],
@@ -51,8 +63,10 @@ X = np.array([ [0,0,1],
                [1,1,1] ])
 
 # output
-y = np.array([[0,0,1,1], [0,0,0,1], [1,1,1,0]]).T
+y = np.array([[0,0,0,1],[0,1,1,0]]).T
 
 # create net and test output
-net = NeuralNet(3,3)
-net.learn_from(X,y)
+net = NeuralNet(3,9,2)
+print net.learn_from(X,y)
+
+# print net.run(np.array([1,1,0]))
