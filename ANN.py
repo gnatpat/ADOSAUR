@@ -56,17 +56,17 @@ class NeuralNet():
     def run(self, input):
         return sigmoid(np.dot(sigmoid(np.dot(input, self.syn0)),self.syn1))
 
-# input
-X = np.array([ [0,0,1],
-               [0,1,1],
-               [1,0,1],
-               [1,1,1] ])
-
-# output
-y = np.array([[0,0,0,1],[0,1,1,0]]).T
-
-# create net and test output
-net = NeuralNet(3,9,2)
-print net.learn_from(X,y)
-
-# print net.run(np.array([1,1,0]))
+# # input
+# X = np.array([ [0,0,1],
+#                [0,1,1],
+#                [1,0,1],
+#                [1,1,1] ])
+#
+# # output
+# y = np.array([[0,0,0,1],[0,1,1,0]]).T
+#
+# # create net and test output
+# net = NeuralNet(3,9,2)
+# net.learn_from(X,y)
+#
+# # print net.run(np.array([[0,1,1]]))
