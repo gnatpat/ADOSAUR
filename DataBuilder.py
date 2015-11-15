@@ -21,9 +21,10 @@ def convertLabelToArray(label):
     labelArray[0][label] = 1
     return labelArray[0]
 
-def buildANNdata(savedParsedData=True):
+def buildANNdata():
+
     # pickle data if not done already
-    if not savedParsedData:
+    if not os.path.isdir('pickledData/'):
         saveParsedData()
 
     # load audio data

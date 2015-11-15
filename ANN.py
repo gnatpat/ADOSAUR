@@ -10,7 +10,7 @@ def sigmoid(x, derivative=False):
 
 class ANN(object):
 
-    def __init__(self, num_inputs, num_hidden, num_outputs, eta=0.1, cycles=1000):
+    def __init__(self, num_hidden, num_inputs=2267, num_outputs=46, eta=0.1, cycles=100):
         # user determined
         self.num_inputs = num_inputs
         self.num_hidden = num_hidden
@@ -48,25 +48,27 @@ class ANN(object):
             self.syn1 += self.eta * np.dot(l1.T, l2_delta)
             self.syn0 += self.eta * np.dot(l0.T, l1_delta)
 
-            if iteration % 10 == 0:
-                print "Error:\t", np.mean(np.abs(l2_error))
+            # if iteration % 10 == 0:
+            #     print "Training Error:\t", np.mean(np.abs(l2_error))
 
-        return np.around(l2)  # output layer
+        return l2, l2_error  # output layer
 
-    def run(self, input):
-        return sigmoid(np.dot(sigmoid(np.dot(input, self.syn0)),self.syn1))
+    def run(self, input, expected_output):
+        output = sigmoid(np.dot(sigmoid(np.dot(input, self.syn0)),self.syn1))
+        error = expected_output - output
+        return output, np.mean(np.abs(error))
 
 # # input
 # X = np.array([ [0,0,1],
 #                [0,1,1],
 #                [1,0,1],
 #                [1,1,1] ])
-#
+
 # # output
 # y = np.array([[0,0,0,1],[0,1,1,0]]).T
-#
+
 # # create net and test output
-# net = ANN(3,5,2)
+# net = ANN(5, num_inputs=3,num_outputs=2)
 # net.learn_from(X,y)
-#
+
 # # print net.run(np.array([[0,1,1]]))
