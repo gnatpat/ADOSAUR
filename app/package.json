@@ -12,12 +12,24 @@
     "url": "https://github.com/gnatpat/ADOSAUR.git"
   },
   "contributors": [
-    { "name" : "Tom Bartissol" },
-    { "name" : "Sacha Cohen-Scali" },
-    { "name" : "Dane Sherburn" },
-    { "name" : "Roxana Ursu" },
-    { "name" : "Hyun Ah Lee" },
-    { "name" : "Nathan Patel" }
+    {
+      "name": "Tom Bartissol"
+    },
+    {
+      "name": "Sacha Cohen-Scali"
+    },
+    {
+      "name": "Dane Sherburn"
+    },
+    {
+      "name": "Roxana Ursu"
+    },
+    {
+      "name": "Hyun Ah Lee"
+    },
+    {
+      "name": "Nathan Patel"
+    }
   ],
   "license": "MIT",
   "bugs": {
@@ -26,7 +38,9 @@
   "homepage": "https://github.com/gnatpat/ADOSAUR",
   "dependencies": {
     "angular-ui-router": "^0.2.15",
-    "materialize-css": "^0.97.1"
+    "materialize-css": "^0.97.1",
+    "ng-file-upload": "~10.0.2",
+    "express": "~4.13.3"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
