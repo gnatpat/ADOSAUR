@@ -39,18 +39,24 @@ def generateListOfANNs(minHiddenNodes, maxHiddenNodes, stepSize):
 		listANNs.append(ANN(numHiddenNodes))
 	return listANNs
 
-def crossValidationOnListOfANNs(trainingData, trainingLabels, minHiddenNodes=50, maxHiddenNodes=100, stepSize=10, folds=10):
+def crossValidationOnListOfANNs(trainingData, trainingLabels, minHiddenNodes=100, maxHiddenNodes=700, stepSize=100, folds=10):
 	listANNs = generateListOfANNs(minHiddenNodes, maxHiddenNodes, stepSize)
 	errors = []
+
+	fileID = open('crossValidationResults.txt', 'w')
+	fileID.write('crossValidationResults\n\n')
+
 	for ann in listANNs:
 		avgError = crossValidation(trainingData, trainingLabels, ann)
-		numHiddenNodes = ann.num_hidden
-		print '##############################'
-		print '# Hidden:\t', numHiddenNodes
-		print '# Cycles:\t', ann.cycles
-		print '# avgError:\t', avgError
-		print '##############################'
-		errors.append((numHiddenNodes, avgError))
+
+		# Write to output file
+		fileID.write('##############################\n')
+		fileID.write('# Hidden:\t{0}\n'.format(ann.num_hidden))
+		fileID.write('# Cycles:\t{0}\n'.format(ann.cycles))
+		fileID.write('# avgError:\t{0}\n'.format(avgError))
+		fileID.write('##############################\n\n')
+
+		errors.append(("numHiddenNodes = {0}".format(ann.num_hidden), "avgError = {0}".format(avgError)))
 
 	return errors
 
@@ -62,7 +68,7 @@ def crossValidation(trainingData, trainingLabels, ann, folds=10):
 
 	for foldIndex in range(folds):
 
-		# print "#############", foldIndex, "#############"
+		print "#############", foldIndex, "#############"
 
 		# validation data and label set (10 samples)
 		foldValidationDataSet = trainingDataSets[foldIndex]
@@ -82,22 +88,30 @@ def crossValidation(trainingData, trainingLabels, ann, folds=10):
 
 	return sum(errors) / len(errors)  # average error over 10 folds
 
-def compareActualOutputWithExpectedOutput(example):
-    output = np.around(ann.run(np.array(trainingData[example])), decimals=3)
-    x_values = range(46)
+def compareActualOutputWithExpectedOutput(ann, example):
+    input = np.array(trainingData[example])
+    expected_output = np.array(trainingLabels[example])
+    output, error = ann.run(input, expected_output)
+    output = np.around(output, decimals=3)
+
+    print "ERROR =", error
+
+    x_values = range(DataBuilder.NUM_LABELS)
     y_values = output
     plt.plot(x_values,y_values)
     x = list(trainingLabels[example]).index(1)
     y = 0.2
-    plt.plot((x, x), (0, y), 'k-')
+    plt.xlim([-1,4])
+    plt.plot((x, x), (0, y), 'r-')
     plt.show()
 
 
 
-
-
-
-
 trainingData, trainingLabels = DataBuilder.buildANNdata()
-ann = ANN(50)
-crossValidationOnListOfANNs(trainingData, trainingLabels, minHiddenNodes=100, maxHiddenNodes=200)
+ann = ANN(1000, num_outputs=DataBuilder.NUM_LABELS)
+ann.learn_from(trainingData, trainingLabels)
+compareActualOutputWithExpectedOutput(ann, 40)
+
+# crossValidationOnListOfANNs(trainingData, trainingLabels, minHiddenNodes=10, maxHiddenNodes=100, stepSize=10)
+
+# print crossValidation(trainingData, trainingLabels, ann)
