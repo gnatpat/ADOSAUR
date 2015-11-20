@@ -24,12 +24,15 @@ def parseAudioData(path_to_audio_data='depression_data/audio/', set='all'):
 def parseArffDataFiles(path_to_arff_files):
     data = []
     for filePath in glob.glob(os.path.join(path_to_arff_files, '*')):
-        fileData = arff.load(open(filePath))
-        # Remove first 3 and last useless attributes (2267 attributes in total)
-        attributesData = fileData['data'][0][3:-1]
-        data.append(attributesData)
+        data.append(parseSingleArffDataFile(filePath))
     return data
 
+# Helper helper function to parse a single arff file
+def parseSingleArffDataFile(filePath):
+    fileData = arff.load(open(filePath))
+    # Remove first 3 and last useless attributes (2267 attributes in total)
+    attributesData = fileData['data'][0][3:-1]
+    return attributesData
 
 # Helper function to parse .csv files which contain the labels
 def parseCsvLabelFiles(path_to_csv_label_files):

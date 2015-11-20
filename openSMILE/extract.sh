@@ -1,4 +1,4 @@
-
+#!/bin/sh
 
 if [ $# = 0 ]; then
     echo "Usage: $0 input [output saveLog]"
@@ -22,11 +22,10 @@ fi
 
 echo "Extracting features from $INPUT..."
 SMILExtract -C config/avec2013.conf -I $INPUT
-mv output.arff $OUTPUT 
+mv output.arff $OUTPUT
 echo "Done. Saved to $OUTPUT"
 
 if [ "$SAVELOG" = "N" ]; then
     rm -f smile.log
     echo "Cleaned up smile.log"
 fi
-

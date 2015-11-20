@@ -51,5 +51,3 @@ def buildANNdata():
     trainingLabels = np.array(trainingLabels)
 
     return trainingData, trainingLabels
-
-buildANNdata()
