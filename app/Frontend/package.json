@@ -39,12 +39,10 @@
   "dependencies": {
     "angular-ui-router": "^0.2.15",
     "materialize-css": "^0.97.1",
-    "ng-file-upload": "~10.0.2",
-    "express": "~4.13.3"
+    "ng-file-upload": "~10.0.2"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
-    "gulp-shell": "^0.5.0",
-    "http-server": "^0.8.5"
+    "gulp-shell": "^0.5.0"
   }
 }
