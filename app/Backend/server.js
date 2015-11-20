@@ -23,8 +23,9 @@
       form.parse(req, function(err, fields, files) {
         console.log("Evaluating BDI for " + files.file.path);
         var depressed = evaluateBDI(files.file.path, function(result) {
-          res.writeHead(200, {'content-type': 'text/plain'});
-          res.end("" + result);
+          res.writeHead(200, {'content-type': 'text/json'});
+          console.log("Sending " + result.trim());
+          res.end(JSON.stringify({"data": result.trim()}));
         } );
       });
 
@@ -38,9 +39,9 @@
 
     eval.stdout.on('data', function(data) {
       console.log("Script gave " + data)
-      callback(data);
+      callback("" + data);
     });
-    
+
     eval.stderr.on('data', function(data) {
       console.log("Script errored:  " + data)
     });

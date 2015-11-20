@@ -14,7 +14,7 @@
 	        file.result = response.data;
 	      });
 
-        $scope.resultMsg = "Your BDI is " + response.data;
+        $scope.resultMsg = "Your BDI is " + response.data.data;
 	    }, function (response) {
 	      if (response.status > 0)
 	        $scope.errorMsg = response.status + ': ' + response.data;
