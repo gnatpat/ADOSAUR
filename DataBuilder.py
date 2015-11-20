@@ -16,9 +16,20 @@ def saveParsedData():
     pickle.dump(testingData,       open(DATA_PATH + 'testingData.p',      'wb'))
 
 def convertLabelToArray(label):
-    # 3 becomes [0,0,0,1,0,...,0] - of length 46
-    labelArray = np.zeros((1,NUM_LABELS))
-    labelArray[0][label] = 1
+    # Use BDI scale
+    labelArray = np.zeros((1,4))
+    # 0-9 = minimal depression
+    if label in range(0,10):
+        labelArray[0][0] = 1
+    # 10-18 = mild depression
+    elif label in range(10,19):
+        labelArray[0][1] = 1
+    # 19-29 = moderate depression
+    elif label in range(19,30):
+        labelArray[0][2] = 1
+    # 30-63 = severe depression
+    elif label in range(30,64):
+        labelArray[0][3] = 1
     return labelArray[0]
 
 def buildANNdata():
@@ -40,3 +51,5 @@ def buildANNdata():
     trainingLabels = np.array(trainingLabels)
 
     return trainingData, trainingLabels
+
+buildANNdata()
