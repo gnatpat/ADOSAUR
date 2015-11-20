@@ -1,6 +1,7 @@
 app/Frontend/node_modules/*
-
 app/Backend/node_modules/*
+app/node_modules/*
+app/Backend/tmp/*
 
 *.pyc
 pickledData/*
