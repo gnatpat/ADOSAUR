@@ -4,7 +4,7 @@ import pickle
 import os
 
 DATA_PATH = 'pickledData/'
-NUM_LABELS = 46  # in AVEC challenge data
+NUM_LABELS = 4  # in AVEC challenge data
 
 def saveParsedData():
     os.mkdir('pickledData')
@@ -17,7 +17,7 @@ def saveParsedData():
 
 def convertLabelToArray(label):
     # Use BDI scale
-    labelArray = np.zeros((1,4))
+    labelArray = np.zeros((1,NUM_LABELS))
     # 0-9 = minimal depression
     if label in range(0,10):
         labelArray[0][0] = 1
