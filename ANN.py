@@ -10,7 +10,16 @@ def sigmoid(x, derivative=False):
 
 class ANN(object):
 
-    def __init__(self, num_hidden, num_inputs=2267, num_outputs=46, eta=0.1, cycles=100):
+    '''
+        Options:
+            num_inputs
+            num_hidden
+            num_outputs
+            eta (learning rate)
+            cycles (number of cycles)
+    '''
+
+    def __init__(self, num_hidden, num_inputs=2267, num_outputs=4, eta=0.1, cycles=100):
         # user determined
         self.num_inputs = num_inputs
         self.num_hidden = num_hidden
