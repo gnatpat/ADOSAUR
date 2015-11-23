@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  // DO NOT PUT A STRICT MODE HERE
   var spawn = require('child_process').spawn;
 
   module.exports = {
