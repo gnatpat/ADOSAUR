@@ -1,8 +1,7 @@
 (function () {
-
-  var formidable = require('formidable');
-
-  var evaluateBDI = require('./utils.js').evaluateBDI;
+  'use strict';
+  var formidable = require('formidable'),
+    evaluateBDI = require('./utils.js').evaluateBDI;
 
   // api routes go here
   module.exports = function (app, express) {
@@ -19,18 +18,18 @@
       });
     });
 
-    app.post('/upload', function(req, res) {
+    app.post('/upload', function (req, res) {
       // parse a file upload
       var form = new formidable.IncomingForm();
       form.uploadDir = '../../tmp';
 
-      form.parse(req, function(err, fields, files) {
+      form.parse(req, function (err, fields, files) {
         console.log("Evaluating BDI for " + files.file.path);
-        var depressed = evaluateBDI(files.file.path, function(result) {
+        evaluateBDI(files.file.path, function (result) {
           res.writeHead(200, {'content-type': 'text/json'});
           console.log("Sending " + result.trim());
           res.end(JSON.stringify({"data": result.trim()}));
-        } );
+        });
       });
 
       return;
@@ -44,5 +43,5 @@
     });
 
     app.use('/api', router);
-  }
+  };
 }());
