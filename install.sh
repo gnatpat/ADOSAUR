@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir tmp
+
 # Install dependencies for Backend
 echo "Installing Backend dependencies"
 cd app/Backend
