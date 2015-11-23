@@ -1,4 +1,0 @@
-OpenSMILE
-
-Python Modules:
-    pip install --user liac-arff
