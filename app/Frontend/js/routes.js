@@ -6,7 +6,7 @@ adosaur.config(function($stateProvider, $urlRouterProvider){
 
   $stateProvider
     .state('home', {
-      url: "/",
+      url: "/home",
       templateUrl: "components/home/home.html",
       controller: "homeCtrl"
     })
