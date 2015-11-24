@@ -1,8 +1,9 @@
 
 <div class="center" container style="margin-top:20px">
+    <p style="font-size:125%">Upload a file to estimate depression probablities:</p>
     <form name="myForm">
-    <fieldset>
-      <br>Audio file (.wav):
+    <fieldset style="border:none">
+      Audio file (.wav):
       <input type="file" ngf-select ng-model="audioFile" name="file"
              accept=".wav" ngf-max-size="50MB" required>
       <i ng-show="myForm.file.$error.required">*required</i><br>
@@ -12,9 +13,9 @@
       <br>
       <button ng-disabled="!myForm.$valid"
               ng-click="uploadAudio(audioFile)">Submit</button>
-      <span>{{resultMsg}}</span>
       <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
     </fieldset>
     <br>
   </form>
+  <div id="graph" style="min-width: 310px; height: 400px; margin: auto; max-width:600px; display:none" ></div>
 </div>

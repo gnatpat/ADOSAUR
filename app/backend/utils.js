@@ -10,7 +10,19 @@
 
       eval.stdout.on('data', function (data) {
         console.log("Script gave " + data);
-        callback(String(data));
+        data = String(data);
+        data = data.substring(1, data.length - 1)
+        split = data.split(" ");
+        values = []
+        for (var i = 0; i < split.length; i++)
+        {
+          var value = parseFloat(split[i]);
+          if(isNaN(value))
+            continue;
+          values.push(value);
+        }
+        console.log(values);
+        callback(values);
       });
 
       eval.stderr.on('data', function (data) {

@@ -7,7 +7,7 @@
   module.exports = function (app, express) {
 
     // serve static
-    app.use(express.static(express.dirname + '/../Frontend'));
+    app.use(express.static(express.dirname + '/../frontend'));
     /* gets a router instance */
     var router = express.Router();
 
@@ -27,8 +27,8 @@
         console.log("Evaluating BDI for " + files.file.path);
         evaluateBDI(files.file.path, function (result) {
           res.writeHead(200, {'content-type': 'text/json'});
-          console.log("Sending " + result.trim());
-          res.end(JSON.stringify({"data": result.trim()}));
+          console.log("Sending " + result);
+          res.end(JSON.stringify({"data": result}));
         });
       });
 
