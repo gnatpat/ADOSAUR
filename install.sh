@@ -18,3 +18,5 @@ echo "Installing Python dependencies"
 pip install --user liac-arff
 pip install --user numpy
 pip install --user matplotlib
+pip install --user --upgrade https://github.com/Theano/Theano/archive/master.zip
+pip install --user --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
