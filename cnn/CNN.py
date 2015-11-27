@@ -1,10 +1,6 @@
-import scipy.io.wavfile
 import theano
 import theano.tensor as T
 import lasagne
-
-def getAudioData(audioPath):
-	return scipy.io.wavfile.read(audioPath)[1]
 
 def buildCNN(input_var=None):
 
@@ -40,5 +36,3 @@ def buildCNN(input_var=None):
             nonlinearity=lasagne.nonlinearities.softmax)
 
     return network
-
-
