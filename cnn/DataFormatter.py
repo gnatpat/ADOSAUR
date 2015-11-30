@@ -53,7 +53,3 @@ def buildExamplesAndTargets(dictionary, path):
 			Y.extend(yLabels)
 
 	return X, Y
-
-
-
-buildAudioData("/media/sc8013/WD SACHA/CLEAN_AVEC/RawAudio/wav/")
