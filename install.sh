@@ -4,13 +4,13 @@ mkdir tmp
 
 # Install dependencies for Backend
 echo "Installing Backend dependencies"
-cd app/Backend
+cd app/backend
 npm i
 npm i grunt-cli
 
 echo "Installing Frontend dependencies"
 # Install dependencies for Frontend
-cd ../Frontend/
+cd ../frontend/
 npm i
 
 echo "Installing Python dependencies"
