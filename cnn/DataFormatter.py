@@ -60,6 +60,8 @@ def buildExamplesAndTargets(dictionary, path):
 			Y = np.concatenate((Y, yLabels))
 	return X, Y
 
+
+# Uncomment this code and run it to pickle the data if you haven't yet
 # trainingX, trainingY, developmentX, developmentY, testX, testY = buildAudioData('../rawData/RawAudio/wav/')
 #
 #
