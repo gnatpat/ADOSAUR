@@ -39,11 +39,10 @@ def buildCNN(input_var=None):
 
     return network
 
-
 # Define number of epochs
 numEpochs = 500
 # Get data and targets from our DataFormatter
-trainingX, trainingY, developmentY, developmentY, testX, testY = DataFormatter.buildAudioData("/media/sc8013/WD SACHA/CLEAN_AVEC/RawAudio/wav/")
+trainingX, trainingY, developmentY, developmentY, testX, testY = DataFormatter.buildAudioData("../raw_data/RawAudio/wav/")
 
 # Prepare Theano variables for inputs and targets
 inputVar = T.tensor3('inputs')

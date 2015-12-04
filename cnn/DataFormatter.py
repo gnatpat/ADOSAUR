@@ -30,8 +30,7 @@ def buildAudioData(rawAudioPath):
 
 	currDir = os.getcwd()
 	# change this path to wherever your raw audio wav files are
-	os.chdir(rawAudioPath)
-
+	rawAudioPath = currDir + '/' + rawAudioPath
 	trainingX, trainingY       = buildExamplesAndTargets(trainLabelsDict, rawAudioPath)
 	developmentX, developmentY = buildExamplesAndTargets(devLabelsDict, rawAudioPath)
 	testX, testY               = buildExamplesAndTargets(testLabelsDict, rawAudioPath)

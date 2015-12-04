@@ -10,5 +10,5 @@ tmp/*
 pickledData/*
 *.swp
 
-raw_data/*
+rawData/*
 
