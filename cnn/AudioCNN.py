@@ -12,7 +12,7 @@ def buildCNN(inputVar=None):
   network = lasagne.layers.InputLayer(shape=(None, 1, 10000), input_var=inputVar)
 
   network = lasagne.layers.Conv1DLayer(
-                      network, num_filters=20, filter_size=10, stride=0, pad=1,
+                      network, num_filters=20, filter_size=10, stride=1, pad=1,
                       nonlinearity=nonlin,
                       W=lasagne.init.GlorotUniform())
 
