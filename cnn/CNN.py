@@ -15,7 +15,7 @@ def buildCNN(input_var=None):
             network, num_filters=20, filter_size=10,
             nonlinearity=lasagne.nonlinearities.rectify,
             W=lasagne.init.GlorotUniform())
-    
+
     # Max-pooling layer
     network = lasagne.layers.MaxPool1DLayer(network, pool_size=1)
 
@@ -67,7 +67,7 @@ testLoss = lasagne.objectives.categorical_crossentropy(testPrediction,
                                                         targetVar)
 testLoss = testLoss.mean()
 
-# Create an expression for classification accuracy 
+# Create an expression for classification accuracy
 testAcc = T.mean(T.eq(T.argmax(testPrediction, axis=1), targetVar),
                   dtype=theano.config.floatX)
 
