@@ -51,6 +51,6 @@ So we have 150 participants along with 150 labels, each of them performing the t
 
 ## Raw Data
 
-The 3GB set of Raw Data should be placed in the raw_data folder, with three subfolders - labels, RawAudio and RawVideo.
+The 3GB set of Raw Data should be placed in a folder named rawData, with three subfolders - labels, RawAudio and RawVideo.
 
 
