@@ -16,7 +16,7 @@ def splitData(dataArray, sizeChunks):
   splitArray = [dataArray[i:i + sizeChunks] for i in range(0, len(dataArray), sizeChunks)]
   # remove the extra array which is not sizeChunks long
   splitArray.pop()
-  finalSplitArray = np.empty(shape=(len(splitArray), 2, sizeChunks))
+  finalSplitArray = np.empty(shape=(len(splitArray), 1, 2, sizeChunks))
   # add an extra row of zeros so we can do 2D convolution
   extraZeros = np.array([0] * sizeChunks)
   i = 0
@@ -37,34 +37,38 @@ def createLabelDict(labelPath):
 
 
 def buildAudioData(rawAudioPath):
-  trainLabelsDict = createLabelDict('../../rawData/labels/Training/')
-  devLabelsDict   = createLabelDict('../../rawData/labels/Development/')
-  testLabelsDict  = createLabelDict('../../rawData/labels/Testing/')
+  trainLabelsDict = createLabelDict('../rawData/labels/Training/')
+  devLabelsDict   = createLabelDict('../rawData/labels/Development/')
+  testLabelsDict  = createLabelDict('../rawData/labels/Testing/')
 
   currDir = os.getcwd()
   rawAudioPath = currDir + '/' + rawAudioPath
+  print "Building training data..."
   trainingX, trainingY       = buildExamplesAndTargets(trainLabelsDict, rawAudioPath)
+  print "Building development data..."
   developmentX, developmentY = buildExamplesAndTargets(devLabelsDict, rawAudioPath)
+  print "Building test data..."
   testX, testY               = buildExamplesAndTargets(testLabelsDict, rawAudioPath)
 
   os.chdir(currDir)
   return trainingX, trainingY, developmentX, developmentY, testX, testY
 
 def buildExamplesAndTargets(dictionary, path):
-  X = np.empty(shape=(1, 2, 10000))
-  Y = np.empty(shape=(1))
+  X = np.empty(shape=(1, 1, 2, 10000))
+  Y = np.empty(shape=(1,63))
 
   os.chdir(path)
-
+  i = 0
   for key, value in dictionary.iteritems():
     for file in glob.glob("*" + key + "*.wav"):
+      if i > 5:
+          break
+      i += 1
       audioData = getAudioData(path + file)
       splitArray = splitData(audioData, 10000)
       numExamples = len(splitArray)
-      yLabels = [value] * numExamples
+      yLabels = np.array([value] * numExamples)
+      yLabels = np.reshape(yLabels, (-1,1))
       X = np.concatenate((X,splitArray))
       Y = np.concatenate((Y, yLabels))
   return X, Y
-
-
-trainingX, trainingY, developmentX, developmentY, testX, testY = buildAudioData('../../rawData/RawAudio/wav/')

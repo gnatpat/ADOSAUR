@@ -1,5 +1,5 @@
 import AudioDataFormatter as ADF
-import cPickle
+import sPickle
 import os
 
 trainingX, trainingY, developmentX, developmentY, testX, testY = ADF.buildAudioData('../../rawData/RawAudio/wav/')
@@ -7,25 +7,25 @@ trainingX, trainingY, developmentX, developmentY, testX, testY = ADF.buildAudioD
 os.chdir('../../pickledData/')
 
 print "Pickling training data..."
-f = file('trainingX.save', 'wb')
-cPickle.dump(trainingX, f, protocol=cPickle.HIGHEST_PROTOCOL)
+f = open('trainingX.save', 'w')
+sPickle.dump(trainingX, f)
 f.close()
-f = file('trainingY.save', 'wb')
-cPickle.dump(trainingY, f, protocol=cPickle.HIGHEST_PROTOCOL)
+f = open('trainingY.save', 'w')
+sPickle.dump(trainingY, f)
 f.close()
 
 print "Pickling development data..."
-f = file('developmentX.save', 'wb')
-cPickle.dump(developmentX, f, protocol=cPickle.HIGHEST_PROTOCOL)
+f = open('developmentX.save', 'w')
+sPickle.dump(developmentX, f)
 f.close()
-f = file('developmentY.save', 'wb')
-cPickle.dump(developmentY, f, protocol=cPickle.HIGHEST_PROTOCOL)
+f = open('developmentY.save', 'w')
+sPickle.dump(developmentY, f)
 f.close()
 
 print "Pickling test data..."
-f = file('testX.save', 'wb')
-cPickle.dump(testX, f, protocol=cPickle.HIGHEST_PROTOCOL)
+f = open('testX.save', 'w')
+sPickle.dump(testX, f)
 f.close()
-f = file('testY.save', 'wb')
-cPickle.dump(testY, f, protocol=cPickle.HIGHEST_PROTOCOL)
+f = open('testY.save', 'w')
+sPickle.dump(testY, f)
 f.close()
