@@ -55,20 +55,21 @@ def buildAudioData(rawAudioPath):
 
 def buildExamplesAndTargets(dictionary, path):
   X = np.empty(shape=(1, 1, 2, 10000))
-  Y = np.empty(shape=(1,63))
+  Y = np.empty(shape=(1,64))
 
   os.chdir(path)
   i = 0
   for key, value in dictionary.iteritems():
     for file in glob.glob("*" + key + "*.wav"):
-      if i > 5:
+      if i > 10:
           break
       i += 1
       audioData = getAudioData(path + file)
       splitArray = splitData(audioData, 10000)
       numExamples = len(splitArray)
-      yLabels = np.array([value] * numExamples)
-      yLabels = np.reshape(yLabels, (-1,1))
+      yLabels = np.zeros((numExamples,64))
+      for j in range(numExamples):
+          yLabels[j][value] = 1
       X = np.concatenate((X,splitArray))
       Y = np.concatenate((Y, yLabels))
   return X, Y

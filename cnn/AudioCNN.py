@@ -21,7 +21,7 @@ def buildCNN(inputVar=None):
   # network = lasagne.layers.MaxPool2DLayer(network, pool_size=(2,2))
 
   network = lasagne.layers.DenseLayer(network, num_units=20, nonlinearity=nonlin)
-  network = lasagne.layers.DenseLayer(network, num_units=63, nonlinearity=nonlin)
+  network = lasagne.layers.DenseLayer(network, num_units=64, nonlinearity=nonlin)
 
   return network
 
@@ -42,7 +42,7 @@ network = buildCNN(inputVar)
 
 # Create a loss expression for training
 prediction = lasagne.layers.get_output(network)
-loss = lasagne.objectives.squared_error(prediction, targetVar)
+loss = lasagne.objectives.categorical_crossentropy(prediction, targetVar)
 loss = loss.mean()
 
 # Create update expression for training
@@ -51,17 +51,17 @@ updates = lasagne.updates.sgd(loss, params, learning_rate=0.01)
 
 # Create a loss expression for validation and testing
 testPrediction = lasagne.layers.get_output(network, deterministic=True)
-testLoss = lasagne.objectives.squared_error(testPrediction, targetVar)
+testLoss = lasagne.objectives.categorical_crossentropy(testPrediction, targetVar)
 testLoss = testLoss.mean()
 
 # Create an expression for classification accuracy
-testAcc = T.mean(T.eq(T.argmax(testPrediction, axis=1), targetVar),
+testAcc = T.mean(T.eq(T.argmax(testPrediction, axis=0), targetVar),
                   dtype=theano.config.floatX)
 
 # Compile a function performing training step and returning corresponsing training loss
-trainFn = theano.function([inputVar, targetVar], loss, updates=updates, allow_input_downcast=True)
+trainFn = theano.function([inputVar, targetVar], loss, updates=updates)
 # Compile a function computing the validation loss and accuracy
-valFn = theano.function([inputVar, targetVar], [testLoss, testAcc], allow_input_downcast=True)
+valFn = theano.function([inputVar, targetVar], [testLoss, testAcc])
 
 # Launch training loop over epochs
 print "Launching training "
