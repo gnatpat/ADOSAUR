@@ -2,8 +2,8 @@ import numpy as np
 import theano
 import theano.tensor as T
 import lasagne
-import DataFormatter
 import cPickle
+from utils import LoadData as LD
 
 def buildCNN(inputVar=None):
 
@@ -27,33 +27,7 @@ def buildCNN(inputVar=None):
 # Define number of epochs
 numEpochs = 500
 
-# Get data and targets from our DataFormatter
-print "Loading training..."
-f = file('../pickledData/trainingX.save', 'rb')
-trainingX = cPickle.load(f)
-f.close()
-
-f = file('../pickledData/trainingY.save', 'rb')
-trainingY = cPickle.load(f)
-f.close()
-
-print "Loading development..."
-f = file('../pickledData/developmentX.save', 'rb')
-developmentX = cPickle.load(f)
-f.close()
-
-f = file('../pickledData/developmentY.save', 'rb')
-developmentY = cPickle.load(f)
-f.close()
-
-print "Loading test..."
-f = file('../pickledData/testX.save', 'rb')
-testX = cPickle.load(f)
-f.close()
-
-f = file('../pickledData/testY.save', 'rb')
-testY = cPickle.load(f)
-f.close()
+trainingX, trainingY, developmentX, developmentY, testX, testY = LD.loadData()
 
 # Prepare Theano variables for inputs and targets
 inputVar = T.tensor3('inputs')
