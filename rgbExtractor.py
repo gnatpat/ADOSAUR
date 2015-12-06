@@ -1,6 +1,8 @@
 from PIL import Image
+import numpy as np
 
 def extractRGB(filepath):
     im = Image.open(filepath)
-    pixels = list(im.getdata())
-    print pixels
+    return np.array(im.getdata())
+
+print extractRGB('./test.jpg')
