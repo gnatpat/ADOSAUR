@@ -1,9 +1,11 @@
 import cv2
 import os
 
+
 # Takes image and returns a numpy array of tuples (R,G,B)
 def extractRGB(filepath):
     return cv2.imread(filepath)
+
 
 # Takes video file path and outputs frames numbered 1.jpg, 2.jpg, ...
 # into the output folder (e.g. outputImages/)
@@ -24,10 +26,17 @@ def extractFramesFromVideo(filepath, outputPath):
         count = count + 1
         cv2.waitKey(1)
         rval, frame = vc.read()
-                                
+
     vc.release()
 
 
-def videoDataFormatter():
-    return None
-
+# E.g. createLabelDict('../rawData/labels/Training/')
+# Takes path to data file and outputs dictionary with key
+# as patient and label as score on BDI scale
+def createLabelDict(labelPath):
+    labelDict = {}
+    for file in os.listdir(labelPath):
+        csvReader = csv.reader(open(labelPath + file))
+        for label in csvReader:
+            labelDict[file[:-4]] = int(label[0])
+    return labelDict

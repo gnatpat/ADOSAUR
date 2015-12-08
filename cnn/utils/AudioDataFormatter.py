@@ -3,6 +3,7 @@ import os
 import csv
 import glob
 import numpy as np
+from Utils import createLabelDict
 
 def getAudioData(audioPath):
   data = scipy.io.wavfile.read(audioPath)[1]
@@ -25,15 +26,6 @@ def splitData(dataArray, sizeChunks):
 	  finalSplitArray[i] = arrayToAdd
 	  i += 1
   return finalSplitArray
-
-
-def createLabelDict(labelPath):
-  labelDict = {}
-  for file in os.listdir(labelPath):
-    csvReader = csv.reader(open(labelPath + file))
-    for label in csvReader:
-      labelDict[file[:-4]] = int(label[0])
-  return labelDict
 
 
 def buildAudioData(rawAudioPath):
