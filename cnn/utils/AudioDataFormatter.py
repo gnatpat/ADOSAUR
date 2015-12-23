@@ -1,6 +1,5 @@
 import scipy.io.wavfile
 import os
-import csv
 import glob
 import numpy as np
 from Utils import createLabelDict

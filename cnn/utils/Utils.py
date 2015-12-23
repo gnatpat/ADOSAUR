@@ -1,6 +1,6 @@
 import cv2
 import os
-
+import csv
 
 # Takes image and returns a numpy array of tuples (R,G,B)
 def extractRGB(filepath):
