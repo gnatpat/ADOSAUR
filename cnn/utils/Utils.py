@@ -8,7 +8,7 @@ import numpy as np
 
 # filepath './test.mp4'
 def extractRGBfromVideo(filepath):
-    tempDir = '../temp/'
+    tempDir = '../tmp/'
     fileExt = '.jpg'
 
     # extract frames into temp directory
