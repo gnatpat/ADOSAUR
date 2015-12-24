@@ -6,91 +6,46 @@ import cPickle
 import time
 from utils import LoadData as LD
 from utils import AudioDataFormatter as ADF
+from nolearn.lasagne import NeuralNet
 
 def buildCNN(inputVar=None):
 
-  nonlin = lasagne.nonlinearities.rectify
+    network = NeuralNet(
+        layers=[('input', lasagne.layers.InputLayer),
+                ('conv1', lasagne.layers.Conv2DLayer),
+                ('hidden', lasagne.layers.DenseLayer),
+                ('output', lasagne.layers.DenseLayer),
+                ],
 
-  network = lasagne.layers.InputLayer(shape=(None, 1, 2, 10000), input_var=inputVar)
+        # layer parameters
+        input_shape = (None, 1, 2, 10000),
+        hidden_num_units = 20,  # number of units in 'hidden' layer
+        conv1_num_filters = 20, conv1_filter_size = (2,2),
+        output_nonlinearity = lasagne.nonlinearities.softmax,
+        output_num_units = 64,  # 64 target values for the digits 0, 1, 2, ..., 63
 
-  network = lasagne.layers.Conv2DLayer(
-                      network, num_filters=20, filter_size=(2,2),
-                      nonlinearity=nonlin,
-                      W=lasagne.init.GlorotUniform())
+        # optimization method
+        update = lasagne.updates.nesterov_momentum,
+        update_learning_rate = 0.01,
+        update_momentum = 0.9,
 
-  # network = lasagne.layers.MaxPool2DLayer(network, pool_size=(2,2))
+        # TODO: need to change regression to False
+        regression = True,
+        max_epochs = 1,
+        verbose = 10,
+    )
 
-  network = lasagne.layers.DenseLayer(network, num_units=20, nonlinearity=nonlin)
-  network = lasagne.layers.DenseLayer(network, num_units=64, nonlinearity=nonlin)
-
-  return network
+    return network
 
 
-# Define number of epochs
-numEpochs = 500
+def trainCNN():
+    # load our data
+    trainingX, trainingY, developmentX, developmentY, testX, testY = ADF.buildAudioData('../rawData/RawAudio/wav/')
 
-# trainingX, trainingY, developmentX, developmentY, testX, testY = LD.loadData()
-trainingX, trainingY, developmentX, developmentY, testX, testY = ADF.buildAudioData('../rawData/RawAudio/wav/')
+    # build network architecture
+    network = buildCNN()
 
-# Prepare Theano variables for inputs and targets
-inputVar = T.tensor4('inputs')
-targetVar = T.matrix('targets')
+    # train the network
+    network.fit(trainingX, trainingY)
 
-# Create CNN
-print "Building CNN..."
-network = buildCNN(inputVar)
-
-# Create a loss expression for training
-prediction = lasagne.layers.get_output(network)
-loss = lasagne.objectives.categorical_crossentropy(prediction, targetVar)
-loss = loss.mean()
-
-# Create update expression for training
-params = lasagne.layers.get_all_params(network, trainable=True)
-updates = lasagne.updates.sgd(loss, params, learning_rate=0.01)
-
-# Create a loss expression for validation and testing
-testPrediction = lasagne.layers.get_output(network, deterministic=True)
-testLoss = lasagne.objectives.categorical_crossentropy(testPrediction, targetVar)
-testLoss = testLoss.mean()
-
-# Create an expression for classification accuracy
-testAcc = T.mean(T.eq(T.argmax(testPrediction, axis=0), targetVar),
-                  dtype=theano.config.floatX)
-
-# Compile a function performing training step and returning corresponsing training loss
-trainFn = theano.function([inputVar, targetVar], loss, updates=updates)
-# Compile a function computing the validation loss and accuracy
-valFn = theano.function([inputVar, targetVar], [testLoss, testAcc])
-
-# Launch training loop over epochs
-print "Launching training "
-for epoch in range(numEpochs):
-	# Do a full pass over training data
-	trainErr = 0
-	startTime = time.time()
-	trainErr += trainFn(trainingX, trainingY)
-
-	# Do a full pass over validation data
-	devErr = 0
-	devAcc = 0
-	err, acc = valFn(developmentX, developmentY)
-	devErr += err
-	devAcc += acc
-
-	# Print the result for this epoch
-	print("Epoch {} of {} took {:.3f}s".format(
-	        epoch + 1, numEpochs, time.time() - startTime))
-	print("  training loss:\t\t{:.6f}".format(trainErr))
-	print("  validation loss:\t\t{:.6f}".format(devErr))
-	print("  validation accuracy:\t\t{:.2f} %".format(devAcc))
-
-# After training, compute and print test error
-testErr = 0
-testAcc = 0
-err, acc = valFn(testX, testY)
-testErr += err
-testAcc += acc
-print("Final results:")
-print("  test loss:\t\t\t{:.6f}".format(testErr))
-print("  test accuracy:\t\t{:.2f} %".format(testAcc))
+trainCNN()
