@@ -2,10 +2,10 @@ import numpy as np
 import theano
 import theano.tensor as T
 import lasagne
-import cPickle
 import time
 from utils import LoadData as LD
 from utils import AudioDataFormatter as ADF
+from utils import Utils as utils
 from nolearn.lasagne import NeuralNet
 
 def buildCNN(inputVar=None):
@@ -32,20 +32,28 @@ def buildCNN(inputVar=None):
         # TODO: need to change regression to False
         regression = True,
         max_epochs = 1,
-        verbose = 10,
+        verbose = 1,
     )
 
     return network
 
 
-def trainCNN():
+def trainCNN(save=True, load=False):
     # load our data
     trainingX, trainingY, developmentX, developmentY, testX, testY = ADF.buildAudioData('../rawData/RawAudio/wav/')
 
-    # build network architecture
-    network = buildCNN()
+    if load:
+        # load a pretrained network
+        network = utils.loadNet('audioCNN.pickle')
+    else:
+        # build network architecture
+        network = buildCNN()
 
     # train the network
     network.fit(trainingX, trainingY)
 
-trainCNN()
+    if save:
+        # pickle the network
+        utils.saveNet('audioCNN.pickle', network)
+
+trainCNN(True, False)

@@ -4,6 +4,7 @@ import csv
 import glob
 import math
 import numpy as np
+import cPickle
 
 
 # filepath './test.mp4'
@@ -70,3 +71,15 @@ def createLabelDict(labelPath):
         for label in csvReader:
             labelDict[file[:-4]] = int(label[0])
     return labelDict
+
+# pickel dat net duh
+def saveNet(filename=None, network=None):
+    f = open(filename, 'wb')
+    cPickle.dump(network, f, -1)
+    return None
+
+# load da net 4rom fyl
+def loadNet(filename=None):
+    f = open(filename, 'rb')
+    net = cPickle.load(f)
+    return net
