@@ -5,10 +5,46 @@ import glob
 import math
 import numpy as np
 import cPickle
+import shutil
+import pickle  # internet too slow to install cPickle - someone fix this!
+
+# Gets flattened frames ("feature vectors") in video
+# e.g. the image [[1,2],[3,4]] flattened is [1,2,3,4]
+# TODO: load actual training, validation and test sets
+def getANNtestSet(filepath):
+    if os.path.exists('./ANNtestSet.save'):  # check if it exists first
+        return pickle.load(open('./ANNtestSet.save', 'r'))
+    else:
+        ANNtestSet = imagesToFeatureVectors(extractImagesfromVideo(filepath))
+        pickle.dump(ANNtestSet, open('ANNtestSet.save', 'w'))
+        return ANNtestSet
+
+# TODO: load actual training, validation and test sets
+def getCNNtestSet(filepath):
+    if os.path.exists('./CNNtestSet.save'):  # check if it exists first
+        return pickle.load(open('./CNNtestSet.save', 'r'))
+    else:
+        CNNtestSet = extractImagesfromVideo(filepath)
+        pickle.dump(CNNtestSet, open('CNNtestSet.save', 'w'))
+        return CNNtestSet
+
+# Converts an array of 2D images to a 1D numpy array of flattened images
+def imagesToFeatureVectors(images):
+    flattenedImages = []
+    for image in images:
+        flattenedImages.append(imageToFeatureVector(image))
+    return np.array(flattenedImages)
+
+
+# Converts 2D numpy array to 1D numpy array
+# e.g. 28 x 28 image becomes 784 array like in MNIST examples
+def imageToFeatureVector(numpyArray):
+    return numpyArray.flatten()
 
 
 # filepath './test.mp4'
-def extractRGBfromVideo(filepath):
+# Output is an image: either a RGB or gray scale
+def extractImagesfromVideo(filepath, grayscale=True):
     tempDir = '../tmp/'
     fileExt = '.jpg'
 
@@ -18,22 +54,29 @@ def extractRGBfromVideo(filepath):
     # return a list of all jpegs in temp directory e.g. ['1.jpg', ... , '5.jpg']
     filenames = glob.glob(tempDir + '*' + fileExt)  # '../temp/*.jpg'
 
-    rgbConversions = []  # stores the converted RGB files
+    images = []  # stores the converted RGB files
     for filename in filenames:  # convert each file in temp to RGB
-        rgbConversions.append(extractRGB(filename))
+        if grayscale:
+            images.append(extractGrayScale(filename))
+        else:  # RGB
+            images.append(extractRGB(filename))
 
     # delete temp directory after all files have been converted to RGB
     if os.path.exists(tempDir):  # check if it exists first
-        import shutil
         shutil.rmtree(tempDir)  # delete directory
 
     # return a numpy array of shape (frames, height, width, channels)
-    return np.array(rgbConversions)
+    return np.array(images)
 
 
-# Takes image and returns a numpy array of tuples (R,G,B)
+# Takes image and returns a 2D numpy array of tuples (R,G,B)
 def extractRGB(filepath):
     return cv2.imread(filepath)
+
+
+# Takes image and returns a 2D numpy array of integers [0, 255]
+def extractGrayScale(filepath):
+    return cv2.imread(filepath, 0)
 
 
 # Takes video file path and outputs frames numbered 1.jpg, 2.jpg, ...
