@@ -8,19 +8,16 @@ import cPickle
 import shutil
 import pickle  # internet too slow to install cPickle - someone fix this!
 
-# Gets flattened frames ("feature vectors") in video
-# e.g. the image [[1,2],[3,4]] flattened is [1,2,3,4]
-# TODO: load actual training, validation and test sets
-def getANNtestSet(filepath):
-    if os.path.exists('./ANNtestSet.save'):  # check if it exists first
-        return pickle.load(open('./ANNtestSet.save', 'r'))
-    else:
-        ANNtestSet = imagesToFeatureVectors(extractImagesfromVideo(filepath))
-        pickle.dump(ANNtestSet, open('ANNtestSet.save', 'w'))
-        return ANNtestSet
 
-# TODO: load actual training, validation and test sets
-def getCNNtestSet(filepath):
+# TODO: load actual training, validation and test sets.
+#
+#       Need a function taking the directory 'database'
+#       which returns X_train, y_train; a numpy array of
+#       grayscale images and their corresponding BDI.
+#       From here, NoLearn will split these datasets into
+#       training, validation and test sets.
+#
+def getCNNdata(filepath):
     if os.path.exists('./CNNtestSet.save'):  # check if it exists first
         return pickle.load(open('./CNNtestSet.save', 'r'))
     else:
@@ -28,22 +25,9 @@ def getCNNtestSet(filepath):
         pickle.dump(CNNtestSet, open('CNNtestSet.save', 'w'))
         return CNNtestSet
 
-# Converts an array of 2D images to a 1D numpy array of flattened images
-def imagesToFeatureVectors(images):
-    flattenedImages = []
-    for image in images:
-        flattenedImages.append(imageToFeatureVector(image))
-    return np.array(flattenedImages)
-
-
-# Converts 2D numpy array to 1D numpy array
-# e.g. 28 x 28 image becomes 784 array like in MNIST examples
-def imageToFeatureVector(numpyArray):
-    return numpyArray.flatten()
-
 
 # filepath './test.mp4'
-# Output is an image: either a RGB or gray scale
+# Output is an array of images (RGB or grayscale)
 def extractImagesfromVideo(filepath, grayscale=True):
     tempDir = '../tmp/'
     fileExt = '.jpg'
@@ -51,21 +35,21 @@ def extractImagesfromVideo(filepath, grayscale=True):
     # extract frames into temp directory
     extractFramesFromVideo(filepath, tempDir)
 
-    # return a list of all jpegs in temp directory e.g. ['1.jpg', ... , '5.jpg']
+    # return a list of all files in temp directory e.g. ['1.jpg', ... , '5.jpg']
     filenames = glob.glob(tempDir + '*' + fileExt)  # '../temp/*.jpg'
 
-    images = []  # stores the converted RGB files
-    for filename in filenames:  # convert each file in temp to RGB
+    images = []  # stores the extracted images
+    for filename in filenames:  # convert each file in tmp to an image
         if grayscale:
             images.append(extractGrayScale(filename))
         else:  # RGB
             images.append(extractRGB(filename))
 
-    # delete temp directory after all files have been converted to RGB
-    if os.path.exists(tempDir):  # check if it exists first
+    # delete temp directory after all files have been processed
+    if os.path.exists(tempDir):  # check if directory exists first
         shutil.rmtree(tempDir)  # delete directory
 
-    # return a numpy array of shape (frames, height, width, channels)
+    # return a numpy array of shape (numImages, height, width, channels)
     return np.array(images)
 
 
