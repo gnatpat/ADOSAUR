@@ -20,7 +20,7 @@ from utils.Utils import getCNNdata
 def loadData():
     data = {}  # initialise dictionary
     testSet = getCNNdata('./test.mp4').reshape(-1, 1, 1280, 720)  # generate test set; -1 forces np to deduce dimension
-    targets = np.array([1] * 11, dtype='int32')  # pseudo targets
+    targets = np.array([1] * 11, dtype='int32')  # pseudo targets - NOTE: must have dtype='int32'
 
     # populate dictionary
     data['X_train'] = testSet  # a list of grayscale images
