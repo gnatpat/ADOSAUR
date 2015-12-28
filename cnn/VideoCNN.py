@@ -33,6 +33,7 @@ def loadData():
 
 def CNN(data):
     # small net for proof of concept
+    # see http://goo.gl/GZUQOb for more realistic config
     net2 = NeuralNet(
     layers=[
         ('input', layers.InputLayer),
@@ -51,15 +52,16 @@ def CNN(data):
     update_momentum=0.9,
 
     regression=False,
-    max_epochs=3, # was 1000
+    max_epochs=3,
     verbose=1,
     )
 
     # Train the network
     net2.fit(data['X_train'], data['y_train'])
 
-    # # Save trained network
-    # pickle.dump(net2, open('CNN.save','w'))
+
+    # TODO: pickle trained network (after we've optimised)
+
 
     # Try the network on the first training example  -- meaningless, but whatevs
     print("\nActual:\t\t%s" % str(data['y_train'][0]))
