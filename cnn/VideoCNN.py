@@ -12,25 +12,20 @@ from nolearn.lasagne import NeuralNet
 import numpy as np
 import pickle
 
-from utils.Utils import getCNNtestSet
+from utils.Utils import getCNNdata
 
 
-# TODO: load actual training, validation and test sets. See Utils.py
+# TODO: load actual training, validation and test sets.
+#       Change getCNNdata in Utils.py
 def loadData():
     data = {}  # initialise dictionary
-    testSet = getCNNtestSet('./test.mp4').reshape(-1, 1, 1280, 720)  # generate test set; -1 forces np to deduce dimension
+    testSet = getCNNdata('./test.mp4').reshape(-1, 1, 1280, 720)  # generate test set; -1 forces np to deduce dimension
     targets = np.array([1] * 11, dtype='int32')  # pseudo targets
 
     # populate dictionary
     data['X_train'] = testSet
     data['y_train'] = targets
-    data['X_valid'] = testSet
-    data['y_valid'] = targets
-    data['X_test'] = testSet
-    data['y_test'] = targets
     data['num_examples_train'] = 11
-    data['num_examples_valid'] = 11
-    data['num_examples_test'] = 11
     data['input_shape'] = (None, 1, 1280, 720)  # 1280 x 720 grayscale image input
     data['output_dim'] = 10
 
@@ -49,7 +44,8 @@ def CNN(data):
     input_shape=data['input_shape'],
     conv1_num_filters=5, conv1_filter_size=(3, 3), pool1_pool_size=(2, 2),
     hidden2_num_units=50,
-    output_num_units=data['output_dim'], output_nonlinearity=lasagne.nonlinearities.softmax,
+    output_num_units=data['output_dim'],
+    output_nonlinearity=lasagne.nonlinearities.softmax,
 
     update_learning_rate=0.01,
     update_momentum=0.9,
@@ -65,9 +61,9 @@ def CNN(data):
     # # Save trained network
     # pickle.dump(net2, open('CNN.save','w'))
 
-    # Try the network on new data
-    print("\nActual:\t\t%s" % str(data['y_test'][0]))
-    print("Predicted:\t%s" % str(net2.predict([data['X_test'][0]])[0]))
+    # Try the network on the first training example  -- meaningless, but whatevs
+    print("\nActual:\t\t%s" % str(data['y_train'][0]))
+    print("Predicted:\t%s" % str(net2.predict([data['X_train'][0]])[0]))
 
 
 def main():
