@@ -115,13 +115,13 @@ def createLabelDict(labelPath):
             labelDict[file[:-4]] = int(label[0])
     return labelDict
 
-# pickel dat net duh
+# pickle the network
 def saveNet(filename=None, network=None):
     f = open(filename, 'wb')
     cPickle.dump(network, f, -1)
     return None
 
-# load da net 4rom fyl
+# load the network from file
 def loadNet(filename=None):
     f = open(filename, 'rb')
     net = cPickle.load(f)

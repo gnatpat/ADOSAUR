@@ -29,18 +29,31 @@ def buildCNN(inputVar=None):
         update_learning_rate = 0.01,
         update_momentum = 0.9,
 
-        # TODO: need to change regression to False
         regression = False,
-        max_epochs = 1,
+        max_epochs = 5,
         verbose = 1,
     )
 
     return network
 
 
-def trainCNN(save=True, load=False):
-    # load our data
+def loadAudioData():
+    data = {}  # initialise dictionary
     trainingX, trainingY, developmentX, developmentY, testX, testY = ADF.buildAudioData('../rawData/RawAudio/wav/')
+    data['trainingX'] = trainingX
+    data['trainingY'] = trainingY
+    data['developmentX'] = developmentX
+    data['developmentY'] = developmentY
+    data['testX'] = testX
+    data['testY'] = testY
+
+    return data
+
+
+def trainCNN(data, save=True, load=False):
+    # get our data
+    trainingX = data['trainingX']
+    trainingY = data['trainingY']
 
     if load:
         # load a pretrained network
@@ -56,8 +69,21 @@ def trainCNN(save=True, load=False):
         # pickle the network
         utils.saveNet('audioCNN.pickle', network)
 
+    return network
+
+
+def predictInput(example, network):
+    return network.predict(example)
+
+
 def main():
-    trainCNN(True, False)
+    # load our data
+    data = loadAudioData()
+    # train the cnn
+    network = trainCNN(data, False, False)
+    # make a prediction
+    print("\nActual:\t\t%s" % str(data['trainingY'][0]))
+    print("Predicted:\t%s" % str(predictInput([data['trainingX'][0]], network)))
 
 if __name__ == '__main__':
     main()
