@@ -16,14 +16,11 @@ def splitData(dataArray, sizeChunks):
   splitArray = [dataArray[i:i + sizeChunks] for i in range(0, len(dataArray), sizeChunks)]
   # remove the extra array which is not sizeChunks long
   splitArray.pop()
-  finalSplitArray = np.empty(shape=(len(splitArray), 1, 2, sizeChunks))
-  # add an extra row of zeros so we can do 2D convolution
-  extraZeros = np.array([0] * sizeChunks)
+  finalSplitArray = np.empty(shape=(len(splitArray), 1, sizeChunks))
   i = 0
   for elem in splitArray:
-	  arrayToAdd = np.vstack((elem, extraZeros))
-	  finalSplitArray[i] = arrayToAdd
-	  i += 1
+   finalSplitArray[i] = elem
+   i += 1
   return finalSplitArray
 
 
@@ -45,8 +42,8 @@ def buildAudioData(rawAudioPath):
   return trainingX, trainingY, developmentX, developmentY, testX, testY
 
 def buildExamplesAndTargets(dictionary, path):
-  X = np.empty(shape=(1, 1, 2, 10000))
-  Y = np.empty(shape=(1,64))
+  X = np.empty(shape=(1, 1, 10000))
+  Y = np.empty(shape=(1))
 
   os.chdir(path)
   i = 0
@@ -58,9 +55,9 @@ def buildExamplesAndTargets(dictionary, path):
       audioData = getAudioData(path + file)
       splitArray = splitData(audioData, 10000)
       numExamples = len(splitArray)
-      yLabels = np.zeros((numExamples,64))
+      yLabels = np.zeros((numExamples))
       for j in range(numExamples):
-          yLabels[j][value] = 1
+          yLabels[j] = value
       X = np.concatenate((X,splitArray))
       Y = np.concatenate((Y, yLabels))
   return X, Y
