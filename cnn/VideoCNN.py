@@ -23,11 +23,11 @@ def loadData():
     targets = np.array([1] * 11, dtype='int32')  # pseudo targets
 
     # populate dictionary
-    data['X_train'] = testSet
-    data['y_train'] = targets
-    data['num_examples_train'] = 11
-    data['input_shape'] = (None, 1, 1280, 720)  # 1280 x 720 grayscale image input
-    data['output_dim'] = 10
+    data['X_train'] = testSet  # a list of grayscale images
+    data['y_train'] = targets  # a list of ints (on BDI scale)
+    data['num_examples_train'] = testSet.shape[0]
+    data['input_shape'] = (None,) + testSet.shape[1:]  # ignore num examples. Here input is 1280 x 720 grayscale image
+    data['output_dim'] = 10  # chosen arbitrarily
 
     return data
 
