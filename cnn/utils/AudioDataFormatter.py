@@ -16,7 +16,7 @@ def splitData(dataArray, sizeChunks):
   splitArray = [dataArray[i:i + sizeChunks] for i in range(0, len(dataArray), sizeChunks)]
   # remove the extra array which is not sizeChunks long
   splitArray.pop()
-  finalSplitArray = np.empty(shape=(len(splitArray), 1, sizeChunks))
+  finalSplitArray = np.empty(shape=(len(splitArray), 1, sizeChunks), dtype='float64')
   i = 0
   for elem in splitArray:
    finalSplitArray[i] = elem
@@ -42,8 +42,8 @@ def buildAudioData(rawAudioPath):
   return trainingX, trainingY, developmentX, developmentY, testX, testY
 
 def buildExamplesAndTargets(dictionary, path):
-  X = np.empty(shape=(1, 1, 10000))
-  Y = np.empty(shape=(1))
+  X = np.empty(shape=(1, 1, 10000), dtype='float64')
+  Y = np.empty(shape=(1), dtype='int32')
 
   os.chdir(path)
   i = 0
@@ -55,7 +55,7 @@ def buildExamplesAndTargets(dictionary, path):
       audioData = getAudioData(path + file)
       splitArray = splitData(audioData, 10000)
       numExamples = len(splitArray)
-      yLabels = np.zeros((numExamples))
+      yLabels = np.zeros((numExamples), dtype='int32')
       for j in range(numExamples):
           yLabels[j] = value
       X = np.concatenate((X,splitArray))
