@@ -19,8 +19,10 @@ def splitData(dataArray, sizeChunks):
   finalSplitArray = np.empty(shape=(len(splitArray), 1, sizeChunks), dtype='float64')
   i = 0
   for elem in splitArray:
-   finalSplitArray[i] = elem
-   i += 1
+    # do not include the arrays with too many zeros (corresponding to silence)
+    if np.count_nonzero(elem) > sizeChunks/2:
+        finalSplitArray[i] = elem
+    i += 1
   return finalSplitArray
 
 
@@ -49,9 +51,6 @@ def buildExamplesAndTargets(dictionary, path):
   i = 0
   for key, value in dictionary.iteritems():
     for file in glob.glob("*" + key + "*.wav"):
-      if i > 10:
-          break
-      i += 1
       audioData = getAudioData(path + file)
       splitArray = splitData(audioData, 10000)
       numExamples = len(splitArray)
