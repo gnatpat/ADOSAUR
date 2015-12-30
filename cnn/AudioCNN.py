@@ -11,33 +11,50 @@ from sklearn.metrics import classification_report, accuracy_score
 
 
 # Builds the network
-def buildCNN(params):
+def buildCNN():
 
     network = NeuralNet(
         # specify the layers
         layers=[('input', lasagne.layers.InputLayer),
                 ('conv1', lasagne.layers.Conv1DLayer),
-                ('hidden', lasagne.layers.DenseLayer),
+                ('pool1', lasagne.layers.MaxPool1DLayer),
+                ('dropout1', layers.DropoutLayer),
+                ('conv2', lasagne.layers.Conv1DLayer),
+                ('pool2', lasagne.layers.MaxPool1DLayer),
+                ('dropout2', layers.DropoutLayer),
+                ('conv3', lasagne.layers.Conv1DLayer),
+                ('pool3', lasagne.layers.MaxPool1DLayer),
+                ('dropout3', layers.DropoutLayer)
+                ('hidden4', lasagne.layers.DenseLayer),
+                ('dropout4', layers.DropoutLayer),
+                ('hidden5', lasagne.layers.DenseLayer),
                 ('output', lasagne.layers.DenseLayer),
                 ],
 
         # layer parameters
         input_shape = (None, 1, 10000),
-        conv1_num_filters = params["conv1_num_filters"],
-        conv1_filter_size = params["conv1_filter_size"],
-        hidden_num_units = params["hidden_num_units"],  # number of units in 'hidden' layer
-        output_nonlinearity = lasagne.nonlinearities.softmax,
+        conv1_num_filters=32, conv1_filter_size=3, pool1_pool_size=2,
+        dropout1_p=0.1,
+        conv2_num_filters=64, conv2_filter_size=2, pool2_pool_size=2,
+        dropout2_p=0.2,
+        conv3_num_filters=128, conv3_filter_size=2, pool3_pool_size=2,
+        dropout3_p=0.3,
+        hidden4_num_units=500,
+        dropout4_p=0.5,
+        hidden5_num_units=500,
         output_num_units = 64,  # 64 target values for the depression indices
+        output_nonlinearity = lasagne.nonlinearities.softmax,
 
         # optimization method
-        update = params["update"],
+        update_learning_rate=0.01,
+        update_momentum=0.9,
 
         regression = False, # classification problem
-        max_epochs = 10,
-        verbose = 0,
+        max_epochs = 1,
+        verbose = 1,
 
-        # split the training data into training and validation using 50% for val
-        train_split = TrainSplit(eval_size=0.5),
+        # split the training data into training and validation using 30% for val
+        train_split = TrainSplit(eval_size=0.3),
     )
 
     return network
@@ -86,74 +103,25 @@ def trainCNN(data, params, save=True, load=False):
 # Tests a network using test data and expected labels,
 # printing the classification report and accuracy score
 def testCNN(network, inputs, expectedLabels):
-    # TODO: may need a fix, getting some warnings
+    # TODO: need to fix it, always gives the same accuracy...
     predictions = network.predict(inputs)
     print(classification_report(expectedLabels, predictions))
     print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
 
 
-def optimiseCNN(data):
-    X = data['X']
-    Y = data['Y']
-    params = {}
-    # initialise best accuracy and best params
-    bestAccuracy = 0
-    bestParams = {}
-
-    # open the file for writing
-    file = open("audioCNN_results.txt", "w")
-
-    # perform a grid search through the parameters
-    for update in {lasagne.updates.rmsprop, lasagne.updates.nesterov_momentum, lasagne.updates.adagrad}:
-        for conv1_num_filters in xrange(5,55,5):
-            for conv1_filter_size in xrange(2,22,2):
-                for hidden_num_units in xrange(5,55,5):
-                    print "Trying new network..."
-
-                    # fill in params dictionary
-                    params["update"]            = update
-                    params["conv1_num_filters"] = conv1_num_filters
-                    params["conv1_filter_size"] = conv1_filter_size
-                    params["hidden_num_units"]  = hidden_num_units
-
-                    # build and train the network with current params
-                    network = buildCNN(params)
-                    network.fit(X, Y)
-
-                    # see how it performs
-                    predictions = network.predict(data["testX"])
-                    accuracyScore = accuracy_score(data["testY"], predictions)
-                    correctlyClassified = proportionCorrect(predictions, data["testY"])
-                    if (accuracyScore > bestAccuracy):
-                        bestAccuracy = accuracyScore
-                        bestParams = params
-
-                    # write results to a file
-                    file.write("Parameters used:\n")
-                    file.write("\tupdate: " + str(update) + "\n")
-                    file.write("\tconv1_num_filters: " + str(conv1_num_filters) + "\n")
-                    file.write("\tconv1_filter_size: " + str(conv1_filter_size) + "\n")
-                    file.write("\thidden_num_units: " + str(hidden_num_units) + "\n")
-                    file.write("Accuracy score: " + str(accuracyScore) + "\n\n")
-                    file.flush()
-
-    # write optimal results found
-    file.write("BEST PARAMETERS:\n")
-    file.write("\tupdate: " + str(update) + "\n")
-    file.write("\tconv1_num_filters: " + str(bestParams["conv1_num_filters"]) + "\n")
-    file.write("\tconv1_filter_size: " + str(bestParams["conv1_filter_size"]) + "\n")
-    file.write("\thidden_num_units: " + str(bestParams["hidden_num_units"]) + "\n")
-    file.write("BEST ACCURACY SCORE: " + str(bestAccuracy))
-    file.flush()
-
-    file.close()
-
-
 def main():
     # load our data
     data = loadAudioData()
-    # optimise the cnn
-    optimiseCNN(data)
+    # build the network
+    print "Building the network..."
+    params = {}
+    network = buildCNN(params)
+    # train the network
+    print "Training the network..."
+    network.fit(data['X'], data['Y'])
+    # test the network
+    print "Testing the network..."
+    testCNN(network, data['testX'], data['testY'])
 
 
 if __name__ == '__main__':
