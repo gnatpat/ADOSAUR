@@ -114,8 +114,7 @@ def main():
     data = loadAudioData()
     # build the network
     print "Building the network..."
-    params = {}
-    network = buildCNN(params)
+    network = buildCNN()
     # train the network
     print "Training the network..."
     network.fit(data['X'], data['Y'])
