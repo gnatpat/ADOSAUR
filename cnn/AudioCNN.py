@@ -36,8 +36,7 @@ def buildCNN():
         max_epochs = 3,
         verbose = 1,
 
-        # TODO: needs to be checked that eval_size actually just splits the
-        # data in training and validation (50/50 here)
+        # split the training data into training and validation using 50% for val
         eval_size = 0.5,
     )
 
@@ -53,12 +52,6 @@ def loadAudioData():
     # merge training and development data and add to dictionary
     data['X'] = np.append(trainingX, developmentX, axis=0)
     data['Y'] = np.append(trainingY, developmentY)
-
-    # add them separately in case we need it
-    data['trainingX'] = trainingX
-    data['trainingY'] = trainingY
-    data['developmentX'] = developmentX
-    data['developmentY'] = developmentY
 
     # add the test data to dictionary
     data['testX'] = testX
@@ -89,11 +82,6 @@ def trainCNN(data, save=True, load=False):
         utils.saveNet('audioCNN.pickle', network)
 
     return network
-
-
-# Makes a prediction for a single input given a network
-def predictSingleInput(example, network):
-    return network.predict(example)
 
 
 # Tests a network using test data and expected labels,
