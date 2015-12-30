@@ -1,3 +1,6 @@
+.DS_Store
+thumbs.db
+
 app/backend/node_modules/*
 app/frontend/node_modules/*
 app/node_modules/*
@@ -6,3 +9,7 @@ tmp/*
 *.pyc
 pickledData/*
 *.swp
+
+rawData/*
+
+*.log

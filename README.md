@@ -48,3 +48,9 @@ The `audio` folder contain subfolders for the two exercises all of the participa
 * `Freeform/` Participants respond to one of a number of questions such as: “What is your favourite dish?”; “What was your best gift, and why?”; “Discuss a sad childhood memory”, again in the German language
 
 So we have 150 participants along with 150 labels, each of them performing the two exercises mentioned before,  so 300 data samples.
+
+## Raw Data
+
+The 3GB set of Raw Data should be placed in a folder named rawData, with three subfolders - labels, RawAudio and RawVideo.
+
+
