@@ -12,7 +12,7 @@ from nolearn.lasagne import NeuralNet
 import numpy as np
 import pickle
 
-from utils.Utils import getCNNdata
+from utils.VideoUtils import getCNNdata
 
 
 # TODO: load actual training, validation and test sets.
