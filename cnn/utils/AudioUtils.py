@@ -4,7 +4,7 @@ import glob
 import numpy as np
 from Utils import createLabelDict
 
-def getAudioData(audioPath):
+def extractAudioData(audioPath):
   data = scipy.io.wavfile.read(audioPath)[1]
   # if two channels are used, take data from the first one
   if len(data.shape) == 2:
@@ -27,6 +27,7 @@ def splitData(dataArray, sizeChunks):
 
 
 def buildAudioData(rawAudioPath):
+  # create label dictionaries for training, dev and test sets
   trainLabelsDict = createLabelDict('../rawData/labels/Training/')
   devLabelsDict   = createLabelDict('../rawData/labels/Development/')
   testLabelsDict  = createLabelDict('../rawData/labels/Testing/')
@@ -44,19 +45,26 @@ def buildAudioData(rawAudioPath):
   return trainingX, trainingY, developmentX, developmentY, testX, testY
 
 def buildExamplesAndTargets(dictionary, path):
+  # initialise the arrays to store inputs (X) and corresponding labels (Y)
   X = np.empty(shape=(1, 1, 10000), dtype='float64')
   Y = np.empty(shape=(1), dtype='int32')
 
   os.chdir(path)
   i = 0
+  # iterate through the given dictionary
   for key, value in dictionary.iteritems():
+    # iterate through the files corresponding to the patient (key)
     for file in glob.glob("*" + key + "*.wav"):
-      audioData = getAudioData(path + file)
+      # extract the audio data for the current file
+      audioData = extractAudioData(path + file)
+      # split the audio data into arrays of size 10000
       splitArray = splitData(audioData, 10000)
       numExamples = len(splitArray)
+      # create the corresponding labels to add
       yLabels = np.zeros((numExamples), dtype='int32')
       for j in range(numExamples):
           yLabels[j] = value
+      # insert the data and labels to X and Y arrays
       X = np.concatenate((X,splitArray))
       Y = np.concatenate((Y, yLabels))
   return X, Y

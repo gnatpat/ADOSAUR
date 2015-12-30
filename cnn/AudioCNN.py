@@ -3,8 +3,7 @@ import theano
 import theano.tensor as T
 import lasagne
 import time
-from utils import LoadData as LD
-from utils import AudioDataFormatter as ADF
+from utils import AudioUtils as AU
 from utils import Utils as utils
 from nolearn.lasagne import NeuralNet
 from sklearn.metrics import classification_report, accuracy_score
@@ -49,7 +48,7 @@ def buildCNN():
 def loadAudioData():
     # initialise dictionary
     data = {}
-    trainingX, trainingY, developmentX, developmentY, testX, testY = ADF.buildAudioData('../rawData/RawAudio/wav/')
+    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData('../rawData/RawAudio/wav/')
 
     # merge training and development data and add to dictionary
     data['X'] = np.append(trainingX, developmentX, axis=0)
