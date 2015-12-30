@@ -72,14 +72,13 @@ def trainCNN(data, save=True, load=False):
     else:
         # build network architecture
         network = buildCNN()
+        # train the network
+        network.fit(X, Y)
 
-    # train the network
-    network.fit(X, Y)
-
-    if save:
-        # pickle the network
-        print("Saving the network...")
-        utils.saveNet('audioCNN.pickle', network)
+        if save:
+            # pickle the network
+            print("Saving the network...")
+            utils.saveNet('audioCNN.pickle', network)
 
     return network
 
@@ -97,7 +96,7 @@ def main():
     # load our data
     data = loadAudioData()
     # train the cnn
-    network = trainCNN(data, False, False)
+    network = trainCNN(data, True, False)
     # test the cnn
     testCNN(network, data['testX'], data['testY'])
 
