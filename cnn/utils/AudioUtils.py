@@ -50,7 +50,6 @@ def buildExamplesAndTargets(dictionary, path):
   Y = np.empty(shape=(1), dtype='int32')
 
   os.chdir(path)
-  i = 0
   # iterate through the given dictionary
   for key, value in dictionary.iteritems():
     # iterate through the files corresponding to the patient (key)
