@@ -1,28 +1,17 @@
 import cv2
 import os
 import csv
-import glob
+from glob import glob
 import math
 import numpy as np
-import cPickle
 import shutil
-import pickle  # internet too slow to install cPickle - someone fix this!
+import pickle
 
-# TODO: load actual training, validation and test sets.
-#
-#       Need a function taking the directory 'database'
-#       which returns X_train, y_train; a numpy array of
-#       grayscale images and their corresponding BDI.
-#       From here, NoLearn will split these datasets into
-#       training, validation and test sets.
-#
-def getCNNdata(filepath):
-    if os.path.exists('./CNNtestSet.save'):  # check if it exists first
-        return pickle.load(open('./CNNtestSet.save', 'r'))
-    else:
-        CNNtestSet = extractImagesfromVideo(filepath)
-        pickle.dump(CNNtestSet, open('CNNtestSet.save', 'w'))
-        return CNNtestSet
+from Utils import createLabelDict
+
+DATABASE_DIR = '../rawData/'
+VIDEO_FOLDER = 'rawVideo/'
+LABEL_FOLDER = 'labels/'
 
 
 # filepath './test.mp4'
@@ -35,7 +24,7 @@ def extractImagesfromVideo(filepath, grayscale=True):
     extractFramesFromVideo(filepath, tempDir)
 
     # return a list of all files in temp directory e.g. ['1.jpg', ... , '5.jpg']
-    filenames = glob.glob(tempDir + '*' + fileExt)  # '../temp/*.jpg'
+    filenames = glob(tempDir + '*' + fileExt)  # '../temp/*.jpg'
 
     images = []  # stores the extracted images
     for filename in filenames:  # convert each file in tmp to an image
@@ -65,30 +54,90 @@ def extractGrayScale(filepath):
 # Takes video file path and outputs frames numbered 1.jpg, 2.jpg, ...
 # into the output folder (e.g. outputImages/)
 def extractFramesFromVideo(filepath, outputPath):
+    filename = filepath.split('/')[-1][:-4]  # exclude extension
     vc = cv2.VideoCapture(filepath)  # initialise video capture
-    count = 1  # frame count
 
     if not os.path.isdir(outputPath):
         os.makedirs(outputPath)
 
-    # The following extracts frames every second
-    frameRate = math.floor(vc.get(5))  # get video frame rate
+    second = 0  # current second in video
+    capRate = 5  # time between captures
     while vc.isOpened(): # still receiving data
-        frameNum = math.floor(vc.get(1))  # get current frame number
-        rval, frame = vc.read()  # read frame
-
-        if (rval == False):
-            break  # no more frames
-        if (frameNum % frameRate == 0):  # e.g. every 24 frames
-            cv2.imwrite(outputPath + str(count) + '.jpg', frame)  # extract frame
-            count += 1
+        vc.set(0, second * 1000)  # set capturing position to (second * 1000) ms
+        success, image = vc.read()
+        if success:
+            cv2.imwrite(outputPath + filename + '_' + str(second) + '.jpg', image)
+            second += capRate
+        else:
+            break  # couldn't read image
 
     vc.release()  # release camera
     return None
 
-# Takes image and returns a numpy array of tuples (R,G,B)
-def extractRGB(filepath):
-    return cv2.imread(filepath)
 
-def videoDataFormatter():
-    return None
+def getCNNdata(CNNfolder='./'):
+
+    print '\n\nLoading training data...'
+    [trainingDir] \
+        = glob(CNNfolder + DATABASE_DIR + VIDEO_FOLDER + 'Training')
+    trainingLabelDict \
+        = createLabelDict(CNNfolder + DATABASE_DIR + LABEL_FOLDER + 'Training/')
+    trainingX, trainingY \
+        = retrieveDataFrom(trainingDir, trainingLabelDict)
+    trainingX = trainingX.reshape(-1, 1, trainingX.shape[1], trainingX.shape[2])
+
+    print '\n\nLoading validation data...'
+    [validationDir] \
+        = glob(CNNfolder + DATABASE_DIR + VIDEO_FOLDER + 'Development')
+    validationLabelDict \
+        = createLabelDict(CNNfolder + DATABASE_DIR + LABEL_FOLDER + 'Development/')
+    validationX, validationY \
+        = retrieveDataFrom(validationDir, validationLabelDict)
+    validationX = validationX.reshape(-1, 1, validationX.shape[1], validationX.shape[2])
+
+    print '\n\nLoading testing data...'
+    [testingDir] \
+        = glob(CNNfolder + DATABASE_DIR + VIDEO_FOLDER + 'Testing')
+    testingLabelDict \
+        = createLabelDict(CNNfolder + DATABASE_DIR + LABEL_FOLDER + 'Testing/')
+    testingX, testingY \
+        = retrieveDataFrom(testingDir, testingLabelDict)
+    testingX = testingX.reshape(-1, 1, testingX.shape[1], testingX.shape[2])
+
+    return trainingX, trainingY, validationX, validationY, testingX, testingY
+
+# retrieve videos from subdirectories within current directory
+def retrieveDataFrom(directory, labelsDict):
+    videoPaths = np.array([ glob(x + '/*') for x in glob(directory + '/[!p]*') ]).flatten()
+    images = []
+    labels = []
+    for videoPath in videoPaths:
+        filename = videoPath.split('/')[-1][:-4]  # e.g. 203_1_Northwind_video
+        patientNum = filename[:5]  # e.g. 203_1
+        # print patientNum, 'has label', labelsDict[patientNum]
+        picklePath = directory + '/pickledData/' + filename + '.save'
+        if os.path.exists(picklePath):  # check if it exists first
+            print 'Loading pickled data of ' + filename
+            curImages = pickle.load(open(picklePath, 'r'))
+        else:
+            print 'Extracting data for ' + filename
+            curImages = extractImagesfromVideo(videoPath)
+            if not os.path.exists(directory + '/pickledData/'):
+                os.mkdir(directory + '/pickledData/')  # pickle dir doesn't exist so make it
+            print 'Pickling data in ' + picklePath
+            pickle.dump(curImages, open(picklePath, 'w'))
+        images.extend(curImages)  # add images to list of examples
+        labels.extend([labelsDict[patientNum]] * len(curImages))  # assign corresponding label
+    return np.array(images), np.array(labels, dtype='int32')
+
+
+if __name__ == '__main__':
+    trainingX, trainingY, validationX, validationY, testingX, testingY \
+        = getCNNdata('../')
+
+    # print trainingX.shape
+    # print trainingY.shape
+    # print validationX.shape
+    # print validationY.shape
+    # print testingX.shape
+    # print testingY.shape
