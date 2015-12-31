@@ -18,15 +18,15 @@ def buildCNN():
         layers=[('input', lasagne.layers.InputLayer),
                 ('conv1', lasagne.layers.Conv1DLayer),
                 ('pool1', lasagne.layers.MaxPool1DLayer),
-                ('dropout1', layers.DropoutLayer),
+                ('dropout1', lasagne.layers.DropoutLayer),
                 ('conv2', lasagne.layers.Conv1DLayer),
                 ('pool2', lasagne.layers.MaxPool1DLayer),
-                ('dropout2', layers.DropoutLayer),
+                ('dropout2', lasagne.layers.DropoutLayer),
                 ('conv3', lasagne.layers.Conv1DLayer),
                 ('pool3', lasagne.layers.MaxPool1DLayer),
-                ('dropout3', layers.DropoutLayer)
+                ('dropout3', lasagne.layers.DropoutLayer),
                 ('hidden4', lasagne.layers.DenseLayer),
-                ('dropout4', layers.DropoutLayer),
+                ('dropout4', lasagne.layers.DropoutLayer),
                 ('hidden5', lasagne.layers.DenseLayer),
                 ('output', lasagne.layers.DenseLayer),
                 ],
@@ -77,7 +77,7 @@ def loadAudioData():
     return data
 
 
-def trainCNN(data, params, save=True, load=False):
+def trainCNN(data, save=True, load=False):
     # get our data
     X = data['X']
     Y = data['Y']
@@ -88,7 +88,7 @@ def trainCNN(data, params, save=True, load=False):
         network = utils.loadNet('audioCNN.pickle')
     else:
         # build network architecture
-        network = buildCNN(params)
+        network = buildCNN()
         # train the network
         network.fit(X, Y)
 
@@ -110,17 +110,26 @@ def testCNN(network, inputs, expectedLabels):
 
 
 def main():
-    # load our data
     data = loadAudioData()
-    # build the network
-    print "Building the network..."
-    network = buildCNN()
-    # train the network
-    print "Training the network..."
-    network.fit(data['X'], data['Y'])
-    # test the network
-    print "Testing the network..."
+
+    # Uncomment if network not saved
+    # print "Building the network..."
+    # network = buildCNN()
+    #
+    # print "Training the network..."
+    # network.fit(data['X'], data['Y'])
+    #
+    # print("Saving the network...")
+    # utils.saveNet('audioCNN.pickle', network)
+
+    print("Loading the network...")
+    network = utils.loadNet('audioCNN.pickle')
+
+    print "Testing the network with test set..."
     testCNN(network, data['testX'], data['testY'])
+
+    print "Testing the network with training/val set..."
+    testCNN(network, data['X'], data['Y'])
 
 
 if __name__ == '__main__':
