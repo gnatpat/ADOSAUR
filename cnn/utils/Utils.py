@@ -1,5 +1,6 @@
 import csv
 import os
+from sklearn.metrics import classification_report, accuracy_score
 
 # E.g. createLabelDict('../rawData/labels/Training/')
 # Takes path to data file and outputs dictionary with key
@@ -11,6 +12,14 @@ def createLabelDict(labelPath):
         for label in csvReader:
             labelDict[file[:-4]] = int(label[0])
     return labelDict
+
+# Tests a network using test data and expected labels,
+# printing the classification report and accuracy score
+def testCNN(network, inputs, expectedLabels):
+    print("\nTesting network...")
+    predictions = network.predict(inputs)
+    print(classification_report(expectedLabels, predictions))
+    print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
 
 # Saves network
 def saveNet(filename=None, network=None):
