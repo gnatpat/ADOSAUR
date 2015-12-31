@@ -1,4 +1,4 @@
-import cv2
+import csv
 import os
 
 # E.g. createLabelDict('../rawData/labels/Training/')
@@ -12,13 +12,13 @@ def createLabelDict(labelPath):
             labelDict[file[:-4]] = int(label[0])
     return labelDict
 
-# pickel dat net duh
+# Saves network
 def saveNet(filename=None, network=None):
     f = open(filename, 'wb')
     cPickle.dump(network, f, -1)
     return None
 
-# load da net 4rom fyl
+# Loads network
 def loadNet(filename=None):
     f = open(filename, 'rb')
     net = cPickle.load(f)
