@@ -112,6 +112,7 @@ def retrieveDataFrom(directory, labelsDict):
     images = []
     labels = []
     for videoPath in videoPaths:
+        videoPath = ''.join(videoPath)
         filename = videoPath.split('/')[-1][:-4]  # e.g. 203_1_Northwind_video
         patientNum = filename[:5]  # e.g. 203_1
         # print patientNum, 'has label', labelsDict[patientNum]
