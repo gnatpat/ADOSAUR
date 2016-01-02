@@ -62,8 +62,10 @@ def extractFramesFromVideo(filepath, outputPath):
 
     second = 0  # current second in video
     capRate = 5  # time between captures
-    while vc.isOpened(): # still receiving data
-        vc.set(0, second * 1000)  # set capturing position to (second * 1000) ms
+    numberOfFrames = vc.get(7)
+    currentFrame = 0
+    vc.set(0, 0);
+    while currentFrame < numberOfFrames: # still receiving data
         success, image = vc.read()
         if success:
             cv2.imwrite(outputPath + filename + '_' + str(second) + '.jpg', image)
@@ -71,6 +73,8 @@ def extractFramesFromVideo(filepath, outputPath):
         else:
             break  # couldn't read image
 
+        vc.set(0, second * 1000)  # set capturing position to (second * 1000) ms
+        currentFrame = vc.get(1)
     vc.release()  # release camera
     return None
 
@@ -108,7 +112,11 @@ def getCNNdata(CNNfolder='./'):
 
 # retrieve videos from subdirectories within current directory
 def retrieveDataFrom(directory, labelsDict):
-    videoPaths = np.array([ glob(x + '/*') for x in glob(directory + '/[!p]*') ]).flatten()
+    rawVideoPaths = ([ glob(x + '/*') for x in glob(directory + '/[!p]*') ])
+    videoPaths = []
+    for folder in rawVideoPaths:
+        for path in folder:
+            videoPaths.append(path)
     images = []
     labels = []
     for videoPath in videoPaths:
