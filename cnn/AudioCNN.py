@@ -25,7 +25,7 @@ def buildCNN():
 
         input_shape=(None, 1, 40000),
         conv1_num_filters=5, conv1_filter_size=3, pool1_pool_size=2,
-        hidden1_num_units=50,
+        hidden1_num_units=500,
         hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
         output_num_units=64,
         output_nonlinearity=lasagne.nonlinearities.sigmoid,

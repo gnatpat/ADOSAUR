@@ -9,13 +9,7 @@ def extractAudioData(audioPath):
   # if two channels are used, take data from the first one
   if len(data.shape) == 2:
     data = data[:, 0]
-  data = np.array(data, dtype='float64')
-  sumData = np.sum(data, dtype='float64')
-  length = len(data)
-  normalised = np.zeros(shape=(length), dtype='float64')
-  for i in xrange(length):
-      normalised[i] = data[i]/length
-  return normalised
+  return np.array(data, dtype='float64')
 
 
 def splitData(dataArray, sizeChunks):
