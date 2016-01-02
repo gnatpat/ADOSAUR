@@ -9,7 +9,13 @@ def extractAudioData(audioPath):
   # if two channels are used, take data from the first one
   if len(data.shape) == 2:
     data = data[:, 0]
-  return data
+  data = np.array(data, dtype='float64')
+  sumData = np.sum(data, dtype='float64')
+  length = len(data)
+  normalised = np.zeros(shape=(length), dtype='float64')
+  for i in xrange(length):
+      normalised[i] = data[i]/length
+  return normalised
 
 
 def splitData(dataArray, sizeChunks):
@@ -46,7 +52,7 @@ def buildAudioData(rawAudioPath):
 
 def buildExamplesAndTargets(dictionary, path):
   # initialise the arrays to store inputs (X) and corresponding labels (Y)
-  X = np.empty(shape=(1, 1, 10000), dtype='float64')
+  X = np.empty(shape=(1, 1, 40000), dtype='float64')
   Y = np.empty(shape=(1), dtype='int32')
 
   os.chdir(path)
@@ -57,7 +63,7 @@ def buildExamplesAndTargets(dictionary, path):
       # extract the audio data for the current file
       audioData = extractAudioData(path + file)
       # split the audio data into arrays of size 10000
-      splitArray = splitData(audioData, 10000)
+      splitArray = splitData(audioData, 40000)
       numExamples = len(splitArray)
       # create the corresponding labels to add
       yLabels = np.zeros((numExamples), dtype='int32')

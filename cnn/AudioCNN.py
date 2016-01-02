@@ -7,54 +7,37 @@ from utils import AudioUtils as AU
 from utils import Utils as utils
 from nolearn.lasagne import NeuralNet
 from nolearn.lasagne import TrainSplit
-from sklearn.metrics import classification_report, accuracy_score
-
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+from collections import Counter
 
 # Builds the network
 def buildCNN():
 
     network = NeuralNet(
         # specify the layers
-        layers=[('input', lasagne.layers.InputLayer),
-                ('conv1', lasagne.layers.Conv1DLayer),
-                ('pool1', lasagne.layers.MaxPool1DLayer),
-                ('dropout1', lasagne.layers.DropoutLayer),
-                ('conv2', lasagne.layers.Conv1DLayer),
-                ('pool2', lasagne.layers.MaxPool1DLayer),
-                ('dropout2', lasagne.layers.DropoutLayer),
-                ('conv3', lasagne.layers.Conv1DLayer),
-                ('pool3', lasagne.layers.MaxPool1DLayer),
-                ('dropout3', lasagne.layers.DropoutLayer),
-                ('hidden4', lasagne.layers.DenseLayer),
-                ('dropout4', lasagne.layers.DropoutLayer),
-                ('hidden5', lasagne.layers.DenseLayer),
-                ('output', lasagne.layers.DenseLayer),
-                ],
+        layers=[
+             ('input', lasagne.layers.InputLayer),
+             ('conv1', lasagne.layers.Conv1DLayer),
+             ('pool1', lasagne.layers.MaxPool1DLayer),
+             ('hidden1', lasagne.layers.DenseLayer),
+             ('output', lasagne.layers.DenseLayer),
+             ],
 
-        # layer parameters
-        input_shape = (None, 1, 10000),
-        conv1_num_filters=32, conv1_filter_size=3, pool1_pool_size=2,
-        dropout1_p=0.1,
-        conv2_num_filters=64, conv2_filter_size=2, pool2_pool_size=2,
-        dropout2_p=0.2,
-        conv3_num_filters=128, conv3_filter_size=2, pool3_pool_size=2,
-        dropout3_p=0.3,
-        hidden4_num_units=500,
-        dropout4_p=0.5,
-        hidden5_num_units=500,
-        output_num_units = 64,  # 64 target values for the depression indices
-        output_nonlinearity = lasagne.nonlinearities.softmax,
+        input_shape=(None, 1, 40000),
+        conv1_num_filters=5, conv1_filter_size=3, pool1_pool_size=2,
+        hidden1_num_units=50,
+        hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
+        output_num_units=64,
+        output_nonlinearity=lasagne.nonlinearities.sigmoid,
 
-        # optimization method
-        update_learning_rate=0.01,
+        # learning parameters
+        update_learning_rate=0.0001,
         update_momentum=0.9,
 
-        regression = False, # classification problem
-        max_epochs = 1,
-        verbose = 1,
-
-        # split the training data into training and validation using 30% for val
-        train_split = TrainSplit(eval_size=0.3),
+        # miscellaneous
+        regression=False,
+        max_epochs=5,
+        verbose=2,
     )
 
     return network
@@ -103,33 +86,31 @@ def trainCNN(data, save=True, load=False):
 # Tests a network using test data and expected labels,
 # printing the classification report and accuracy score
 def testCNN(network, inputs, expectedLabels):
-    # TODO: need to fix it, always gives the same accuracy...
     predictions = network.predict(inputs)
-    print(classification_report(expectedLabels, predictions))
+    print ("Predictions: ", Counter(predictions))
+    print ("Expected: ", Counter(expectedLabels))
+    # print(classification_report(expectedLabels, predictions))
+    # print(confusion_matrix(expectedLabels, predictions))
     print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
 
 
 def main():
     data = loadAudioData()
 
-    # Uncomment if network not saved
-    # print "Building the network..."
-    # network = buildCNN()
-    #
-    # print "Training the network..."
-    # network.fit(data['X'], data['Y'])
-    #
-    # print("Saving the network...")
-    # utils.saveNet('audioCNN.pickle', network)
+    print "Building the network..."
+    network = buildCNN()
 
-    print("Loading the network...")
-    network = utils.loadNet('audioCNN.pickle')
+    print "Training the network..."
+    network.fit(data['X'], data['Y'])
+
+    print("Saving the network...")
+    utils.saveNet('audioCNN.pickle', network)
+
+    # print("Loading the network...")
+    # network = utils.loadNet('audioCNN.pickle')
 
     print "Testing the network with test set..."
     testCNN(network, data['testX'], data['testY'])
-
-    print "Testing the network with training/val set..."
-    testCNN(network, data['X'], data['Y'])
 
 
 if __name__ == '__main__':
