@@ -46,14 +46,17 @@ def buildAudioData(rawAudioPath):
 
 def buildExamplesAndTargets(dictionary, path):
   # initialise the arrays to store inputs (X) and corresponding labels (Y)
-  X = np.empty(shape=(1, 1, 40000), dtype='float64')
-  Y = np.empty(shape=(1), dtype='int32')
+  X = np.empty(shape=(1,1,40000), dtype='float64')
+  X[1:]
+  Y = np.empty(shape=(0), dtype='int32')
 
   os.chdir(path)
+  i = 0
   # iterate through the given dictionary
   for key, value in dictionary.iteritems():
     # iterate through the files corresponding to the patient (key)
     for file in glob.glob("*" + key + "*.wav"):
+      print file
       # extract the audio data for the current file
       audioData = extractAudioData(path + file)
       # split the audio data into arrays of size 10000
@@ -66,4 +69,7 @@ def buildExamplesAndTargets(dictionary, path):
       # insert the data and labels to X and Y arrays
       X = np.concatenate((X,splitArray))
       Y = np.concatenate((Y, yLabels))
+  # remove first element of X as this one is added when X is initialised
+  # and is thus indesirable
+  X = X[1:]
   return X, Y
