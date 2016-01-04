@@ -9,6 +9,7 @@ from nolearn.lasagne import NeuralNet
 from nolearn.lasagne import TrainSplit
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 from collections import Counter
+from sPickle import Pickler
 
 # Builds the network
 def buildCNN():
@@ -24,10 +25,10 @@ def buildCNN():
              ],
 
         input_shape=(None, 1, 40000),
-        conv1_num_filters=5, conv1_filter_size=3, pool1_pool_size=2,
+        conv1_num_filters=5, conv1_filter_size=2, pool1_pool_size=2,
         hidden1_num_units=500,
         hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
-        output_num_units=64,
+        output_num_units=4,
         output_nonlinearity=lasagne.nonlinearities.sigmoid,
 
         # learning parameters
@@ -36,8 +37,8 @@ def buildCNN():
 
         # miscellaneous
         regression=False,
-        max_epochs=5,
-        verbose=2,
+        max_epochs=10,
+        verbose=1,
     )
 
     return network
@@ -89,7 +90,7 @@ def testCNN(network, inputs, expectedLabels):
     predictions = network.predict(inputs)
     print ("Predictions: ", Counter(predictions))
     print ("Expected: ", Counter(expectedLabels))
-    # print(classification_report(expectedLabels, predictions))
+    print(classification_report(expectedLabels, predictions))
     # print(confusion_matrix(expectedLabels, predictions))
     print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
 

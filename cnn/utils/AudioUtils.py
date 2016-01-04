@@ -2,6 +2,7 @@ import scipy.io.wavfile
 import os
 import glob
 import numpy as np
+import pickle
 from Utils import createLabelDict
 
 def extractAudioData(audioPath):
@@ -54,10 +55,19 @@ def buildExamplesAndTargets(dictionary, path):
   for key, value in dictionary.iteritems():
     # iterate through the files corresponding to the patient (key)
     for file in glob.glob("*" + key + "*.wav"):
-      # extract the audio data for the current file
-      audioData = extractAudioData(path + file)
-      # split the audio data into arrays of size 10000
-      splitArray = splitData(audioData, 40000)
+      if os.path.isfile("pickledData/" + file[:-4] + ".save"):
+          print "Loading pickled data of " + file[:-4] + ".save"
+          splitArray = pickle.load(open("pickledData/" + file[:-4] + ".save", 'r'))
+      else:
+          print "Extracting data for " + file
+          # extract the audio data for the current file
+          audioData = extractAudioData(path + file)
+          # split the audio data into arrays of size 40000
+          splitArray = splitData(audioData, 40000)
+          if not os.path.isdir('pickledData'):
+            os.mkdir('pickledData/')  # pickle dir doesn't exist so make it
+          print 'Pickling data for ' + file
+          pickle.dump(splitArray, open('pickledData/' + file[:-4] + ".save", 'w'))
       numExamples = len(splitArray)
       # create the corresponding labels to add
       yLabels = np.zeros((numExamples), dtype='int32')

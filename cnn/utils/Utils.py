@@ -112,7 +112,21 @@ def createLabelDict(labelPath):
     for file in os.listdir(labelPath):
         csvReader = csv.reader(open(labelPath + file))
         for label in csvReader:
-            labelDict[file[:-4]] = int(label[0])
+            labelToAdd = int(label[0])
+            # 0-9 minimal depression
+            if labelToAdd in range(0,10):
+                labelToAdd = 0
+            # 10-18 = mild depression
+            elif labelToAdd in range(10,19):
+                labelToAdd = 1
+            # 19-29 = moderate depression
+            elif labelToAdd in range(19,30):
+                labelToAdd = 2
+            # 30-63 = severe depression
+            elif labelToAdd in range(30,64):
+                labelToAdd = 3
+
+            labelDict[file[:-4]] = labelToAdd
     return labelDict
 
 # pickle the network
