@@ -1,0 +1,197 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+
+\usepackage{graphicx}
+\graphicspath{ {/homes/rgu13/Year3/GroupProject/} }
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}} % optional; useful if paragraphs are to be numbered
+
+\begin{document}
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics[scale=0.05]{logo.png}\\[1cm] 
+
+%----------------------------------------------------------------------------------------
+
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Imperial College London}\\[1.5cm]
+\textsc{\Large Software Engineering Practice\\
+Group Project}\\[0.5cm] 
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Automatic detection of depression from speech and facial expressions}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.5\textwidth}
+\begin{flushleft} \large
+\emph{Authors:}\\
+Sacha \textsc{Cohen-Scali}\\
+Tom E. H. \textsc{Bartissol}\\
+Dane G. \textsc{Sherburn}\\
+Hyun Ah \textsc{Lee}\\
+Nathan \textsc{Patel}\\
+Roxana G. \textsc{Ursu}\\
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+Dr. Bj$\ddot{o}$rn W. \textsc{Schuller} % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[4cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Executive summary}
+ 
+\newpage
+
+\section{Introduction}
+
+\newpage
+
+\section{Design and Implementation}  
+
+Find document for these points
+
+Summary of project history
+	Research neural networks (architecture, training, etc.)
+	Implement neural network
+	Implement web app
+	Link neural network to web app
+	Research CNN and relevant libraries
+	Implement CNN
+	Optimisation
+
+Originally planned to writing CNN completely - realised this is not a practical method
+
+\newpage
+
+\section{Evaluation}  
+ 
+\newpage
+
+\section{Conclusion and future extensions}  
+ 
+\newpage
+
+\section{Project management}  
+\subsection{Team management}
+\subsubsection{Methodologies}
+\textbf{Scrum}\\
+Our team used Scrum as the main agile method for the project management.\\
+
+Scrum is an agile software development methodology which concentrate on how the tasks are managed in a team-based development environment. The Scrum methodology consists of team roles, ceremonies, artifacts, and rules. \\
+
+There are three key roles in a Scrum team: the Product Owner, the ScrumMaster and the Development Team that work with three artifacts: the Product, the Sprint Backlogs and the Burndown Chart. In our project, the Product Owner was our supervisor, Dr. Bjorn W. Schuller. He was the project’s key stakeholder who conveyed the overall mission and vision of the product which our team was building. The ScrumMaster role was undertaken by Sacha. He was mainly in charge with arranging the meetings, making sure that everyone is aware of the deadlines we had and maintained the product backlog. The rest of us were the Development team. However, we have made a small alteration by allowing any member of the team to insert new cards in the backlog. \\
+
+The Scrum ceremonies (or Scrum events) are: the Sprint, Sprint Planning, the Daily Stand-up , the Sprint Review and the Retrospective. \\
+
+A sprint is a limited amount of time during which a specific work is completed and made ready for review. In our case, a Sprint usually lasted one week (Friday to Friday) so we tried to break down the work into smaller tasks that could have been completed in a week.
+During the Sprint Planning meetings, the  team decides which items in the backlog will be delivered and how much time will take to deliver them. We usually had our Sprint Planning meetings every Fridays, 11am to 12pm (when everyone was free). \\
+
+The Daily Stand-up is a 15-minute time-boxed event for the Development Team to synchronize activities and create a plan for the next 24 hours. We tried to meet everyday (usually at lunch time) and briefly discussed what we managed to do the day before, what we are planning to do next and how we are going to complete the next tasks. \\
+
+The Sprint Review is held at the end of the Sprint to inspect the Increment and adapt the Product Backlog if needed. We had a Sprint review twice a week (Fridays and Tuesdays). Fridays, after our regular sprint planning meeting, the group would update the Backlog and made all the necessary changes if unexpected events have occurred during the sprint. For example, a certain task might have taken longer or turned up to be more complicated than expected. We also meet every Tuesday (from 10 to 11am) for a Sprint Review. This way we were able to update the Backlog (if needed) just in time for the next Sprint Planning meeting, made any changes needed before the end of the Sprint and make sure that everyone is making progress. \\
+
+Finally, the Sprint Retrospective is an opportunity for the Scrum Team to inspect itself and create a plan for improvements to be enacted during the next Sprint. We had our Sprint Retrospective on Tuesdays, after the Sprint Review and prior to the next Sprint Planning.\\
+
+\textbf{Extreme Programming}\\ 
+As a complementary method for our group project, we have decided to use a technique from Extreme Programming method. That is pair programming. \\
+
+We all had very different timetables during the term and we wanted to have at least 2 people understanding well any given part of the project. Plus working in a team, rather than as an individual, new ideas were encouraged and the probability of getting stuck  was limited. But, as we just mentioned, meeting as a group every day was rather impossible so we allocated each task to 2 or 3 team members, depending on the complexity of the task. The smaller group would try to meet daily during that sprint and try to complete the task they have been allocated.\\
+
+\textbf{Supervisor meetings}\\
+We tried to talk with our supervisor as often as this was possible in order to gain valuable feedback and to help us adapt our tasks and plan our further work. However, since our supervisor was in Germany during the term, we managed to arrange just a few number of Skype calls, but they were very informative and helped us understand better what the final product should be.\\
+
+We also had a few meeting with two of the research associates, Eduardo De Brito Lima Ferreira Coutinho and George Trigeorgis. These meetings were were also very useful in terms of feedback, but also got some good suggestions on what technologies, what kind of libraries or languages to use in our project. \\
+
+\textbf{Meeting summaries}
+During every meeting (twice a week group meetings and supervisor meetings) we wrote down notes on what everyone has done, any challenges that the team faces and what is the future work that needs to be done. We mainly used the whiteboards in the meeting rooms and took a picture of everything we wrote done and upload it to Slack. This way, each team member was able to find out quickly the decision we took during our meetings.\\
+	
+\subsubsection{Tools}
+\textbf{Trello[*]}\\
+Trello is an online project management web application that allows multiple users to view and manage a board. It was very useful with our agile methodology as we can have different lists to implement the whole Scrum process (Backlog, Current Sprint, Testing and Done) as well as a static list with links to References and Resources which we need to consult on a regular basis. It also allowed us to assign each task to a person or a group of people.\\
+
+\textbf{Google Calendar[*]}\\
+As a group of six, managing the time is not trivial, so we have decided to use Google Calendar in order to find common free time - and following Scrum practices, we scheduled periodic room bookings in labs for our Stand-Up meetings.\\
+
+\textbf{Slack[*]}\\
+We used Slack for messaging as we can have different channels for different topics (general, report or research for example), therefore keeping the discussions organised. Another advantage is that Trello, GitHub and Google Calendar can all be integrated with Slack in order to receive notifications whenever a change happened (new task, new commit or new event for example).\\
+
+
+\textbf{Facebook[*] and Whatsapp[*] groups and chat}\\
+In addition to Slack, we also used Facebook and Whatsapp groups and chat since all of us have these two applications on their phone and it was a bit quicker to send immediate messages. However, both Facebook and Whatsapp chats can become very messy and hard to follow or look back to a specific conversation and that is why we tried to document everything in Slack.\\
+
+\textbf{Google Docs[*]}\\
+We used Google Docs mainly for our reports. We found it easier to have multiple people writing on the same google document than having a LaTex file pushed to Gihub. We had lots of nasty conflicts when more people wrote on the same LaTex at the same time. \\
+
+\textbf{Skype[*] }\\
+Skype was another tool we used to communicate with each other when meeting in person was not possible. During the term, we used Skype mainly to talk with our supervisor and during the winter break we used it to talk with each other since we were in different cities, different countries. \\
+
+
+\subsection{Engineering Practices}
+\subsubsection{Workflow and version control}
+	
+
+\subsubsection{Github [*]}
+
+\subsection{Design Process}
+	
+	
+	
+	
+
+
+\newpage
+
+\section{Bibliography}  
+
+\newpage
+
+\section{Appendix (e.g. user guide)}
+\end{document}
