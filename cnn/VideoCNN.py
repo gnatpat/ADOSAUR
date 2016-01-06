@@ -2,13 +2,15 @@ import lasagne
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
 from nolearn.lasagne import NeuralNet
+from nolearn.lasagne import PrintLayerInfo
+
 import numpy as np
 import pickle
 
 from utils.VideoUtils import getCNNdata
 from utils.Utils import testCNN
 
-UNITS_ON_BDI = 64
+UNITS_ON_BDI = 3
 
 
 # Loads training, validation and testing data
@@ -40,13 +42,24 @@ def buildCNN(data):
         # architecture
         layers=[
             ('input', layers.InputLayer),
-            ('conv1', layers.Conv2DLayer),
-            ('pool1', layers.MaxPool2DLayer),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.MaxPool2DLayer, {'pool_size': (2, 2)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.MaxPool2DLayer, {'pool_size': (2, 2)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.MaxPool2DLayer, {'pool_size': (2, 2)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
+            (layers.MaxPool2DLayer, {'pool_size': (2, 2)}),
             ('hidden2', layers.DenseLayer),
             ('output', layers.DenseLayer),
             ],
         input_shape=data['input_shape'],
-        conv1_num_filters=5, conv1_filter_size=(3, 3), pool1_pool_size=(2, 2),
         hidden2_num_units=50,
         output_num_units=data['output_dim'],
         output_nonlinearity=lasagne.nonlinearities.softmax,
@@ -57,8 +70,8 @@ def buildCNN(data):
 
         # miscellaneous
         regression=False,
-        max_epochs=3,
-        verbose=1,
+        max_epochs=1,
+        verbose=3,
     )
 
     # TODO: pickle trained network (after we've optimised)
@@ -73,12 +86,17 @@ def CNN(data):
     # train the network
     print("Training network...\n")
     network.fit(data['trainingX'], data['trainingY'])
-
     return network
 
 def main():
     data = loadData()
+
     network = CNN(data)
+    
+    network.initialize()
+    # layer_info = PrintLayerInfo()
+    # layer_info(network)
+
     testCNN(network, data['testingX'], data['testingY'])
 
 if __name__ == '__main__':

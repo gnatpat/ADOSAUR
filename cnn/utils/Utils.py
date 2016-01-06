@@ -10,7 +10,8 @@ def createLabelDict(labelPath):
     for file in os.listdir(labelPath):
         csvReader = csv.reader(open(labelPath + file))
         for label in csvReader:
-            labelDict[file[:-4]] = int(label[0])
+            labelNo = int(int(label[0])/16)
+            labelDict[file[:-4]] = labelNo
     return labelDict
 
 # Tests a network using test data and expected labels,

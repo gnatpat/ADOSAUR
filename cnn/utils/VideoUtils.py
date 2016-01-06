@@ -119,6 +119,7 @@ def retrieveDataFrom(directory, labelsDict):
             videoPaths.append(path)
     images = []
     labels = []
+    videoPaths = videoPaths[0:8]
     for videoPath in videoPaths:
         videoPath = ''.join(videoPath)
         filename = videoPath.split('/')[-1][:-4]  # e.g. 203_1_Northwind_video
