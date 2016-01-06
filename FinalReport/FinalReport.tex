@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{float}
 
 \usepackage{graphicx}
 \graphicspath{ {/homes/rgu13/Year3/GroupProject/} }
@@ -154,31 +155,63 @@ We also had a few meeting with two of the research associates, Eduardo De Brito 
 During every meeting (twice a week group meetings and supervisor meetings) we wrote down notes on what everyone has done, any challenges that the team faces and what is the future work that needs to be done. We mainly used the whiteboards in the meeting rooms and took a picture of everything we wrote done and upload it to Slack. This way, each team member was able to find out quickly the decision we took during our meetings.\\
 	
 \subsubsection{Tools}
-\textbf{Trello[*]}\\
-Trello is an online project management web application that allows multiple users to view and manage a board. It was very useful with our agile methodology as we can have different lists to implement the whole Scrum process (Backlog, Current Sprint, Testing and Done) as well as a static list with links to References and Resources which we need to consult on a regular basis. It also allowed us to assign each task to a person or a group of people.\\
+\textbf{Trello\cite{trello}}\\
 
-\textbf{Google Calendar[*]}\\
+Trello is an online project management web application that allows multiple users to view and manage a board. It was very useful with our agile methodology as we can have different lists to implement the whole Scrum process (Backlog, Current Sprint, Testing and Done) as well as a static list with links to References and Resources which we need to consult on a regular basis. It also allowed us to assign each task to a person or a group of people.\\
+\begin{figure}[H]
+
+\centering
+
+\includegraphics[scale=0.6]{trello}
+\caption{Trello}
+\end{figure}
+
+\textbf{Google Calendar\cite{googlecal}}\\
 As a group of six, managing the time is not trivial, so we have decided to use Google Calendar in order to find common free time - and following Scrum practices, we scheduled periodic room bookings in labs for our Stand-Up meetings.\\
 
-\textbf{Slack[*]}\\
+\textbf{Slack\cite{slack}}\\
+
 We used Slack for messaging as we can have different channels for different topics (general, report or research for example), therefore keeping the discussions organised. Another advantage is that Trello, GitHub and Google Calendar can all be integrated with Slack in order to receive notifications whenever a change happened (new task, new commit or new event for example).\\
+\begin{figure}[H]
 
+\centering
 
-\textbf{Facebook[*] and Whatsapp[*] groups and chat}\\
+\includegraphics[scale=0.6]{slack}
+\caption{Slack}
+\end{figure}
+
+\textbf{Fagithubcebook\cite{facebook} and Whatsapp \cite{whatsapp} groups and chat}\\
 In addition to Slack, we also used Facebook and Whatsapp groups and chat since all of us have these two applications on their phone and it was a bit quicker to send immediate messages. However, both Facebook and Whatsapp chats can become very messy and hard to follow or look back to a specific conversation and that is why we tried to document everything in Slack.\\
 
-\textbf{Google Docs[*]}\\
-We used Google Docs mainly for our reports. We found it easier to have multiple people writing on the same google document than having a LaTex file pushed to Gihub. We had lots of nasty conflicts when more people wrote on the same LaTex at the same time. \\
+\textbf{Google Docs \cite{googledocs}}\\
+We used Google Docs mainly for our reports. We found it easier to have multiple people writing on the same google document than having a LaTex file pushed to GiHub. We had lots of nasty conflicts when more people wrote on the same LaTex at the same time. \\
 
-\textbf{Skype[*] }\\
+\textbf{Skype \cite{skype} }\\
 Skype was another tool we used to communicate with each other when meeting in person was not possible. During the term, we used Skype mainly to talk with our supervisor and during the winter break we used it to talk with each other since we were in different cities, different countries. \\
 
 
 \subsection{Engineering Practices}
 \subsubsection{Workflow and version control}
-	
 
-\subsubsection{Github [*]}
+\begin{figure}[H]
+
+\centering
+
+\includegraphics[scale=0.7]{workflow}
+\caption{Workflow}
+\end{figure}
+
+	For source code management and version control, we have chosen \textbf{GitHub}. Together with \verb|GitHub|, we used \verb|Trello| cards to keep track of the stage of each task.\\
+	
+	Everybody in the group was able to add tasks to Backlog section on Trello. During our weekly meetings, we decided which tasks are most relevant, have higher priority, and we added them to Sprint Candidates section. The next stage was estimating how long should the task take and allocating each task to a person or, in most cases, a group of people. \\
+	
+	After the meeting, the smaller groups meet and decide how to tackle the new task. They would add the task to Current Sprint section, create a new branch on Github and start the implementation accompanied by testing. Once all the tests pass, the group would check for style and correctness of what they have just implemented. In this stage, the feature is shared with the entire group and if the group agrees that the feature is indeed what our project needed, the branch is merged back in master. Any conflicts that occur are fixed and the task is moved to the "Done" section on TrelloFacebook board. \\
+	
+The team is ready now for another meeting and another task.    
+
+\subsubsection{Gitub \cite{github} }
+We have decided to use GitHub as our project code management and version control because of it’s simplicity and because it is easy accessible by everyone in the group. Also, we all used Git before and we were comfortable with it. 
+
 
 \subsection{Design Process}
 	
@@ -190,8 +223,47 @@ Skype was another tool we used to communicate with each other when meeting in pe
 \newpage
 
 \section{Bibliography}  
+\begin{thebibliography}{9}
+\bibitem{trello} 
+Trello 
+\\\texttt{https://trello.com/}
+
+\bibitem{googlecal} 
+Google Calendar
+\\\texttt{https://calendar.google.com/calendar}
+
+\bibitem{slack} 
+Slack 
+\\\texttt{https://slack.com/}
+
+
+\bibitem{facebook} 
+Facebook
+\\\texttt{https://www.facebook.com/}
+
+\bibitem{whatsapp} 
+WhatsApp
+\\\texttt{https://www.whatsapp.com/}
+
+\bibitem{googledocs} 
+Google Docs
+\\\texttt{https://www.google.co.uk/docs}
+
+
+\bibitem{skype} 
+Skype
+\\\texttt{https://www.skype.com/}
+
+
+
+\bibitem{github} 
+GitHub 
+\\\texttt{https://github.com/}
+\end{thebibliography}
+
 
 \newpage
 
-\section{Appendix (e.g. user guide)}
+\appendix
+\section{Appendix }
 \end{document}

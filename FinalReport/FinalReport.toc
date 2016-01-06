@@ -7,9 +7,9 @@
 \contentsline {subsection}{\numberline {6.1}Team management}{7}
 \contentsline {subsubsection}{\numberline {6.1.1}Methodologies}{7}
 \contentsline {subsubsection}{\numberline {6.1.2}Tools}{8}
-\contentsline {subsection}{\numberline {6.2}Engineering Practices}{9}
-\contentsline {subsubsection}{\numberline {6.2.1}Workflow and version control}{9}
-\contentsline {subsubsection}{\numberline {6.2.2}Github [*]}{9}
-\contentsline {subsection}{\numberline {6.3}Design Process}{9}
-\contentsline {section}{\numberline {7}Bibliography}{10}
-\contentsline {section}{\numberline {8}Appendix (e.g. user guide)}{11}
+\contentsline {subsection}{\numberline {6.2}Engineering Practices}{11}
+\contentsline {subsubsection}{\numberline {6.2.1}Workflow and version control}{11}
+\contentsline {subsubsection}{\numberline {6.2.2}Gitub \cite {github} }{12}
+\contentsline {subsection}{\numberline {6.3}Design Process}{12}
+\contentsline {section}{\numberline {7}Bibliography}{13}
+\contentsline {section}{\numberline {A}Appendix }{14}
