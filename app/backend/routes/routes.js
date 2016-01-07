@@ -1,11 +1,13 @@
 (function () {
   'use strict';
   var formidable = require('formidable'),
-    evaluateBDI = require('./utils.js').evaluateBDI;
+    evaluateBDI  = require('../utils.js').evaluateBDI,
+    bp           = require('body-parser');
 
   // api routes go here
-  module.exports = function (app, express) {
+  module.exports = function (app, express, models, passport) {
 
+    app.use(bp.json());
     // serve static
     app.use(express.static(express.dirname + '/../frontend'));
     /* gets a router instance */
@@ -18,6 +20,11 @@
       });
     });
 
+    // Import other routes into same file
+    require('./loginRoutes.js')(router, models, passport);
+    require('./userRoutes.js')(router, models, passport);
+    require('./textRoutes.js')(router, models, passport);
+    require('./recordRoutes.js')(router, models, passport);
     app.post('/upload', function (req, res) {
       // parse a file upload
       var form = new formidable.IncomingForm();
