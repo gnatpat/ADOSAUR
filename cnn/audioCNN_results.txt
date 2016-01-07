@@ -12,6 +12,8 @@ Layers params:
   hidden1_num_units = 400
 Update: nesterov_momentum
 Epochs: 10
+update_learning_rate=0.0001
+update_momentum=0.9
 
 Predictions:
 	Counter({0: 5060, 1: 1218, 3: 247, 2: 70})
@@ -46,6 +48,8 @@ Layers params:
   hidden1_num_units = 300
 Update: nesterov_momentum
 Epochs: 10
+update_learning_rate=0.0001
+update_momentum=0.9
 
 Predictions:
 	Counter({0: 4754, 1: 1405, 3: 302, 2: 134})
@@ -80,6 +84,8 @@ Layers params:
   hidden1_num_units = 300
 Update: nesterov_momentum
 Epochs: 50
+update_learning_rate=0.0001
+update_momentum=0.9
 
 Predictions:
 	Counter({0: 5369, 1: 990, 2: 172, 3: 64})
@@ -114,6 +120,8 @@ Layers params:
   hidden1_num_units = 1000
 Update: nesterov_momentum
 Epochs: 20
+update_learning_rate=0.0001
+update_momentum=0.9
 
 Predictions:
 	Counter({0: 5077, 1: 827, 3: 532, 2: 159})
@@ -131,3 +139,113 @@ avg / total       0.31      0.38      0.30      6595
 
 Accuracy:
 	0.38438210765731617
+
+--------------------------------------------------------------------------------
+
+Results for audioCNN5.pickle:
+Architecture:
+  [('input', <class 'lasagne.layers.input.InputLayer'>),
+  ('conv1', <class 'lasagne.layers.conv.Conv1DLayer'>),
+  ('pool1', <class 'lasagne.layers.pool.MaxPool1DLayer'>),
+  ('hidden1', <class 'lasagne.layers.dense.DenseLayer'>),
+  ('output', <class 'lasagne.layers.dense.DenseLayer'>)]
+Layers params:
+  conv1_num_filters = 4
+  conv1_filter_size = 2
+  pool1_pool_size   = 2
+  hidden1_num_units = 1000
+Update: nesterov_momentum
+Epochs: 100
+update_learning_rate=0.0001
+update_momentum=0.9
+
+Predictions:
+  Counter({0: 5161, 1: 722, 3: 379, 2: 333})
+Expected:
+	Counter({0: 2635, 1: 1814, 2: 1301, 3: 845})
+Classification report:
+              precision    recall  f1-score   support
+
+          0       0.42      0.81      0.55      2635
+          1       0.28      0.11      0.16      1814
+          2       0.11      0.03      0.05      1301
+          3       0.20      0.09      0.12       845
+
+avg / total       0.29      0.37      0.29      6595
+
+Accuracy:
+	0.37346474601971191
+
+--------------------------------------------------------------------------------
+
+Results for audioCNN6.pickle:
+Architecture:
+  [('input', <class 'lasagne.layers.input.InputLayer'>),
+  ('conv1', <class 'lasagne.layers.conv.Conv1DLayer'>),
+  ('pool1', <class 'lasagne.layers.pool.MaxPool1DLayer'>),
+  ('hidden1', <class 'lasagne.layers.dense.DenseLayer'>),
+  ('output', <class 'lasagne.layers.dense.DenseLayer'>)]
+Layers params:
+  conv1_num_filters = 4
+  conv1_filter_size = 2
+  pool1_pool_size   = 2
+  hidden1_num_units = 1000
+Update: nesterov_momentum
+Epochs: 50
+train_split=TrainSplit(eval_size=0.5)
+update_learning_rate=0.0001
+update_momentum=0.9
+
+Predictions:
+  Counter({0: 4758, 1: 968, 3: 519, 2: 350})
+Expected:
+	Counter({0: 2635, 1: 1814, 2: 1301, 3: 845})
+Classification report:
+              precision    recall  f1-score   support
+
+          0       0.44      0.80      0.57      2635
+          1       0.23      0.12      0.16      1814
+          2       0.31      0.08      0.13      1301
+          3       0.15      0.09      0.11       845
+
+avg / total       0.32      0.38      0.31      6595
+
+Accuracy:
+	0.37952994692949205
+
+--------------------------------------------------------------------------------
+
+Results for audioCNN7.pickle:
+Architecture:
+  [('input', <class 'lasagne.layers.input.InputLayer'>),
+  ('conv1', <class 'lasagne.layers.conv.Conv1DLayer'>),
+  ('pool1', <class 'lasagne.layers.pool.MaxPool1DLayer'>),
+  ('hidden1', <class 'lasagne.layers.dense.DenseLayer'>),
+  ('output', <class 'lasagne.layers.dense.DenseLayer'>)]
+Layers params:
+  conv1_num_filters = 5
+  conv1_filter_size = 3
+  pool1_pool_size   = 2
+  hidden1_num_units = 1000
+Update: nesterov_momentum
+Epochs: 50
+train_split=TrainSplit(eval_size=0.5)
+update_learning_rate=0.0001
+update_momentum=0.9
+
+Predictions:
+  Counter({0: 4949, 1: 767, 2: 640, 3: 239})
+Expected:
+	Counter({0: 2635, 1: 1814, 2: 1301, 3: 845})
+Classification report:
+              precision    recall  f1-score   support
+
+          0       0.43      0.81      0.56      2635
+          1       0.25      0.10      0.15      1814
+          2       0.31      0.15      0.20      1301
+          3       0.21      0.06      0.09       845
+
+avg / total       0.33      0.39      0.32      6595
+
+Accuracy:
+	0.38984078847611825

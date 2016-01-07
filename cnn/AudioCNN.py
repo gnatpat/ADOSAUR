@@ -30,7 +30,7 @@ def buildCNN():
 
         # layers parameters
         input_shape=(None, 1, 40000),
-        conv1_num_filters=4, conv1_filter_size=2,
+        conv1_num_filters=5, conv1_filter_size=3,
         pool1_pool_size=2,
         hidden1_num_units=1000,
         hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
@@ -46,6 +46,7 @@ def buildCNN():
         regression=False,
         max_epochs=50,
         verbose=1,
+        train_split=TrainSplit(eval_size=0.5),
     )
 
     return network
@@ -79,9 +80,20 @@ def testCNN(network, inputs, expectedLabels):
     print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
 
 
+# takes an path to the audio file and a network and returns an array containing
+# the number of times it predicted each label for the different chunks
+def evaluate(audioFilePath, network):
+    # extract the audio data for the current file
+    audioData = AU.extractAudioData(audioFilePath)
+    # split the audio data into arrays of size 40000
+    splitArray = AU.splitData(audioData, 40000)
+    # predict using the network
+    predictions = network.predict(splitArray);
+    return dict(Counter(predictions))
+
+
 def main():
     data = loadAudioData()
-    # testPickledNets(data)
 
     print "Building the network..."
     network = buildCNN()
@@ -90,33 +102,11 @@ def main():
     network.fit(data['X'], data['Y'])
 
     print("Saving the network...")
-    utils.saveNet('audioCNN5.pickle', network)
+    utils.saveNet('audioCNN8.pickle', network)
 
     print "Testing the network with test set..."
     testCNN(network, data['testX'], data['testY'])
 
-
-def testPickledNets(data):
-    # open the file for writing
-    file = open("audioCNN_results.txt", "w")
-    # iterate over the pickled nets and test them
-    for netFile in glob.glob("audioCNN*.pickle"):
-        print("Loading " + netFile + "...")
-        network = utils.loadNet(netFile)
-        predictions = network.predict(data['testX'])
-        expectedLabels = data['testY']
-        file.write("Results for " + netFile + ":\n")
-        file.write("Predictions:\n\t")
-        file.write(str(Counter(predictions)))
-        file.write("\nExpected:\n\t")
-        file.write(str(Counter(expectedLabels)))
-        file.write("\nClassification report:\n\t")
-        file.write(classification_report(expectedLabels, predictions))
-        file.write("\nAccuracy:\n\t")
-        file.write(str(accuracy_score(expectedLabels, predictions)))
-        file.write("\n\n")
-        file.flush()
-    file.close()
 
 if __name__ == '__main__':
     main()
