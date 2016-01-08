@@ -30,7 +30,7 @@ def buildCNN():
 
         # layers parameters
         input_shape=(None, 1, 40000),
-        conv1_num_filters=5, conv1_filter_size=3,
+        conv1_num_filters=6, conv1_filter_size=3,
         pool1_pool_size=2,
         hidden1_num_units=1000,
         hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
@@ -102,7 +102,7 @@ def main():
     network.fit(data['X'], data['Y'])
 
     print("Saving the network...")
-    utils.saveNet('audioCNN8.pickle', network)
+    utils.saveNet('audioCNN9.pickle', network)
 
     print "Testing the network with test set..."
     testCNN(network, data['testX'], data['testY'])
