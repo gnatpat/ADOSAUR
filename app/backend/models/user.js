@@ -11,6 +11,8 @@
       uid         : String,
       pwd         : String,
       email       : String,
+      first_name  : String,
+      last_name   : String,
       profile_pic : String,
       dob         : Date,
       doctor      : Boolean,

@@ -1,7 +1,7 @@
 var adosaur = angular.module('adosaur');
 
-adosaur.config(function($stateProvider, $urlRouterProvider){
-
+adosaur.config(function ($stateProvider, $urlRouterProvider) {
+  'use strict';
   $urlRouterProvider.otherwise('/home');
 
   $stateProvider
@@ -11,19 +11,25 @@ adosaur.config(function($stateProvider, $urlRouterProvider){
       controller: "homeCtrl"
     })
     .state('doctorLogin', {
-        url: "/doctorLogin",
-        templateUrl: "components/realTime/realTime.html",
-        controller: "realTimeCtrl"
+      url: "/doctorLogin",
+      templateUrl: "components/realTime/realTime.html",
+      controller: "realTimeCtrl"
     })
     .state('upload', {
-        url: "/upload",
-        templateUrl: "components/upload/upload.html",
-        controller: "uploadCtrl"
+      url: "/upload",
+      templateUrl: "components/upload/upload.html",
+      controller: "uploadCtrl"
     })
 
     .state('login', {
-        url: "/login",
-        templateUrl: "components/login/login.html",
-        controller: "loginCtrl"
+      url: "/login",
+      templateUrl: "components/login/login.html",
+      controller: "loginCtrl"
     })
-})
+
+    .state('doctor', {
+      url: "/doctor/{uid}",
+      templateUrl: "components/doctor/doctor.html",
+      controller: "doctorCtrl"
+    });
+});
