@@ -9,7 +9,7 @@ import pickle
 
 from Utils import createLabelDict
 
-DATABASE_DIR = '../rawData/'
+DATABASE_DIR = '/media/nathan/WD SACHA/rawData/'
 VIDEO_FOLDER = 'rawVideo/'
 LABEL_FOLDER = 'labels/'
 
@@ -81,6 +81,11 @@ def extractFramesFromVideo(filepath, outputPath):
 
 def getCNNdata(CNNfolder='./'):
 
+    if(DATABASE_DIR[0] == "/" or DATABASE_DIR[0] == "~"):
+        print "\n\nDatabase directory is absolute. Ignoring current directory..."
+        CNNfolder = ""
+
+    print "Loading data from " + CNNfolder + DATABASE_DIR + VIDEO_FOLDER
     print '\n\nLoading training data...'
     [trainingDir] \
         = glob(CNNfolder + DATABASE_DIR + VIDEO_FOLDER + 'Training')
