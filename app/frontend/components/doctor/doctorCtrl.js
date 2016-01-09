@@ -7,7 +7,7 @@
 
       var rp = $http.get('/api/user/' + $scope.uid);
       rp.success(function (data, status, headers, config) {
-        console.log('GOT USER!', data.user);
+        console.log('Got user:', data.user);
         $scope.patients = data.user.patients;
         $scope.texts = data.user.texts;
       });

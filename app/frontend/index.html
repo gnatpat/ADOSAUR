@@ -25,7 +25,6 @@
   <link type="text/css" rel="stylesheet" href="/node_modules/materialize-css/dist/css/materialize.min.css"  media="screen,projection"/>
   <script type="text/javascript">
     $(document).ready(function(){
-        console.log("hello");
         $('.parallax').parallax();
       });
   </script>
@@ -36,6 +35,7 @@
 
   <!-- app js -->
   <script src="js/routes.js"></script>
+  <script src="js/utils.js"></script>
 
   <!-- Controllers -->
   <script src="components/home/homeCtrl.js"></script>
@@ -43,6 +43,7 @@
   <script src="components/upload/uploadCtrl.js"></script>
   <script src="components/login/loginCtrl.js"></script>
   <script src="components/doctor/doctorCtrl.js"></script>
+  <script src="components/logout/logoutCtrl.js"></script>
 
   <script src="http://code.highcharts.com/highcharts.js"></script>
 
@@ -50,9 +51,12 @@
 <body ng-app="adosaur">
 
   <!-- Navigation Bar -->
-  <nav class="teal" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#/" class="brand-logo"><img style="height:50px; margin-top:5px; margin-bottom:5px" src="assets/img/t-rex.png"></img></a>
-    </div>
+  <nav class="teal row", role="navigation" ng-controller="indexCtrl">
+    <a href="#/" class="col s1 offset-s1 brand-logo">
+      <img style="height:50px; margin-top:5px; margin-bottom:5px" src="assets/img/t-rex.png"></img>
+    </a>
+    <a class="btn-large" href="/#/login" ng-show="!user.found">Login</a>
+    <a class="btn-large red" href="/#/logout" ng-show="user.found">Logout</a>
   </nav>
 
   <!-- Content gets inserted here -->

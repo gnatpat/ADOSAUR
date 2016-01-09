@@ -5,6 +5,7 @@
 
   module.exports = function (router, models, passport) {
 
+    /* logs the user in */
     router.post('/login', function (req, res, next) {
       // authenticate user
       passport.authenticate('local', function (err, user, info) {
@@ -20,10 +21,15 @@
             return next(err);
           }
           // if everything is fine
-          console.log(user);
           return res.redirect('/#/doctor/' + user.uid);
         });
       })(req, res, next);
+    });
+
+    /* logs the user out, must be loged in */
+    router.get('/logout', passport.isAuthenticated, function (req, res) {
+      req.logout();
+      res.redirect('/');
     });
   };
 }());

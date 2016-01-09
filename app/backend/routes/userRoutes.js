@@ -50,8 +50,9 @@
     });
 
     router.get('/users/current', function (req, res) {
+      var isFound = req.user !== undefined ? 1 : 0;
       res.status(200).json({
-        found: (req.user !== undefined),
+        found: isFound,
         user: req.user
       });
     });
@@ -66,7 +67,6 @@
       user.last_name = req.body.last_name;
       user.save(function (err) {
         if (err) {
-          console.log("here");
           res.status(500).json({
             error: "Failed to created User"
           });
