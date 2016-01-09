@@ -5,10 +5,12 @@ import numpy as np
 import pickle
 from Utils import createLabelDict
 import librosa
+from matplotlib.pyplot import specgram
+import matplotlib.pyplot as plt
 
 SIZE_CHUNKS = 306500
-RAW_DATA_PATH = '/media/sc8013/WD SACHA/rawData/'
-RAW_AUDIO_PATH = 'rawAudio/wav/'
+RAW_DATA_PATH = '/media/sc8013/ROXY FAT32/groupProject/rawData/'
+RAW_AUDIO_PATH = '/media/sc8013/ROXY FAT32/groupProject/rawData/'
 
 def extractAudioData(audioPath):
   sr, data = scipy.io.wavfile.read(audioPath)
@@ -39,7 +41,7 @@ def buildAudioData(rawAudioPath):
   testLabelsDict  = createLabelDict(RAW_DATA_PATH + 'labels/Testing/')
 
   currDir = os.getcwd()
-  rawAudioPath = '/media/sc8013/WD SACHA/rawData/rawAudio/wav/'
+  rawAudioPath = '/media/sc8013/ROXY FAT32/groupProject/rawData/rawAudio/wav/'
   # rawAudioPath = currDir + '/' + rawAudioPath
   print "Building training data..."
   trainingX, trainingY       = buildExamplesAndTargets(trainLabelsDict, rawAudioPath)
@@ -54,7 +56,7 @@ def buildAudioData(rawAudioPath):
 def buildExamplesAndTargets(dictionary, path):
   # initialise the arrays to store inputs (X) and corresponding labels (Y)
   X = np.empty(shape=(1,128,599), dtype='float32')
-  Y = np.empty(shape=(1,4), dtype='float32')
+  Y = np.empty(shape=(0), dtype='int32')
 
   os.chdir(path)
   # iterate through the given dictionary
@@ -84,9 +86,9 @@ def buildExamplesAndTargets(dictionary, path):
       melSpectArray = melSpectArray[1:]
 
       # create the corresponding labels to add
-      yLabels = np.zeros((numExamples, 4), dtype='float32')
+      yLabels = np.zeros((numExamples), dtype='int32')
       for j in range(numExamples):
-          yLabels[j][value] = 1
+          yLabels[j] = value
 
       # insert the data and labels to X and Y arrays
       X = np.concatenate((X,melSpectArray))
@@ -95,5 +97,12 @@ def buildExamplesAndTargets(dictionary, path):
   # remove first element of X as this one is added when X is initialised
   # and is thus indesirable
   X = X[1:]
-  Y = Y[1:]
   return X, Y
+
+def main():
+  sr, data = extractAudioData(RAW_DATA_PATH + RAW_AUDIO_PATH + 'Northwind__230_1_Northwind_audio_mono_16k.wav')
+  plt.specgram(data, NFFT=2048)
+  plt.show()
+  
+if __name__ == '__main__':
+    main()

@@ -24,33 +24,19 @@ def buildCNN():
              ('input', lasagne.layers.InputLayer),
              ('conv1', lasagne.layers.Conv1DLayer),
              ('pool1', lasagne.layers.MaxPool1DLayer),
-             ('conv2', lasagne.layers.Conv1DLayer),
-             ('pool2', lasagne.layers.MaxPool1DLayer),
-             ('conv3', lasagne.layers.Conv1DLayer),
-             ('pool3', lasagne.layers.MaxPool1DLayer),
-             ('globpool1', lasagne.layers.GlobalPoolLayer),
              ('hidden1', lasagne.layers.DenseLayer),
-             ('hidden2', lasagne.layers.DenseLayer),
              ('output', lasagne.layers.DenseLayer),
              ],
 
         # layers parameters
         input_shape=(None, 128, 599),
-        conv1_num_filters=256, conv1_filter_size=4,
-        conv1_nonlinearity=lasagne.nonlinearities.sigmoid,
-        pool1_pool_size=4,
-        conv2_num_filters=256, conv2_filter_size=4,
-        conv2_nonlinearity=lasagne.nonlinearities.sigmoid,
-        pool2_pool_size=2,
-        conv3_num_filters=512, conv3_filter_size=4,
-        conv3_nonlinearity=lasagne.nonlinearities.sigmoid,
-        pool3_pool_size=2,
-        hidden1_num_units=2048,
-        hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
-        hidden2_num_units=2048,
-        hidden2_nonlinearity=lasagne.nonlinearities.sigmoid,
+        conv1_num_filters=5, conv1_filter_size=3,
+        conv1_nonlinearity=lasagne.nonlinearities.rectify,
+        pool1_pool_size=2,
+        hidden1_num_units=1000,
+        hidden1_nonlinearity=lasagne.nonlinearities.rectify,
         output_num_units=4,
-        output_nonlinearity=lasagne.nonlinearities.sigmoid,
+        output_nonlinearity=lasagne.nonlinearities.rectify,
 
         # learning method and parameters
         update=lasagne.updates.nesterov_momentum,
@@ -58,11 +44,10 @@ def buildCNN():
         update_momentum=0.9,
 
         # miscellaneous
-        regression=True,
+        regression=False,
         max_epochs=20,
-        verbose=1,
-        train_split=TrainSplit(eval_size=0.5),
-        objective_loss_function=lasagne.objectives.binary_crossentropy,
+        verbose=3,
+        train_split=TrainSplit(eval_size=0.2),
     )
 
     return network
@@ -77,6 +62,9 @@ def loadAudioData():
     # merge training and development data and add to dictionary
     data['X'] = np.append(trainingX, developmentX, axis=0)
     data['Y'] = np.append(trainingY, developmentY, axis=0)
+
+    print data['X'].shape
+    print data['Y'].shape
 
     # add the test data to dictionary
     data['testX'] = testX
@@ -122,8 +110,8 @@ def main():
     print("Saving the network...")
     utils.saveNet('audioCNN9.pickle', network)
 
-    # print "Testing the network with test set..."
-    # testCNN(network, data['testX'], data['testY'])
+    print "Testing the network with test set..."
+    testCNN(network, data['testX'], data['testY'])
 
     # print "Loading the network..."
     # network = utils.loadNet('audioCNN9.pickle')
@@ -131,10 +119,6 @@ def main():
     print data['testX'].shape
     print data['testY'].shape
 
-    predictions = network.predict(data['testX'])
-    for i in xrange(len(predictions)):
-        values = predictions[i].tolist()
-        print values.index(max(values)),
 
 if __name__ == '__main__':
     main()
