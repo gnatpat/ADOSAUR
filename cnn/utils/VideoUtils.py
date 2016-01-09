@@ -6,10 +6,13 @@ import math
 import numpy as np
 import shutil
 import pickle
+import threading
+from Queue import Queue
 
 from Utils import createLabelDict
 
-DATABASE_DIR = '/media/nathan/WD SACHA/rawData/'
+
+DATABASE_DIR = '../rawData/'
 VIDEO_FOLDER = 'rawVideo/'
 LABEL_FOLDER = 'labels/'
 
@@ -93,6 +96,7 @@ def getCNNdata(CNNfolder='./'):
         = createLabelDict(CNNfolder + DATABASE_DIR + LABEL_FOLDER + 'Training/')
     trainingX, trainingY \
         = retrieveDataFrom(trainingDir, trainingLabelDict)
+    print(trainingX.shape)
     trainingX = trainingX.reshape(-1, 1, trainingX.shape[1], trainingX.shape[2])
 
     print '\n\nLoading validation data...'
@@ -102,6 +106,7 @@ def getCNNdata(CNNfolder='./'):
         = createLabelDict(CNNfolder + DATABASE_DIR + LABEL_FOLDER + 'Development/')
     validationX, validationY \
         = retrieveDataFrom(validationDir, validationLabelDict)
+    print(validationX.shape)
     validationX = validationX.reshape(-1, 1, validationX.shape[1], validationX.shape[2])
 
     print '\n\nLoading testing data...'
@@ -115,33 +120,53 @@ def getCNNdata(CNNfolder='./'):
 
     return trainingX, trainingY, validationX, validationY, testingX, testingY
 
+def loadSingleVideo(videoPath, locks, images, labels, directory, labelsDict):
+    (imageLock, labelLock) = locks
+    filename = videoPath.split('/')[-1][:-4]  # e.g. 203_1_Northwind_video
+    patientNum = filename[:5]  # e.g. 203_1
+    # print patientNum, 'has label', labelsDict[patientNum]
+    picklePath = directory + '/pickledData/' + filename + '.save'
+    if os.path.exists(picklePath):  # check if it exists first
+        print 'Loading pickled data of ' + filename
+        curImages = pickle.load(open(picklePath, 'r'))
+    else:
+        print 'Extracting data for ' + filename
+        curImages = extractImagesfromVideo(videoPath)
+        print 'Pickling data in ' + picklePath
+        pickle.dump(curImages, open(picklePath, 'w'))
+    with imageLock:
+        images.extend(curImages)  # add images to list of examples
+    with labelLock:
+        labels.extend([labelsDict[patientNum]] * len(curImages))  # assign corresponding label
+
+def loadWorker(queue, locks, images, labels, directory, labelsDict):
+    while True:
+        if(queue.empty()):
+            return
+        path = queue.get()
+        loadSingleVideo(path, locks, images, labels, directory, labelsDict)
+        queue.task_done()
+
+
 # retrieve videos from subdirectories within current directory
 def retrieveDataFrom(directory, labelsDict):
     rawVideoPaths = ([ glob(x + '/*') for x in glob(directory + '/[!p]*') ])
-    videoPaths = []
+    if not os.path.exists(directory + '/pickledData/'):
+        os.mkdir(directory + '/pickledData/')  # pickle dir doesn't exist so make it
+    queue = Queue()
     for folder in rawVideoPaths:
         for path in folder:
-            videoPaths.append(path)
+            queue.put(path)
     images = []
     labels = []
-    for videoPath in videoPaths:
-        videoPath = ''.join(videoPath)
-        filename = videoPath.split('/')[-1][:-4]  # e.g. 203_1_Northwind_video
-        patientNum = filename[:5]  # e.g. 203_1
-        # print patientNum, 'has label', labelsDict[patientNum]
-        picklePath = directory + '/pickledData/' + filename + '.save'
-        if os.path.exists(picklePath):  # check if it exists first
-            print 'Loading pickled data of ' + filename
-            curImages = pickle.load(open(picklePath, 'r'))
-        else:
-            print 'Extracting data for ' + filename
-            curImages = extractImagesfromVideo(videoPath)
-            if not os.path.exists(directory + '/pickledData/'):
-                os.mkdir(directory + '/pickledData/')  # pickle dir doesn't exist so make it
-            print 'Pickling data in ' + picklePath
-            pickle.dump(curImages, open(picklePath, 'w'))
-        images.extend(curImages)  # add images to list of examples
-        labels.extend([labelsDict[patientNum]] * len(curImages))  # assign corresponding label
+    imageLock = threading.Lock()
+    labelLock = threading.Lock()
+    for i in range(4):
+        t = threading.Thread(target=loadWorker, args=(queue, (imageLock, labelLock), images, labels, directory, labelsDict))
+        t.daemon = True
+        t.start()
+
+    queue.join()
     return np.array(images), np.array(labels, dtype='int32')
 
 
