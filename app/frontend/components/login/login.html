@@ -1,13 +1,22 @@
-<form action="/api/login" method="post">
-    <div>
+<div class="container">
+  <div class="row">
+    <div flash-message="5000" class="col s4 offset-s4"></div>
+  </div>
+  <div class="row">
+    <form class="col s4 offset-s4" action="/api/login" method="post">
+      <div class="input-field">
+        <i class="material-icons prefix">account_circle</i>
         <label>Username:</label>
         <input type="text" name="username"/>
-    </div>
-    <div>
+      </div>
+      <div class="input-field">
+        <i class="material-icons prefix">vpn_key</i>
         <label>Password:</label>
-        <input type="password" name="password"/>
-    </div>
-    <div>
-        <input type="submit" value="Log In"/>
-    </div>
-</form>
+        <input type="password" name="password" class="validate"/>
+      </div>
+      <div>
+        <input class="btn waves-effect waves-light" type="submit" value="Log In"/>
+      </div>
+    </form>
+  </div>
+</div>
