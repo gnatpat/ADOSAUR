@@ -1,3 +1,14 @@
-<div ng-repeat="patient in patients" class="">
-  <div class="card-panel hoverable">{{patient.email}} -- <strong>{{patient.first_name}}</strong> -- {{patient.last_name}}</div>
+<div ng-repeat="patient in patients" class="col s12 m8 offset-m2 l6 offset-l3">
+  <div class="card-panel grey lighten-5 z-depth-1 hoverable">
+    <div class="row valign-wrapper">
+      <div class="col s2">
+        <img ng-src="{{patient.profile_pic}}" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+      </div>
+      <div class="col s10">
+        <span class="black-text">
+          {{patient.first_name}} {{patient.last_name}}
+        </span>
+      </div>
+    </div>
+  </div>
 </div>

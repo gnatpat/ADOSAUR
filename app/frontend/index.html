@@ -4,7 +4,7 @@
 h1 {
     text-shadow: 5px 5px 25px black;
 }
-hh { 
+hh {
     display: block;
     font-size: 1.6em;
     margin-top: 1em;
@@ -65,12 +65,20 @@ hh {
 <body ng-app="adosaur">
 
   <!-- Navigation Bar -->
-  <nav class="teal row", role="navigation" ng-controller="indexCtrl">
-    <a href="#/" class="col s1 offset-s1 brand-logo">
-      <img style="height:50px; margin-top:5px; margin-bottom:5px" src="assets/img/t-rex.png"></img>
-    </a>
-    <a class="btn-large" href="/#/login" ng-show="!user.found">Login</a>
-    <a class="btn-large red" href="/#/logout" ng-show="user.found">Logout</a>
+  <nav class="teal", role="navigation" ng-controller="indexCtrl">
+    <div class="row">
+      <div class="col s1 offset-s1">
+        <a href="#/" class="brand-logo" style="vertical-align: middle">
+          <img style="height:50px; margin-top:5px; margin-bottom:5px" src="assets/img/t-rex.png"></img>
+        </a>
+      </div>
+    <div class="col s1 offset-s11">
+      <a class="btn-large" href="/#/login" ng-show="!user.found">Login</a>
+    </div>
+    <div class="col s1 offset-s11">
+      <a class="btn-large red" href="/#/logout" ng-show="user.found">Logout</a>
+    </div>
+  </div>
   </nav>
 
   <!-- Content gets inserted here -->
