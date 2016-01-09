@@ -22,7 +22,7 @@ adosaur.config(function ($stateProvider, $urlRouterProvider) {
     })
 
     .state('login', {
-      url: "/login",
+      url: "/login?err",
       templateUrl: "components/login/login.html",
       controller: "loginCtrl"
     })
@@ -31,5 +31,10 @@ adosaur.config(function ($stateProvider, $urlRouterProvider) {
       url: "/doctor/{uid}",
       templateUrl: "components/doctor/doctor.html",
       controller: "doctorCtrl"
+    })
+
+    .state('doctor.patients', {
+      url: "/doctor/{uid}/patients",
+      templateUrl: ""
     });
 });

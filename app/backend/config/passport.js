@@ -18,9 +18,9 @@
       function (username, password, done) {
         User.findOne({ 'uid': username }, function (err, user) {
           if (err) { return done(err); }
-          if (!user) { return done(null, false); }
+          if (!user) { return done(null, false, {message: "1"}); }
           if (!user.validPassword(password)) {
-            return done(null, false);
+            return done(null, false, {message: "2"});
           }
           // if no errors and correct username/pwd return user
           return done(null, user);
