@@ -4,9 +4,8 @@
   adosaur.controller('loginCtrl', ['$scope', '$http', function ($scope, $http) {
 
     // var rp = $http({
-    //   method: 'PUT',
-    //   url: '/api/user/new',
-    //   data: {uid: "sc8013", pwd: "adosaur", email: "sc8013@ic.ac.uk", doctor: true}
+    //   method: 'GET',
+    //   url: '/api/users/all'
     // });
     // rp.success(function (data, status, headers, config) {
     //   console.log('success');

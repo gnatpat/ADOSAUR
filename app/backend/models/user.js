@@ -17,6 +17,10 @@
       patients    : [User],
       records     : [ObjectId]
     });
+    /*TODO: encrypt passwords */
+    User.methods.validPassword = function (password) {
+      return this.pwd === password;
+    };
     return User;
   };
 }());

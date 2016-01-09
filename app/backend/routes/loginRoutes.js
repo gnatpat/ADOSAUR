@@ -5,9 +5,8 @@
 
   module.exports = function (router, models, passport) {
 
-    router.post('/login', passport.authenticate('local', {
-      successRedirect: '/',
-      failureRedirect: '/#/login'
-    }));
+    router.post('/login', passport.authenticate('local'), function (req, res) {
+      res.redirect('/');
+    });
   };
 }());

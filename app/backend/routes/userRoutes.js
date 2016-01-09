@@ -9,6 +9,17 @@
       User = models.user,
       Record = models.record;
 
+    router.get('/users/all', function (req, res) {
+      User.find(function (err, users) {
+        if (err) {
+          res.status(500).json({ error: "Error in getting all users" });
+        }
+        res.status(200).json({
+          users: users
+        });
+      });
+    });
+
     router.get('/users/current', function (req, res) {
       res.status(200).json({
         found: (req.user !== undefined),

@@ -1,13 +1,10 @@
 (function () {
   'use strict';
   var formidable = require('formidable'),
-    evaluateBDI  = require('../utils.js').evaluateBDI,
-    bp           = require('body-parser');
+    evaluateBDI  = require('../utils.js').evaluateBDI;
 
   // api routes go here
   module.exports = function (app, express, models, passport) {
-
-    app.use(bp.json());
     // serve static
     app.use(express.static(express.dirname + '/../frontend'));
     /* gets a router instance */
