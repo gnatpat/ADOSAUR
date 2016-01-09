@@ -24,16 +24,31 @@ def buildCNN():
              ('input', lasagne.layers.InputLayer),
              ('conv1', lasagne.layers.Conv1DLayer),
              ('pool1', lasagne.layers.MaxPool1DLayer),
+             ('conv2', lasagne.layers.Conv1DLayer),
+             ('pool2', lasagne.layers.MaxPool1DLayer),
+             ('conv3', lasagne.layers.Conv1DLayer),
+             ('pool3', lasagne.layers.MaxPool1DLayer),
+             ('globpool1', lasagne.layers.GlobalPoolLayer),
              ('hidden1', lasagne.layers.DenseLayer),
+             ('hidden2', lasagne.layers.DenseLayer),
              ('output', lasagne.layers.DenseLayer),
              ],
 
         # layers parameters
-        input_shape=(None, 1, 40000),
-        conv1_num_filters=6, conv1_filter_size=3,
-        pool1_pool_size=2,
-        hidden1_num_units=1000,
+        input_shape=(None, 128, 599),
+        conv1_num_filters=256, conv1_filter_size=4,
+        conv1_nonlinearity=lasagne.nonlinearities.sigmoid,
+        pool1_pool_size=4,
+        conv2_num_filters=256, conv2_filter_size=4,
+        conv2_nonlinearity=lasagne.nonlinearities.sigmoid,
+        pool2_pool_size=2,
+        conv3_num_filters=512, conv3_filter_size=4,
+        conv3_nonlinearity=lasagne.nonlinearities.sigmoid,
+        pool3_pool_size=2,
+        hidden1_num_units=2048,
         hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
+        hidden2_num_units=2048,
+        hidden2_nonlinearity=lasagne.nonlinearities.sigmoid,
         output_num_units=4,
         output_nonlinearity=lasagne.nonlinearities.sigmoid,
 
@@ -43,10 +58,11 @@ def buildCNN():
         update_momentum=0.9,
 
         # miscellaneous
-        regression=False,
-        max_epochs=50,
+        regression=True,
+        max_epochs=20,
         verbose=1,
         train_split=TrainSplit(eval_size=0.5),
+        objective_loss_function=lasagne.objectives.binary_crossentropy,
     )
 
     return network
@@ -56,11 +72,11 @@ def buildCNN():
 def loadAudioData():
     # initialise dictionary
     data = {}
-    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData('../rawData/RawAudio/wav/')
+    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData('/media/sc8013/WD SACHA/rawData/RawAudio/wav/')
 
     # merge training and development data and add to dictionary
     data['X'] = np.append(trainingX, developmentX, axis=0)
-    data['Y'] = np.append(trainingY, developmentY)
+    data['Y'] = np.append(trainingY, developmentY, axis=0)
 
     # add the test data to dictionary
     data['testX'] = testX
@@ -75,8 +91,10 @@ def testCNN(network, inputs, expectedLabels):
     predictions = network.predict(inputs)
     print("Predictions: ", Counter(predictions))
     print("Expected: ", Counter(expectedLabels))
+    print("Classification report:\n")
     print(classification_report(expectedLabels, predictions))
-    # print(confusion_matrix(expectedLabels, predictions))
+    print("Confusion matrix:\n")
+    print(confusion_matrix(expectedLabels, predictions))
     print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
 
 
@@ -85,8 +103,8 @@ def testCNN(network, inputs, expectedLabels):
 def evaluate(audioFilePath, network):
     # extract the audio data for the current file
     audioData = AU.extractAudioData(audioFilePath)
-    # split the audio data into arrays of size 40000
-    splitArray = AU.splitData(audioData, 40000)
+    # split the audio data into arrays of size SIZE_CHUNKS
+    splitArray = AU.splitData(audioData, AU.SIZE_CHUNKS)
     # predict using the network
     predictions = network.predict(splitArray);
     return dict(Counter(predictions))
@@ -104,9 +122,19 @@ def main():
     print("Saving the network...")
     utils.saveNet('audioCNN9.pickle', network)
 
-    print "Testing the network with test set..."
-    testCNN(network, data['testX'], data['testY'])
+    # print "Testing the network with test set..."
+    # testCNN(network, data['testX'], data['testY'])
 
+    # print "Loading the network..."
+    # network = utils.loadNet('audioCNN9.pickle')
+
+    print data['testX'].shape
+    print data['testY'].shape
+
+    predictions = network.predict(data['testX'])
+    for i in xrange(len(predictions)):
+        values = predictions[i].tolist()
+        print values.index(max(values)),
 
 if __name__ == '__main__':
     main()
