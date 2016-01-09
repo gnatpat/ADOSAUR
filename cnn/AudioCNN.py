@@ -4,6 +4,7 @@ import theano.tensor as T
 import lasagne
 import os
 import glob
+import random
 from utils import AudioUtils as AU
 from utils import Utils as utils
 from nolearn.lasagne import NeuralNet
@@ -29,8 +30,8 @@ def buildCNN():
              ],
 
         # layers parameters
-        input_shape=(None, 1, 40000),
-        conv1_num_filters=6, conv1_filter_size=3,
+        input_shape=(None, 1, AU.SIZE_CHUNKS),
+        conv1_num_filters=5, conv1_filter_size=3,
         pool1_pool_size=2,
         hidden1_num_units=1000,
         hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
@@ -40,13 +41,13 @@ def buildCNN():
         # learning method and parameters
         update=lasagne.updates.nesterov_momentum,
         update_learning_rate=0.0001,
-        update_momentum=0.9,
+        # update_momentum=0.9,
 
         # miscellaneous
         regression=False,
         max_epochs=50,
         verbose=1,
-        train_split=TrainSplit(eval_size=0.5),
+        train_split=TrainSplit(eval_size=0.2),
     )
 
     return network
@@ -56,7 +57,8 @@ def buildCNN():
 def loadAudioData():
     # initialise dictionary
     data = {}
-    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData('../rawData/RawAudio/wav/')
+    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData('/media/sc8013/WD SACHA/rawData/RawAudio/wav/')
+    # trainingX, trainingY, developmentX, developmentY = AU.augmentData(trainingX, trainingY, developmentX, developmentY)
 
     # merge training and development data and add to dictionary
     data['X'] = np.append(trainingX, developmentX, axis=0)
@@ -76,7 +78,7 @@ def testCNN(network, inputs, expectedLabels):
     print("Predictions: ", Counter(predictions))
     print("Expected: ", Counter(expectedLabels))
     print(classification_report(expectedLabels, predictions))
-    # print(confusion_matrix(expectedLabels, predictions))
+    print(confusion_matrix(expectedLabels, predictions))
     print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
 
 
@@ -85,8 +87,8 @@ def testCNN(network, inputs, expectedLabels):
 def evaluate(audioFilePath, network):
     # extract the audio data for the current file
     audioData = AU.extractAudioData(audioFilePath)
-    # split the audio data into arrays of size 40000
-    splitArray = AU.splitData(audioData, 40000)
+    # split the audio data into arrays of size SIZE_CHUNKS
+    splitArray = AU.splitData(audioData)
     # predict using the network
     predictions = network.predict(splitArray);
     return dict(Counter(predictions))
@@ -102,7 +104,10 @@ def main():
     network.fit(data['X'], data['Y'])
 
     print("Saving the network...")
-    utils.saveNet('audioCNN9.pickle', network)
+    utils.saveNet('audioCNN11.pickle', network)
+
+    # print ("Loading the network...")
+    # network = utils.loadNet('audioCNN10.pickle')
 
     print "Testing the network with test set..."
     testCNN(network, data['testX'], data['testY'])
