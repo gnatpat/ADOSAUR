@@ -34,7 +34,14 @@ adosaur.config(function ($stateProvider, $urlRouterProvider) {
     })
 
     .state('doctor.patients', {
-      url: "/doctor/{uid}/patients",
-      templateUrl: ""
+      url: "patients/{uid}",
+      templateUrl: "components/doctor/patientsPART.html",
+      controller: "doctorCtrl"
+    })
+
+    .state('doctor.texts', {
+      url: "texts/{uid}",
+      templateUrl: "components/doctor/textsPART.html",
+      controller: "doctorCtrl"
     });
 });

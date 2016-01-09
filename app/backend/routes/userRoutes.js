@@ -9,6 +9,7 @@
       User = models.user,
       Record = models.record;
 
+    /* retrieves all users from database */
     router.get('/users/all', function (req, res) {
       User.find(function (err, users) {
         if (err) {
@@ -16,6 +17,34 @@
         }
         res.status(200).json({
           users: users
+        });
+      });
+    });
+
+    /* get a single user by its uid */
+    router.get('/user/:uid', function (req, res) {
+      User.findOne({uid: req.params.uid}, function (err, user) {
+        if (err) {
+          res.status(500).json({
+            error: "could not retrieve user by uid"
+          });
+        }
+        res.status(200).json({
+          user: user
+        });
+      });
+    });
+
+    /* get a single user by its uid */
+    router.get('/user/:_id', function (req, res) {
+      User.findOne({_id: req.params._id}, function (err, user) {
+        if (err) {
+          res.status(500).json({
+            error: "could not retrieve user by _id"
+          });
+        }
+        res.status(200).json({
+          user: user
         });
       });
     });
@@ -33,6 +62,8 @@
       user.pwd    = req.body.pwd;
       user.email  = req.body.email;
       user.doctor = req.body.doctor;
+      user.first_name = req.body.first_name;
+      user.last_name = req.body.last_name;
       user.save(function (err) {
         if (err) {
           console.log("here");
