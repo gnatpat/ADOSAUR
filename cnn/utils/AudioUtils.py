@@ -48,7 +48,7 @@ def buildAudioData(rawAudioPath=RAW_AUDIO_PATH):
 
 def buildExamplesAndTargets(dictionary, path):
   # initialise the arrays to store inputs (X) and corresponding labels (Y)
-  X = np.empty(shape=(1,256,768), dtype='float32')
+  X = np.empty(shape=(1,1,256,768), dtype='float32')
   Y = np.empty(shape=(0), dtype='int32')
 
   currDir = os.getcwd()
@@ -64,8 +64,8 @@ def buildExamplesAndTargets(dictionary, path):
       imageData = extractGrayScale(file)
       # ignore shorter spectrograms
       if imageData.shape == (256,768):
-          imageData = np.reshape(imageData, (1,256,768))
-          label = np.array([value])
+          imageData = np.reshape(imageData, (1,1,256,768))
+          label = np.array([value], dtype='int32')
           X = np.concatenate((X,imageData))
           Y = np.concatenate((Y, label))
 

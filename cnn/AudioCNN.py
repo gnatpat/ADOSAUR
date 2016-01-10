@@ -29,14 +29,14 @@ def buildCNN():
              ],
 
         # layers parameters
-        input_shape=(None, 2, 256, 768),
-        conv1_num_filters=64, conv1_filter_size=(256,5),
-        conv1_nonlinearity=lasagne.nonlinearities.rectify,
-        pool1_pool_size=(4,4),
+        input_shape=(None, 1, 256, 768),
+        conv1_num_filters=1024, conv1_filter_size=(256,5),
+        conv1_nonlinearity=lasagne.nonlinearities.sigmoid,
+        pool1_pool_size=(1,2),
         hidden1_num_units=256,
-        hidden1_nonlinearity=lasagne.nonlinearities.rectify,
+        hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
         output_num_units=4,
-        output_nonlinearity=lasagne.nonlinearities.rectify,
+        output_nonlinearity=lasagne.nonlinearities.sigmoid,
 
         # learning method and parameters
         update=lasagne.updates.nesterov_momentum,
@@ -45,7 +45,7 @@ def buildCNN():
 
         # miscellaneous
         regression=False,
-        max_epochs=20,
+        max_epochs=10,
         verbose=3,
         train_split=TrainSplit(eval_size=0.2),
     )
