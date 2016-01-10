@@ -3,9 +3,9 @@
   'use strict';
   var adosaur = angular.module('adosaur', ['ui.router', 'ngFileUpload', 'flash']);
 
-  adosaur.controller('indexCtrl', ['$scope', 'authService', '$http', '$window', '$state',
-    function ($scope, authService, $http, $window, $state) {
-      authService.getCurrentUser(function (user) {
+  adosaur.controller('indexCtrl', ['$scope', 'util', '$http', '$window', '$state',
+    function ($scope, util, $http, $window, $state) {
+      util.getCurrentUser(function (user) {
         console.log(user);
         $scope.user = user;
       }, function (data) {

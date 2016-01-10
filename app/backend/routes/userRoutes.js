@@ -7,7 +7,7 @@
   module.exports = function (router, models, passport) {
     var
       User = models.user,
-      Record = models.record;
+      Text = models.text;
 
     /* retrieves all users from database */
     router.get('/users/all', function (req, res) {
@@ -49,6 +49,7 @@
       });
     });
 
+    /* gets the current user's information */
     router.get('/users/current', function (req, res) {
       var isFound = req.user !== undefined ? 1 : 0;
       res.status(200).json({
@@ -57,23 +58,66 @@
       });
     });
 
-    router.put('/user/new', function (req, res) {
-      var user    = new User();
-      user.uid    = req.body.uid;
-      user.pwd    = req.body.pwd;
-      user.email  = req.body.email;
-      user.doctor = req.body.doctor;
-      user.first_name = req.body.first_name;
-      user.last_name = req.body.last_name;
-      user.save(function (err) {
+    // gets the current user's patients
+    router.post('/users/current/patients',
+      passport.isAuthenticated,
+      function (req, res) {
+        User.find({ "_id" : { $in: req.body}},
+          function (err, docs) {
+            if (err) {
+              res.status(500).json({ error: "Failed to retrieve patients"});
+            }
+            res.status(200).json({patients: docs});
+          });
+      });
+
+    // gets the current user's texts
+    router.post('/users/current/texts',
+      passport.isAuthenticated,
+      function (req, res) {
+        Text.find({ "_id" : { $in: req.body}},
+          function (err, docs) {
+            if (err) {
+              res.status(500).json({ error: "Failed to retrieve texts"});
+            }
+            res.status(200).json({texts: docs});
+          });
+      });
+
+    /* Adds a new patient to the database and adds its _id to the doctor's
+       patient list */
+    router.put('/add/user/:doctor', function (req, res) {
+      console.log('Adding new Patient for: ' + req.params.doctor);
+      var p  = req.body.patient,
+        user = new User();
+      // create the new patient
+      user.first_name  = p.first_name;
+      user.last_name   = p.last_name;
+      user.doctor      = false;
+      user.email       = p.email;
+      user.dob         = p.dob;
+      user.profile_pic = p.profile_pic;
+      // Save new patient to database
+      user.save(function (err, user) {
+        // if an error occurs
         if (err) {
           res.status(500).json({
-            error: "Failed to created User"
+            error: "Failed to created new patient"
+          });
+        } else {
+          // if no error, add new patient's _id to the doctor who added him
+          User.findByIdAndUpdate(req.params.doctor,
+            { $push: {"patients": user._id}},
+            {safe: true, upsert: true, new : true},
+            function (err) {
+              if (err) {
+                res.status(500).json({error: "Failed to update doctor's patients list"});
+              }
+            });
+          res.status(200).json({
+            message: "User created successfully and added to doctor " + req.params.doctor
           });
         }
-        res.status(200).json({
-          message: "User created successfully"
-        });
       });
     });
   };

@@ -2,28 +2,56 @@
   'use strict';
   var app = angular.module('adosaur');
 
-  app.factory('authService', ['$http', function ($http) {
+  app.factory('util', ['$http', function ($http) {
     var
-      authService = {},
+      util = {},
       currentUser = {};
 
-    authService.getCurrentUser = function (callback, error) {
-      var responsePromise = $http.get('/api/users/current');
+    util.getCurrentUser = function (callback, error) {
+      var rp = $http.get('/api/users/current');
 
-      responsePromise.success(function (data, status, headers, config) {
+      rp.success(function (data, status, headers, config) {
         currentUser = data;
         if (callback) {
           callback(currentUser);
         }
       });
 
-      responsePromise.error(function (data, status, headers, config) {
+      rp.error(function (data, status, headers, config) {
         if (error) {
           error(data);
         }
       });
     };
 
-    return authService;
+    util.getUserPatients = function (patientIDs, callback, error) {
+      var rp = $http.post('/api/users/current/patients', patientIDs);
+
+      rp.success(function (data, status, headers, config) {
+        if (callback) {
+          callback(data);
+        }
+      });
+
+      rp.error(function (data, status, headers, config) {
+        console.log('Failed to retrieve Patients');
+      });
+    };
+
+    util.getUserTexts = function (textIDs, callback, error) {
+      var rp = $http.post('/api/users/current/texts', textIDs);
+
+      rp.success(function (data, status, headers, config) {
+        if (callback) {
+          callback(data);
+        }
+      });
+
+      rp.error(function (data, status, headers, config) {
+        console.log('Failed to retrieve Texts');
+      });
+    };
+
+    return util;
   }]);
 }());

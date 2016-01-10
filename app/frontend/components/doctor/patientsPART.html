@@ -1,14 +1,68 @@
 <div ng-repeat="patient in patients" class="col s12 m8 offset-m2 l6 offset-l3">
-  <div class="card-panel grey lighten-5 z-depth-1 hoverable">
+  <div class="card-panel blue lighten-5 z-depth-1 hoverable">
     <div class="row valign-wrapper">
       <div class="col s2">
         <img ng-src="{{patient.profile_pic}}" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
       </div>
       <div class="col s10">
         <span class="black-text">
-          {{patient.first_name}} {{patient.last_name}}
+          <srtong>{{patient.first_name}} {{patient.last_name}}</strong>
+            <div>email: {{patient.email}}</div>
         </span>
+        <div class="card-action">
+              <a href="#">Send test</a>
+              <a href="#">This is a link</a>
+            </div>
       </div>
     </div>
   </div>
 </div>
+<div>
+<!-- add patient button / modal trigger-->
+<div class="fixed-action-button">
+  <a class="btn-floating btn-large red modal-trigger" data-target="modal1"><i class="material-icons">add</i></a>
+</div>
+<!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Add patient</h4>
+      <form class="col s12">
+        <!-- first row of form -->
+      <div class="row">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="first_name" type="text" class="validate" ng-model="newUser.first_name">
+          <label for="first_name">First Name</label>
+        </div>
+        <div class="input-field col s6">
+          <input id="last_name" type="text" class="validate" ng-model="newUser.last_name">
+          <label for="last_name">Last name</label>
+        </div>
+      </div>
+      <!-- second row of form -->
+      <div class="row">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">email</i>
+          <input id="email" type="email" class="validate" ng-model="newUser.email">
+          <label for="email">Email</label>
+        </div>
+        <div class="input-field col s6">
+          <input id="date" type="date" class="" ng-model="newUser.dob">
+          <label for="date"></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">picture_in_picture</i>
+          <input id="profile_pic" type="text" class="validate" ng-model="newUser.profile_pic">
+          <label for="profile_pic">Photo</label>
+        </div>
+      </div>
+    </form>
+    </div>
+    <div class="modal-footer">
+      <a href="/#/doctor/patients/{{user.uid}}"
+      class="modal-action modal-close waves-effect green white-text btn-flat"
+      ng-click="addPatient()">Add</a>
+    </div>
+  </div>

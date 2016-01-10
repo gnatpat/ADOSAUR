@@ -16,8 +16,9 @@
       profile_pic : String,
       dob         : Date,
       doctor      : Boolean,
-      patients    : [User],
-      records     : [ObjectId]
+      patients    : [ObjectId],
+      records     : [ObjectId],
+      texts       : [ObjectId]
     });
     /*TODO: encrypt passwords */
     User.methods.validPassword = function (password) {
