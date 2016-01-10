@@ -8,9 +8,9 @@
     var Text = new Schema();
 
     Text.add({
-      Title   : String,
-      Content : String,
-      Comments: String
+      title   : String,
+      content : String,
+      comments: String
     });
     return Text;
   };

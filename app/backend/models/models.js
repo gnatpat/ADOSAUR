@@ -17,7 +17,7 @@
   module.exports = {
     user  : mongoose.model('users', UserSchema),
     record: mongoose.model('debates', RecordSchema),
-    text  : mongoose.model('categories', TextSchema),
+    text  : mongoose.model('texts', TextSchema),
   };
 
 }());

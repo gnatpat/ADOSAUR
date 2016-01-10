@@ -22,7 +22,7 @@
           $scope.patients = patients.patients;
         });
         // get current doctor's patients
-        util.getUserPatients(user.user.texts, function (texts) {
+        util.getUserTexts(user.user.texts, function (texts) {
           $scope.texts = texts.texts;
         });
       }, null);
@@ -32,6 +32,18 @@
           method: 'PUT',
           url: '/api/add/user/' + $scope.user.user._id,
           data: {patient: $scope.newUser}
+        });
+        response.error(function (data, status, headers, config) {
+          console.log('Failed to add new patient');
+        });
+      };
+
+      $scope.addText = function () {
+        console.log('Adding text: ', $scope.newText);
+        var response = $http({
+          method: 'PUT',
+          url: '/api/add/text/' + $scope.user.user._id,
+          data: {text: $scope.newText}
         });
         response.error(function (data, status, headers, config) {
           console.log('Failed to add new patient');
