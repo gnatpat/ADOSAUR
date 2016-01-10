@@ -1,60 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+h1 {
+    text-shadow: 5px 5px 25px black;
+}
+hh {
+    display: block;
+    font-size: 1.6em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    text-shadow: 2px 2px 5px black;
+}
+</style>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>ADOSAUR</title>
   <meta name="description" content="real time recognition of depression symptoms">
+  <!-- for flash messages styling -->
+  <link type="text/css" rel="stylesheet" href="../node_modules/angular-flash-alert/dist/angular-flash.min.css" />
   <!-- angular script -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-  <script src="node_modules/angular-ui-router/build/angular-ui-router.min.js"></script>
+  <script src="../node_modules/angular-ui-router/build/angular-ui-router.min.js"></script>
+  <!-- for flash messages -->
+  <script src="../node_modules/angular-flash-alert/dist/angular-flash.min.js"></script>
   <script src="js/app.js"></script>
 
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <!-- jQuery and Materialize -->
+
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="node_modules/materialize-css/dist/js/materialize.min.js"></script>
+  <script type="text/javascript" src="/node_modules/materialize-css/dist/js/materialize.min.js"></script>
   <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link type="text/css" rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css"  media="screen,projection"/>
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $('.parallax').parallax();
+      });
+  </script>
 
   <!-- ng-file-upload -->
-  <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+  <script src="../node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
 
   <!-- app js -->
   <script src="js/routes.js"></script>
+  <script src="js/utils.js"></script>
 
   <!-- Controllers -->
   <script src="components/home/homeCtrl.js"></script>
   <script src="components/realTime/realTimeCtrl.js"></script>
   <script src="components/upload/uploadCtrl.js"></script>
+  <script src="components/login/loginCtrl.js"></script>
+  <script src="components/doctor/doctorCtrl.js"></script>
+  <script src="components/logout/logoutCtrl.js"></script>
 
   <script src="http://code.highcharts.com/highcharts.js"></script>
+
 </head>
 <body ng-app="adosaur">
 
   <!-- Navigation Bar -->
-  <nav class="green darken-3" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#/" class="brand-logo"><img style="height:50px; margin-top:5px; margin-bottom:5px" src="assets/img/t-rex.png"></img></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="#/realTime">Real-Time</a></li>
-        <li><a href="#/upload">Upload footage</a></li>
-      </ul>
+  <nav class="teal", role="navigation" ng-controller="indexCtrl">
+    <div class="row">
+      <div class="col s1 offset-s1">
+        <a href="#/" class="brand-logo" style="vertical-align: middle">
+          <img style="height:50px; margin-top:5px; margin-bottom:5px" src="assets/img/t-rex.png"></img>
+        </a>
+      </div>
+    <div class="col s1 offset-s11">
+      <a class="btn-large" href="/#/login" ng-show="!user.found">Login</a>
     </div>
+    <div class="col s1 offset-s11">
+      <a class="btn-large red" href="/#/logout" ng-show="user.found">Logout</a>
+    </div>
+  </div>
   </nav>
 
   <!-- Content gets inserted here -->
   <div ui-view></div>
 
   <!-- Footer -->
-  <footer class="page-footer green darken-3">
+  <footer class="page-footer teal">
     <div class="container">
       <div class="row">
         <div class="col l6">
           <h5 class="white-text">About</h5>
-          <p class="grey-text text-lighten-4">Imperial College 3rd Year Group Project - built by Tom Bartissol, Sacha Cohen-Scali, Hyun Ah Lee, Nathan Patel, Dane Sherburn and Roxana Ursu</p>
+          <p class="grey-text text-lighten-4">Imperial College 3rd Year Group Project</p>
+        </div>
+
+        <div class="col l3 s12">
+          <h5 class="white-text">Built by: </h5>
+          <ul>
+            <li><a class="white-text" >Sacha Cohen-Scali </a></li>
+            <li><a class="white-text" >Tom Bartissol</a></li>
+            <li><a class="white-text" >Dane Sherburn </a></li>
+            <li><a class="white-text" >Hyun Ah Lee </a></li>
+            <li><a class="white-text" >Nathan Patel</a></li>
+            <li><a class="white-text" >Roxana Ursu</a></li>
+          </ul>
+        </div>
+
+        <div class="col l3 s12">
+          <h5 class="white-text">Supervisor </h5>
+          <ul>
+            <li><a class="white-text" >Dr. Björn W. Schuller</a></li>
+          </ul>
         </div>
       </div>
     </div>

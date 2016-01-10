@@ -10,5 +10,5 @@ gulp.task('restart', shell.task([
 
 /* listens for changes in files */
 gulp.task('watch', function () {
-  gulp.watch('js/*.js', ['restart'])
+  gulp.watch('app/js/*.js', ['restart'])
 });
