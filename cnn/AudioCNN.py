@@ -22,18 +22,18 @@ def buildCNN():
         # specify the layers
         layers=[
              ('input', lasagne.layers.InputLayer),
-             ('conv1', lasagne.layers.Conv1DLayer),
-             ('pool1', lasagne.layers.MaxPool1DLayer),
+             ('conv1', lasagne.layers.Conv2DLayer),
+             ('pool1', lasagne.layers.MaxPool2DLayer),
              ('hidden1', lasagne.layers.DenseLayer),
              ('output', lasagne.layers.DenseLayer),
              ],
 
         # layers parameters
-        input_shape=(None, 128, 599),
-        conv1_num_filters=5, conv1_filter_size=3,
+        input_shape=(None, 2, 256, 768),
+        conv1_num_filters=64, conv1_filter_size=(256,5),
         conv1_nonlinearity=lasagne.nonlinearities.rectify,
-        pool1_pool_size=2,
-        hidden1_num_units=1000,
+        pool1_pool_size=(4,4),
+        hidden1_num_units=256,
         hidden1_nonlinearity=lasagne.nonlinearities.rectify,
         output_num_units=4,
         output_nonlinearity=lasagne.nonlinearities.rectify,
@@ -57,14 +57,11 @@ def buildCNN():
 def loadAudioData():
     # initialise dictionary
     data = {}
-    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData('/media/sc8013/WD SACHA/rawData/RawAudio/wav/')
+    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData()
 
     # merge training and development data and add to dictionary
     data['X'] = np.append(trainingX, developmentX, axis=0)
     data['Y'] = np.append(trainingY, developmentY, axis=0)
-
-    print data['X'].shape
-    print data['Y'].shape
 
     # add the test data to dictionary
     data['testX'] = testX
@@ -112,12 +109,6 @@ def main():
 
     print "Testing the network with test set..."
     testCNN(network, data['testX'], data['testY'])
-
-    # print "Loading the network..."
-    # network = utils.loadNet('audioCNN9.pickle')
-
-    print data['testX'].shape
-    print data['testY'].shape
 
 
 if __name__ == '__main__':

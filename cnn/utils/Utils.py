@@ -1,4 +1,4 @@
-# import cv2
+import cv2
 import os
 import csv
 import glob
