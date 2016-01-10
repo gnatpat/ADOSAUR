@@ -1,6 +1,7 @@
 import csv
 import os
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+from collections import Counter
 
 # E.g. createLabelDict('../rawData/labels/Training/')
 # Takes path to data file and outputs dictionary with key
@@ -10,8 +11,20 @@ def createLabelDict(labelPath):
     for file in os.listdir(labelPath):
         csvReader = csv.reader(open(labelPath + file))
         for label in csvReader:
-            labelNo = int(int(label[0])/16)
-            labelDict[file[:-4]] = labelNo
+            labelToAdd = int(label[0])
+            # 0-9 minimal depression
+            if labelToAdd in range(0,10):
+                labelToAdd = 0
+            # 10-18 = mild depression
+            elif labelToAdd in range(10,19):
+                labelToAdd = 1
+            # 19-29 = moderate depression
+            elif labelToAdd in range(19,30):
+                labelToAdd = 2
+            # 30-63 = severe depression
+            elif labelToAdd in range(30,64):
+                labelToAdd = 3
+            labelDict[file[:-4]] = labelToAdd
     return labelDict
 
 # Tests a network using test data and expected labels,
@@ -19,7 +32,10 @@ def createLabelDict(labelPath):
 def testCNN(network, inputs, expectedLabels):
     print("\nTesting network...")
     predictions = network.predict(inputs)
+    print("Predictions: ", Counter(predictions))
+    print("Expected: ", Counter(expectedLabels))
     print(classification_report(expectedLabels, predictions))
+    print(confusion_matrix(expectedLabels, predictions))
     print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
 
 # Saves network

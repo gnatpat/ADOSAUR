@@ -1,4 +1,4 @@
-import cv2
+#import cv2
 import os
 import csv
 from glob import glob
@@ -8,11 +8,11 @@ import shutil
 import pickle
 import threading
 from Queue import Queue
-
+from scipy.ndimage.interpolation import zoom
 from Utils import createLabelDict
 
 
-DATABASE_DIR = '../rawData/'
+DATABASE_DIR = '/media/np1213/WD SACHA/rawData/'
 VIDEO_FOLDER = 'rawVideo/'
 LABEL_FOLDER = 'labels/'
 
@@ -134,10 +134,14 @@ def loadSingleVideo(videoPath, locks, images, labels, directory, labelsDict):
         curImages = extractImagesfromVideo(videoPath)
         print 'Pickling data in ' + picklePath
         pickle.dump(curImages, open(picklePath, 'w'))
+    resizedImages = [zoom(image, 0.2) for image in curImages]
+    imageLabel = labelsDict[patientNum]
+    mult = [1, 2, 2, 4]
     with imageLock:
-        images.extend(curImages)  # add images to list of examples
+        for x in range(mult[imageLabel]):
+            images.extend(resizedImages)  # add images to list of examples
     with labelLock:
-        labels.extend([labelsDict[patientNum]] * len(curImages))  # assign corresponding label
+        labels.extend([imageLabel] * len(resizedImages) * mult[imageLabel])  # assign corresponding label
 
 def loadWorker(queue, locks, images, labels, directory, labelsDict):
     while True:
@@ -161,13 +165,21 @@ def retrieveDataFrom(directory, labelsDict):
     labels = []
     imageLock = threading.Lock()
     labelLock = threading.Lock()
-    for i in range(4):
+    for i in range(8):
         t = threading.Thread(target=loadWorker, args=(queue, (imageLock, labelLock), images, labels, directory, labelsDict))
         t.daemon = True
         t.start()
 
     queue.join()
-    return np.array(images), np.array(labels, dtype='int32')
+    
+    numExamples = len(images)
+    order = np.random.permutation(numExamples)
+    print(len(images))
+    print(len(labels))
+    newImages = [images[x] for x in order]
+    newLabels = [labels[x] for x in order]
+
+    return (1-np.array(newImages, dtype='float32')/255), np.array(newLabels, dtype='int32')
 
 
 if __name__ == '__main__':
