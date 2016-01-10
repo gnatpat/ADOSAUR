@@ -5,14 +5,15 @@
         <img ng-src="{{patient.profile_pic}}" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
       </div>
       <div class="col s10">
-        <span class="black-text">
+        <div class="black-text" style="margin-bottom: 10px">
           <srtong>{{patient.first_name}} {{patient.last_name}}</strong>
             <div>email: {{patient.email}}</div>
-        </span>
+        </div>
         <div class="card-action">
-              <a href="#">Send test</a>
-              <a href="#">This is a link</a>
-            </div>
+          <a class="btn-floating green"><i class="material-icons">send</i></a>
+          <a class="btn-floating red"><i class="material-icons">delete</i></a>
+          <a class="btn-floating orange"><i class="material-icons">edit</i></a>
+        </div>
       </div>
     </div>
   </div>
