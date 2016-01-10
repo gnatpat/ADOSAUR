@@ -6,8 +6,8 @@ import pickle
 from Utils import createLabelDict
 from Utils import extractGrayScale
 
-RAW_DATA_PATH = '../rawData/'
-RAW_AUDIO_PATH = '../rawData/RawAudio/specgrams/all/'
+RAW_DATA_PATH = '/media/sc8013/ROXY FAT32/groupProject/rawData/'
+RAW_AUDIO_PATH = '/media/sc8013/ROXY FAT32/groupProject/rawData/RawAudio/specgrams/all/'
 
 def extractAudioData(audioPath):
   sr, data = scipy.io.wavfile.read(audioPath)
@@ -54,14 +54,23 @@ def buildExamplesAndTargets(dictionary, path):
   currDir = os.getcwd()
   os.chdir(path)
 
+  if not os.path.exists(directory + '/pickledData/'):
+        os.mkdir(directory + '/pickledData/')  # pickle dir doesn't exist so make it
+
   # iterate through the given dictionary
   for key, value in dictionary.iteritems():
 
     # iterate through the files corresponding to the patient (key)
     for file in glob.glob("*" + key + "*.jpg"):
 
-      print "Extracting data for " + file
-      imageData = extractGrayScale(file)
+      if os.path.isfile("pickledData/" + file[:-4] + ".save"):
+          print "Loading pickled data of " + file[:-4] + ".save"
+          imageData = pickle.load(open("pickledData/" + file[:-4] + ".save", 'r'))
+      else:
+        print "Extracting data for " + file
+        imageData = extractGrayScale(file)
+        print 'Pickling data for ' + file
+          pickle.dump(imageData, open('pickledData/' + file[:-4] + ".save", 'w'))
       # ignore shorter spectrograms
       if imageData.shape == (256,768):
           imageData = np.reshape(imageData, (1,1,256,768))
