@@ -5,7 +5,7 @@
         <br><br>
         <h1 class="header center teal-text text-lighten-2"><strong>TRY IT OUT</strong></h1>
         <div class="row center">
-          <hh class="white-text">Upload a file to estimate depression probablities:</hh>
+          <hh class="white-text">Upload a file to estimate depression level</hh>
         </div>
 
       </div>
@@ -16,12 +16,12 @@
 
 <div class="center row" container style="margin-top:20px">
 
-  <form action="/api/upload/video" method="POST" class="col s4 offset-s4">
+  <form action="/api/upload/video" enctype="multipart/form-data" method="POST" class="col s4 offset-s4">
     <div class="file-field input-field">
       <div>Uplad .mp4</div>
       <div class="btn">
         <span>File</span>
-        <input id="video" type="file"
+        <input name="video" type="file"
                title="upload .mp4 video file"
                accept="mp4" required>
       </div>
@@ -31,5 +31,8 @@
     </div>
     <div class="input-field">
       <input class="btn" type="submit" value="upload">
+    </div>
+    <div style="font-size:18px" class="section">
+        Predicted depression level: {{prediction}}
     </div>
   </form>

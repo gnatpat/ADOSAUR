@@ -1,7 +1,5 @@
 (function () {
   'use strict';
-  var formidable = require('formidable'),
-    evaluateBDI  = require('../utils.js').evaluateBDI;
 
   // api routes go here
   module.exports = function (app, express, models, passport) {
@@ -23,23 +21,7 @@
     require('./textRoutes.js')(router, models, passport);
     require('./recordRoutes.js')(router, models, passport);
     require('./testRoutes.js')(router, models, passport);
-
-    app.post('/upload', function (req, res) {
-      // parse a file upload
-      var form = new formidable.IncomingForm();
-      form.uploadDir = '../../tmp';
-
-      form.parse(req, function (err, fields, files) {
-        console.log("Evaluating BDI for " + files.file.path);
-        evaluateBDI(files.file.path, function (result) {
-          res.writeHead(200, {'content-type': 'text/json'});
-          console.log("Sending " + result);
-          res.end(JSON.stringify({"data": result}));
-        });
-      });
-
-      return;
-    });
+    require('./uploadRoutes.js')(router, models, passport);
 
     /* catches any routes that are not defined */
     router.use(function (req, res) {

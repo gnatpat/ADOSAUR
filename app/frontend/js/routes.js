@@ -12,7 +12,7 @@ adosaur.config(function ($stateProvider, $urlRouterProvider) {
     })
 
     .state('upload', {
-      url: "/upload",
+      url: "/upload?prediction",
       templateUrl: "components/upload/upload.html",
       controller: "uploadCtrl"
     })
