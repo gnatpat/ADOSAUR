@@ -33,6 +33,7 @@
               }
             });
           res.status(200).json({
+            text: text,
             message: "Text created successfully and added to doctor " + req.params.doctor
           });
         }

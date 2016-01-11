@@ -138,6 +138,7 @@
               }
             });
           res.status(200).json({
+            patient: user,
             message: "User created successfully and added to doctor " + req.params.doctor
           });
         }

@@ -45,6 +45,9 @@
           url: '/api/add/user/' + $scope.user.user._id,
           data: {patient: $scope.newUser}
         });
+        response.success(function (data, status, headers, config) {
+          $scope.patients.push(data.patient);
+        });
         response.error(function (data, status, headers, config) {
           console.log('Failed to add new patient');
         });
@@ -56,8 +59,11 @@
           url: '/api/add/text/' + $scope.user.user._id,
           data: {text: $scope.newText}
         });
+        response.success(function (data, status, headers, config) {
+          $scope.texts.push(data.text);
+        });
         response.error(function (data, status, headers, config) {
-          console.log('Failed to add new patient');
+          console.log('Failed to add new text to doctor');
         });
       };
 
