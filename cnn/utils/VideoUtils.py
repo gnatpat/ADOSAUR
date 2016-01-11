@@ -1,4 +1,4 @@
-import cv2
+#import cv2
 import os
 import csv
 from glob import glob
@@ -12,7 +12,7 @@ from scipy.ndimage.interpolation import zoom
 from Utils import createLabelDict
 
 
-DATABASE_DIR = '../rawData/'
+DATABASE_DIR = '/media/np1213/WD SACHA/rawData/'
 VIDEO_FOLDER = 'rawVideo/'
 LABEL_FOLDER = 'labels/'
 
@@ -178,12 +178,10 @@ def retrieveDataFrom(directory, labelsDict):
     
     numExamples = len(images)
     order = np.random.permutation(numExamples)
-    print(len(images))
-    print(len(labels))
     newImages = [images[x] for x in order]
     newLabels = [labels[x] for x in order]
 
-    return (np.array(newImages)), np.array(newLabels, dtype='int32')
+    return (np.array(newImages, dtype='float32')), np.array(newLabels, dtype='int32')
 
 
 if __name__ == '__main__':

@@ -17,6 +17,8 @@ import pickle
 
 from utils.VideoUtils import getCNNdata
 from utils.Utils import testCNN
+from utils.Utils import saveNet
+from utils.Utils import loadNet
 
 UNITS_ON_BDI = 4
 
@@ -50,38 +52,25 @@ def buildCNN(data):
         # architecture
         layers=[
             ('input', layers.InputLayer),
-            (layers.Conv2DLayer, {'num_filters':16, 'filter_size':(3, 3)}),
-            (layers.Conv2DLayer, {'num_filters':16, 'filter_size':(3, 3)}),
-            (layers.Conv2DLayer, {'num_filters':16, 'filter_size':(3, 3), 'nonlinearity':lasagne.nonlinearities.rectify}),
-            (layers.MaxPool2DLayer, {'pool_size': (2, 2)}),
-            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
-            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3)}),
-            (layers.Conv2DLayer, {'num_filters':32, 'filter_size':(3, 3), 'nonlinearity':lasagne.nonlinearities.rectify}),
-            (layers.MaxPool2DLayer, {'pool_size': (2, 2)}),
             (layers.Conv2DLayer, {'num_filters':64, 'filter_size':(3, 3)}),
-            (layers.Conv2DLayer, {'num_filters':64, 'filter_size':(3, 3), 'nonlinearity':lasagne.nonlinearities.rectify}),
             (layers.MaxPool2DLayer, {'pool_size': (2, 2)}),
             ('hidden2', layers.DenseLayer),
-            (layers.DropoutLayer, {'p':0.1}),
-            ('hidden3', layers.DenseLayer),
             ('output', layers.DenseLayer),
             ],
         input_shape=data['input_shape'],
-        hidden2_num_units=64,
+        hidden2_num_units=1000,
         hidden2_nonlinearity=lasagne.nonlinearities.sigmoid,
-        hidden3_num_units=7,
-        hidden3_nonlinearity=lasagne.nonlinearities.sigmoid,
         output_num_units=data['output_dim'],
         output_nonlinearity=lasagne.nonlinearities.sigmoid,
 
         # learning parameters
-        update_learning_rate=0.01,
-        update_momentum=0.95,
+        update_learning_rate=0.0001,
+        update_momentum=0.9,
         update=lasagne.updates.nesterov_momentum,
 
         # miscellaneous
         regression=False,
-        max_epochs=50,
+        max_epochs=500,
         verbose=3,
         train_split=TrainSplit(eval_size=0.2)
     )
@@ -103,23 +92,27 @@ def CNN(data):
 def main():
     data = loadData()
 
-    network = CNN(data)
-    
-    network.initialize()
+    network = loadNet('videoCNN1.save')
+    network.fit(data['trainingX'], data['trainingY'])
+
     # layer_info = PrintLayerInfo()
     # layer_info(network)
 
     testCNN(network, data['testingX'], data['testingY'])
 
+    saveNet('videoCNN1.save', network)
+
+    testCNN(network, data['trainingX'], data['trainingY'])
+
+    testCNN(network, data['validationX'], data['validationY'])
+
     plot_loss(network).show()
 
     face = random.random() * data['trainingX'].shape[0]
 
-    plot_conv_activity(network.layers_[3], data['trainingX'][face:(face+1)]).show()
+    plot_conv_activity(network.layers_[1], data['trainingX'][face:(face+1)]).show()
 
-#    for i in range(1,5):
-#        plot_conv_activity(network.layers_[i*2], data['trainingX'][face:(face+1)]).show()
-    plot_conv_weights(network.layers_[3], figsize=(5, 5))
+    plot_conv_weights(network.layers_[1], figsize=(3, 3))
 
 if __name__ == '__main__':
     main()
