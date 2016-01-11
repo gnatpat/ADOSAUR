@@ -27,6 +27,7 @@
         });
       }, null);
 
+      // adds patient to current doctor
       $scope.addPatient = function () {
         var response = $http({
           method: 'PUT',
@@ -77,7 +78,8 @@
 
       // delete a user (from database)
       $scope.delete = function (id) {
-        console.log('Deleting: ', id);
+        console.log('Deleting patient index', id);
+        $http.get('/api/user/delete/' + $scope.user.user._id + '/' + id);
       };
 
       // edit patient information

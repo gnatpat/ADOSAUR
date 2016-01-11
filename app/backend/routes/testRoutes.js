@@ -7,13 +7,12 @@
     var Test = models.test;
 
     router.put('/test/send/', function (req, res) {
-      console.log(req.body);
       var test = new Test();
       test.doctor  = req.body.doctor;
       test.patient = req.body.patient;
       test.text    = req.body.test.textID;
       test.type    = req.body.test.type;
-      test.result  = NaN;
+      test.result  = 5;
 
       test.save(function (err, test) {
         if (err) {
