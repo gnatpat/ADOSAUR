@@ -27,26 +27,43 @@
         });
       }, null);
 
+      /* finds the index of the object who's property KEY has value VALUE
+       * in the array ARRAY */
+      var findIndex = function (array, key, value) {
+        var l = array.length,
+          i   = 0;
+        for (i; i < l; i += 1) {
+          if (array[i][key] === value) { return i; }
+        }
+        return -1;
+      };
+
+      // adds patient to current doctor
       $scope.addPatient = function () {
         var response = $http({
           method: 'PUT',
           url: '/api/add/user/' + $scope.user.user._id,
           data: {patient: $scope.newUser}
         });
+        response.success(function (data, status, headers, config) {
+          $scope.patients.push(data.patient);
+        });
         response.error(function (data, status, headers, config) {
           console.log('Failed to add new patient');
         });
       };
-
+      // add text to current doctor
       $scope.addText = function () {
-        console.log('Adding text: ', $scope.newText);
         var response = $http({
           method: 'PUT',
           url: '/api/add/text/' + $scope.user.user._id,
           data: {text: $scope.newText}
         });
+        response.success(function (data, status, headers, config) {
+          $scope.texts.push(data.text);
+        });
         response.error(function (data, status, headers, config) {
-          console.log('Failed to add new patient');
+          console.log('Failed to add new text to doctor');
         });
       };
 
@@ -75,9 +92,20 @@
         });
       };
 
-      // delete a user (from database)
-      $scope.delete = function (id) {
-        console.log('Deleting: ', id);
+      // delete a user/text (from database)
+      $scope.delete = function (array, key, id, type) {
+        console.log('Deleting : ', id);
+        var rp;
+        if (type === 'patient') {
+          rp = $http.get('/api/user/delete/' + $scope.user.user._id + '/' + id);
+        } else {
+          rp = $http.get('/api/delete/text/' + $scope.user.user._id + '/' + id);
+        }
+        // if patient/text successfully deleted from database
+        rp.success(function (data, status, headers, config) {
+          // remove patient/texet from current patients/texts
+          array.splice(findIndex(array, key, id), 1);
+        });
       };
 
       // edit patient information

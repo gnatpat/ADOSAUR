@@ -49,6 +49,26 @@
       });
     });
 
+    router.get('/user/delete/:doctor/:id', function (req, res) {
+      var id = req.params.id,
+        doctor = req.params.doctor;
+      console.log('Deleting: ', id);
+      console.log('doctor: ', doctor);
+      User.findByIdAndUpdate(doctor, {$pull : { "patients": id}},
+        function (err) {
+          if (err) {
+            res.status(500).json({error: "Failed to delete patient from doctor's list"});
+          }
+          // if doctor's patients list correctly updated then delete patient from DB
+          User.remove({"_id": id}, function (err) {
+            if (err) {
+              res.status(500).json({error: "Failed to delete patient form DB"});
+            }
+          });
+          res.status(200).json({message: "Patient removed from DB"});
+        });
+    });
+
     /* gets the current user's information */
     router.get('/users/current', function (req, res) {
       var isFound = req.user !== undefined ? 1 : 0;
@@ -90,6 +110,9 @@
       console.log('Adding new Patient for: ' + req.params.doctor);
       var p  = req.body.patient,
         user = new User();
+      if (!p.profile_pic) {
+        p.profile_pic = "./assets/img/default_profile.png";
+      }
       // create the new patient
       user.first_name  = p.first_name;
       user.last_name   = p.last_name;
@@ -115,6 +138,7 @@
               }
             });
           res.status(200).json({
+            patient: user,
             message: "User created successfully and added to doctor " + req.params.doctor
           });
         }

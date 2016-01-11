@@ -33,10 +33,31 @@
               }
             });
           res.status(200).json({
+            text: text,
             message: "Text created successfully and added to doctor " + req.params.doctor
           });
         }
       });
+    });
+
+    router.get('/delete/text/:doctor/:id', function (req, res) {
+      var id = req.params.id,
+        doctor = req.params.doctor;
+      console.log('Deleting: ', id);
+      console.log('doctor: ', doctor);
+      User.findByIdAndUpdate(doctor, {$pull : { "texts": id}},
+        function (err) {
+          if (err) {
+            res.status(500).json({error: "Failed to delete text from doctor's list"});
+          }
+          // if doctor's patients list correctly updated then delete patient from DB
+          Text.remove({"_id": id}, function (err) {
+            if (err) {
+              res.status(500).json({error: "Failed to delete text form DB"});
+            }
+          });
+          res.status(200).json({message: "Text removed from DB"});
+        });
     });
   };
 }());

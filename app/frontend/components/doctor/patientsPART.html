@@ -22,7 +22,9 @@
             <i class="material-icons">edit</i>
           </a>
           <!-- Delete patient button -->
-          <a class="btn-floating red" ng-click="delete(patient._id)" title="Delete patient">
+          <a class="btn-floating red"
+             ng-click="delete(patients, '_id', patient._id, 'patient')"
+             title="Delete patient">
             <i class="material-icons">delete</i>
           </a>
         </div>
