@@ -45,7 +45,7 @@ def buildCNN():
 
         # miscellaneous
         regression=False,
-        max_epochs=50,
+        max_epochs=1500,
         verbose=1,
         train_split=TrainSplit(eval_size=0.2),
     )
@@ -57,8 +57,9 @@ def buildCNN():
 def loadAudioData():
     # initialise dictionary
     data = {}
-    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData('/media/sc8013/WD SACHA/rawData/RawAudio/wav/')
-    # trainingX, trainingY, developmentX, developmentY = AU.augmentData(trainingX, trainingY, developmentX, developmentY)
+    # build the audio data and augment it
+    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData()
+    trainingX, trainingY, developmentX, developmentY = AU.augmentData(trainingX, trainingY, developmentX, developmentY)
 
     # merge training and development data and add to dictionary
     data['X'] = np.append(trainingX, developmentX, axis=0)
@@ -71,29 +72,6 @@ def loadAudioData():
     return data
 
 
-# Tests a network using test data and expected labels,
-# printing the classification report and accuracy score
-def testCNN(network, inputs, expectedLabels):
-    predictions = network.predict(inputs)
-    print("Predictions: ", Counter(predictions))
-    print("Expected: ", Counter(expectedLabels))
-    print(classification_report(expectedLabels, predictions))
-    print(confusion_matrix(expectedLabels, predictions))
-    print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
-
-
-# takes an path to the audio file and a network and returns an array containing
-# the number of times it predicted each label for the different chunks
-def evaluate(audioFilePath, network):
-    # extract the audio data for the current file
-    audioData = AU.extractAudioData(audioFilePath)
-    # split the audio data into arrays of size SIZE_CHUNKS
-    splitArray = AU.splitData(audioData)
-    # predict using the network
-    predictions = network.predict(splitArray);
-    return dict(Counter(predictions))
-
-
 def main():
     data = loadAudioData()
 
@@ -104,13 +82,13 @@ def main():
     network.fit(data['X'], data['Y'])
 
     print("Saving the network...")
-    utils.saveNet('audioCNN11.pickle', network)
+    utils.saveNet('audioCNN.pickle', network)
 
     # print ("Loading the network...")
     # network = utils.loadNet('audioCNN10.pickle')
 
     print "Testing the network with test set..."
-    testCNN(network, data['testX'], data['testY'])
+    utils.testCNN(network, data['testX'], data['testY'])
 
 
 if __name__ == '__main__':

@@ -140,3 +140,25 @@ def loadNet(filename=None):
     f = open(filename, 'rb')
     net = cPickle.load(f)
     return net
+
+# takes an path to the audio file and a network and returns an array containing
+# the number of times it predicted each label for the different chunks
+def predictAudio(audioFilePath, network):
+    # extract the audio data for the current file
+    audioData = AU.extractAudioData(audioFilePath)
+    # split the audio data into arrays of size SIZE_CHUNKS
+    splitArray = AU.splitData(audioData)
+    # predict using the network
+    predictions = network.predict(splitArray);
+    return dict(Counter(predictions))
+
+
+# Tests a network using test data and expected labels,
+# printing the classification report and accuracy score
+def testCNN(network, inputs, expectedLabels):
+    predictions = network.predict(inputs)
+    print("Predictions: ", Counter(predictions))
+    print("Expected: ", Counter(expectedLabels))
+    print(classification_report(expectedLabels, predictions))
+    print(confusion_matrix(expectedLabels, predictions))
+    print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
