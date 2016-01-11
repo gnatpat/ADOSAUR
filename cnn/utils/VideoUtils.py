@@ -12,6 +12,7 @@ from scipy.ndimage.interpolation import zoom
 from Utils import createLabelDict
 from Utils import loadNet
 from Utils import DATABASE_DIR, LABEL_FOLDER
+from collections import Counter
 
 VIDEO_FOLDER = 'RawVideo/'
 
@@ -187,7 +188,20 @@ def retrieveDataFrom(directory, labelsDict):
 # the number of times it predicted each label for the different images
 def predictVideo(videoFilePath, network):
     # extract the images
-    images = extractImagesfromVideo(videoFilePath)
+    rawImages = extractImagesfromVideo(videoFilePath)
+    rawImages = 1 - (rawImages/255.0)
+    curImages = np.array([zoom(image, 0.2) for image in rawImages], dtype='float32')
+    curImages = curImages.reshape(-1, 1, curImages.shape[1], curImages.shape[2])
     # predict using the network
-    predictions = network.predict(images)
+    predictions = network.predict(curImages)
+
     return dict(Counter(predictions))
+
+def main():
+    print "Loading net.."
+    network = loadNet('../videoCNN1.save')
+    print "Predicting.."
+    print predictVideo('../205_1_Freeform_video.mp4', network)
+
+if __name__ == '__main__':
+    main()
