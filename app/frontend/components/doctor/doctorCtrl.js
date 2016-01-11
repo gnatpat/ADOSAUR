@@ -50,24 +50,29 @@
         });
       };
 
+      // opens the modal containing the form to fill to send a test
       $scope.openSendTest = function (patient) {
         $scope.patient = patient;
         $('#send_test_modal').openModal();
       };
 
+      // sends a test and closes the modal
       $scope.sendTest = function () {
         console.log("Sending test");
         console.log($scope.test);
       };
 
+      // delete a user (from database)
       $scope.delete = function (id) {
         console.log('Deleting: ', id);
       };
 
+      // edit patient information
+      /* TODO: implement */
       $scope.edit = function (item) {
         console.log('Editing: ', item);
       };
-
+      // sets the selected text in the send test form
       $scope.selectText = function (textID) {
         console.log('Selected text: ', textID);
         $scope.test.textID = textID;
