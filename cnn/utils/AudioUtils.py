@@ -6,6 +6,7 @@ import random
 from collections import Counter
 from Utils import DATABASE_DIR, LABEL_FOLDER
 from Utils import createLabelDict
+from Utils import loadNet
 
 SIZE_CHUNKS = 96000
 AUDIO_FOLDER = 'RawAudio/wav/mono/16k/'
@@ -120,3 +121,13 @@ def predictAudio(audioFilePath, network):
     # predict using the network
     predictions = network.predict(splitArray);
     return dict(Counter(predictions))
+
+
+def main():
+    print "Loading net.."
+    network = loadNet('../audioCNN13.pickle')
+    print "Predicting.."
+    print predictAudio('../205_1_Freeform_video_converted.wav', network)
+
+if __name__ == '__main__':
+    main()
