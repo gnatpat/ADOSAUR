@@ -13,3 +13,4 @@ pickledData/*
 rawData/*
 
 *.log
+cnn/*.pickle
