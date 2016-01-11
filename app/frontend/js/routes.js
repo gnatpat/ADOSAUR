@@ -32,6 +32,12 @@ adosaur.config(function ($stateProvider, $urlRouterProvider) {
       controller: "logoutCtrl"
     })
 
+    .state('test', {
+      url: "/test/:token",
+      templateUrl: "components/test/test.html",
+      controller: "testCtrl"
+    })
+
     .state('doctor', {
       url: "/doctor/{uid}",
       templateUrl: "components/doctor/doctor.html",

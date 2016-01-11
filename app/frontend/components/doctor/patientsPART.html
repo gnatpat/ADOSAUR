@@ -5,24 +5,40 @@
         <img ng-src="{{patient.profile_pic}}" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
       </div>
       <div class="col s10">
-        <span class="black-text">
+        <div class="black-text" style="margin-bottom: 10px">
           <srtong>{{patient.first_name}} {{patient.last_name}}</strong>
             <div>email: {{patient.email}}</div>
-        </span>
+        </div>
         <div class="card-action">
-              <a href="#">Send test</a>
-              <a href="#">This is a link</a>
-            </div>
+          <!-- Send test button -->
+          <a class="btn-floating teal modal-trigger"
+          data-target="send_test_modal"
+          title="Send test to patient"
+          ng-click="openSendTest(patient)">
+            <i class="material-icons">send</i>
+          </a>
+          <!-- Edit patient button -->
+          <a class="btn-floating orange" ng-click="edit(patient)" title="Edit patient">
+            <i class="material-icons">edit</i>
+          </a>
+          <!-- Delete patient button -->
+          <a class="btn-floating red" ng-click="delete(patient._id)" title="Delete patient">
+            <i class="material-icons">delete</i>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <div>
+
 <!-- add patient button / modal trigger-->
 <div class="fixed-action-button">
-  <a class="btn-floating btn-large red modal-trigger" data-target="modal1"><i class="material-icons">add</i></a>
+  <a class="btn-floating btn-large red modal-trigger" data-target="modal1" title="Add a patient">
+    <i class="material-icons">add</i>
+  </a>
 </div>
-<!-- Modal Structure -->
+<!-- Modal Structure to add a patient -->
   <div id="modal1" class="modal">
     <div class="modal-content">
       <h4>Add patient</h4>
@@ -66,3 +82,51 @@
       ng-click="addPatient()">Add</a>
     </div>
   </div>
+
+<!-- Send test modal -->
+<div id="send_test_modal" class="modal">
+  <div class="modal-content">
+    <div class="chip">
+      <img ng-src="{{patient.profile_pic}}" alt="Contact Person">
+      {{patient.first_name}} {{patient.last_name}}
+    </div>
+    <form class="row">
+      <div class="col s6">
+        <p>
+        <div><strong>Test type:</strong></div>
+          <input name="group1" type="radio" id="test1" ng-model="test.type" class="with-gap" value="read"/>
+          <label for="test1">Read text</label>
+        </p>
+        <p>
+          <input name="group1" type="radio" id="test2" ng-model="test.type" class="with-gap" value="question"/>
+          <label for="test2">Answer questions</label>
+        </p>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">message</i>
+          <textarea id="message" class="materialize-textarea" ng-model="test.emailMsg"></textarea>
+          <label for="message">Email message</label>
+        </div>
+      </div>
+      <div class="col s6">
+        <div class="input-field">
+          <i class="material-icons prefix">search</i>
+          <input id="text_search" type="search" required placeholder="Search texts" ng-model="text_search">
+        </div>
+        <div class="collection">
+          <a ng-repeat="text in texts | filter: text_search"
+          class="collection-item"
+          ng-click="selectText(text._id)"
+          ng-class="{'active': (test.textID === text._id)}">
+            {{text.title}}
+          </a>
+        </div>
+        <div>
+          <a class="waves-effect waves-light btn modal-close" ng-click="sendTest()">
+            <i class="material-icons right">send</i>
+            send
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
