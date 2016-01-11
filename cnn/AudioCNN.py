@@ -2,13 +2,19 @@ import numpy as np
 import theano
 import theano.tensor as T
 import lasagne
-import time
+import os
+import glob
+import random
 from utils import AudioUtils as AU
 from utils import Utils as utils
 from nolearn.lasagne import NeuralNet
 from nolearn.lasagne import TrainSplit
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 from collections import Counter
+
+# prevent error when pickling large network
+import sys
+sys.setrecursionlimit(10000)
 
 # Builds the network
 def buildCNN():
@@ -23,31 +29,37 @@ def buildCNN():
              ('output', lasagne.layers.DenseLayer),
              ],
 
-        input_shape=(None, 1, 40000),
-        conv1_num_filters=5, conv1_filter_size=3, pool1_pool_size=2,
-        hidden1_num_units=500,
+        # layers parameters
+        input_shape=(None, 1, AU.SIZE_CHUNKS),
+        conv1_num_filters=5, conv1_filter_size=3,
+        pool1_pool_size=2,
+        hidden1_num_units=1000,
         hidden1_nonlinearity=lasagne.nonlinearities.sigmoid,
-        output_num_units=64,
+        output_num_units=4,
         output_nonlinearity=lasagne.nonlinearities.sigmoid,
 
-        # learning parameters
+        # learning method and parameters
+        update=lasagne.updates.nesterov_momentum,
         update_learning_rate=0.0001,
-        update_momentum=0.9,
+        # update_momentum=0.9,
 
         # miscellaneous
         regression=False,
-        max_epochs=5,
-        verbose=2,
+        max_epochs=1500,
+        verbose=1,
+        train_split=TrainSplit(eval_size=0.2),
     )
 
     return network
 
 
 # Loads the audio data sets (training, validation and test) in a dictionary
-def loadAudioData():
+def loadData():
     # initialise dictionary
     data = {}
-    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData('../rawData/RawAudio/wav/')
+    # build the audio data and augment it
+    trainingX, trainingY, developmentX, developmentY, testX, testY = AU.buildAudioData()
+    trainingX, trainingY, developmentX, developmentY = AU.augmentData(trainingX, trainingY, developmentX, developmentY)
 
     # merge training and development data and add to dictionary
     data['X'] = np.append(trainingX, developmentX, axis=0)
@@ -60,42 +72,8 @@ def loadAudioData():
     return data
 
 
-def trainCNN(data, save=True, load=False):
-    # get our data
-    X = data['X']
-    Y = data['Y']
-
-    if load:
-        # load a pretrained network
-        print("Loading the network...")
-        network = utils.loadNet('audioCNN.pickle')
-    else:
-        # build network architecture
-        network = buildCNN()
-        # train the network
-        network.fit(X, Y)
-
-        if save:
-            # pickle the network
-            print("Saving the network...")
-            utils.saveNet('audioCNN.pickle', network)
-
-    return network
-
-
-# Tests a network using test data and expected labels,
-# printing the classification report and accuracy score
-def testCNN(network, inputs, expectedLabels):
-    predictions = network.predict(inputs)
-    print ("Predictions: ", Counter(predictions))
-    print ("Expected: ", Counter(expectedLabels))
-    # print(classification_report(expectedLabels, predictions))
-    # print(confusion_matrix(expectedLabels, predictions))
-    print("The accuracy is: ", accuracy_score(expectedLabels, predictions))
-
-
 def main():
-    data = loadAudioData()
+    data = loadData()
 
     print "Building the network..."
     network = buildCNN()
@@ -106,11 +84,11 @@ def main():
     print("Saving the network...")
     utils.saveNet('audioCNN.pickle', network)
 
-    # print("Loading the network...")
-    # network = utils.loadNet('audioCNN.pickle')
+    # print ("Loading the network...")
+    # network = utils.loadNet('audioCNN10.pickle')
 
     print "Testing the network with test set..."
-    testCNN(network, data['testX'], data['testY'])
+    utils.testCNN(network, data['testX'], data['testY'])
 
 
 if __name__ == '__main__':

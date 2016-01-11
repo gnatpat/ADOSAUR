@@ -1,202 +1,114 @@
-from __future__ import print_function
-
-import os
-import time
-
-import numpy as np
-
-import theano
-import theano.tensor as T
+import random
 
 import lasagne
+from lasagne import layers
+from lasagne.updates import nesterov_momentum
+from nolearn.lasagne import NeuralNet
+from nolearn.lasagne import PrintLayerInfo
+from nolearn.lasagne import TrainSplit
 
+from nolearn.lasagne.visualize import plot_loss
+from nolearn.lasagne.visualize import plot_conv_weights
+from nolearn.lasagne.visualize import plot_conv_activity
+from nolearn.lasagne.visualize import plot_occlusion
+
+import numpy as np
+import pickle
+
+from utils.VideoUtils import buildVideoData
+from utils.Utils import testCNN
+from utils.Utils import saveNet
+from utils.Utils import loadNet
+
+UNITS_ON_BDI = 4
+
+
+# Loads training, validation and testing data
 def loadData():
-    # We first define a download function, supporting both Python 2 and 3.
-    from urllib import urlretrieve
+    # retrieve data
+    trainingX, trainingY, validationX, validationY, testingX, testingY = buildVideoData()
 
-    def download(filename, source='http://yann.lecun.com/exdb/mnist/'):
-        print("Downloading %s" % filename)
-        urlretrieve(source + filename, filename)
+    # initialise and populate dictionary
+    data = {}
+    data['trainingX']   = trainingX    # a list of grayscale images
+    data['trainingY']   = trainingY    # a list of ints (on BDI scale)
+    data['validationX'] = validationX  # a list of grayscale images
+    data['validationY'] = validationY  # a list of ints (on BDI scale)
+    data['testingX']    = testingX     # a list of grayscale images
+    data['testingY']    = testingY     # a list of ints (on BDI scale)
+    data['num_examples_train'] = trainingX.shape[0]
+    data['input_shape'] = (None,) + trainingX.shape[1:]
+    data['output_dim'] = UNITS_ON_BDI  # BDI scale
 
-    # We then define functions for loading MNIST images and labels.
-    # For convenience, they also download the requested files if needed.
-    import gzip
+    # Report number of training examples found
+    print("\n\nGot %i training datasets.\n" % data['num_examples_train'])
 
-    def load_mnist_images(filename):
-        if not os.path.exists(filename):
-            download(filename)
-        # Read the inputs in Yann LeCun's binary format.
-        with gzip.open(filename, 'rb') as f:
-            data = np.frombuffer(f.read(), np.uint8, offset=16)
-        # The inputs are vectors now, we reshape them to monochrome 2D images,
-        # following the shape convention: (examples, channels, rows, columns)
-        data = data.reshape(-1, 1, 28, 28)
-        # The inputs come as bytes, we convert them to float32 in range [0,1].
-        # (Actually to range [0, 255/256], for compatibility to the version
-        # provided at http://deeplearning.net/data/mnist/mnist.pkl.gz.)
-        return data / np.float32(256)
+    return data
 
-    def load_mnist_labels(filename):
-        if not os.path.exists(filename):
-            download(filename)
-        # Read the labels in Yann LeCun's binary format.
-        with gzip.open(filename, 'rb') as f:
-            data = np.frombuffer(f.read(), np.uint8, offset=8)
-        # The labels are vectors of integers now, that's exactly what we want.
-        return data
+def buildCNN(data):
+    network = NeuralNet(
+        # architecture
+        layers=[
+            ('input', layers.InputLayer),
+            (layers.Conv2DLayer, {'num_filters':64, 'filter_size':(3, 3)}),
+            (layers.MaxPool2DLayer, {'pool_size': (2, 2)}),
+            ('hidden2', layers.DenseLayer),
+            ('output', layers.DenseLayer),
+            ],
+        input_shape=data['input_shape'],
+        hidden2_num_units=1000,
+        hidden2_nonlinearity=lasagne.nonlinearities.sigmoid,
+        output_num_units=data['output_dim'],
+        output_nonlinearity=lasagne.nonlinearities.sigmoid,
 
-    # We can now download and read the training and test set images and labels.
-    X_train = load_mnist_images('train-images-idx3-ubyte.gz')
-    y_train = load_mnist_labels('train-labels-idx1-ubyte.gz')
-    X_test = load_mnist_images('t10k-images-idx3-ubyte.gz')
-    y_test = load_mnist_labels('t10k-labels-idx1-ubyte.gz')
+        # learning parameters
+        update_learning_rate=0.0001,
+        update_momentum=0.9,
+        update=lasagne.updates.nesterov_momentum,
 
-    # We reserve the last 10000 training examples for validation.
-    X_train, X_val = X_train[:-10000], X_train[-10000:]
-    y_train, y_val = y_train[:-10000], y_train[-10000:]
-
-    # We just return all the arrays in order, as expected in main().
-    # (It doesn't matter how we do this as long as we can read them again.)
-    return X_train, y_train, X_val, y_val, X_test, y_test
-
-def buildCNN(width, height, input_var):
-
-    # Start by creating an input layer for the CNN
-    network = lasagne.layers.InputLayer(shape=(None, 1, width, height), input_var=input_var)
-
-    # Add a convolutional layer, 32 kernels of size 7x7
-    network = lasagne.layers.Conv2DLayer(
-          network, num_filters=32, filter_size=(5,5),
-          nonlinearity=lasagne.nonlinearities.rectify,
-          W=lasagne.init.GlorotUniform())
-
-    # Max-pooling layers of factor 2 in both dimensions
-    network = lasagne.layers.MaxPool2DLayer(network, pool_size=(2, 2))
-
-    # Add a convolutional layer, 32 kernels of size 7x7
-    network = lasagne.layers.Conv2DLayer(
-          network, num_filters=32, filter_size=(5,5),
-          nonlinearity=lasagne.nonlinearities.rectify,
-          W=lasagne.init.GlorotUniform())
-
-    # Max-pooling layers of factor 2 in both dimensions
-    network = lasagne.layers.MaxPool2DLayer(network, pool_size=(2, 2))
-
-    # Fully connected layer of 256 units with 50% dropout
-    network = lasagne.layers.DenseLayer(
-          lasagne.layers.dropout(network, p=0.5),
-          num_units=256,
-          nonlinearity=lasagne.nonlinearities.rectify)
-
-    # Fully connected layer of 10 units with 50% dropout
-    network = lasagne.layers.DenseLayer(
-          lasagne.layers.dropout(network, p=0.5),
-          num_units=10,
-          nonlinearity=lasagne.nonlinearities.softmax)
+        # miscellaneous
+        regression=False,
+        max_epochs=500,
+        verbose=3,
+        train_split=TrainSplit(eval_size=0.2)
+    )
 
     return network
 
-# ############################# Batch iterator ###############################
-# This is just a simple helper function iterating over training data in
-# mini-batches of a particular size, optionally in random order. It assumes
-# data is available as numpy arrays. For big datasets, you could load numpy
-# arrays as memory-mapped files (np.load(..., mmap_mode='r')), or write your
-# own custom data iteration function. For small datasets, you can also copy
-# them to GPU at once for slightly improved performance. This would involve
-# several changes in the main program, though, and is not demonstrated here.
+def CNN(data):
+    # build network - need data to determine input/output shapes
+    print("Building network...")
+    network = buildCNN(data)
 
-def iterateMinibatches(inputs, targets, batchsize):
-    assert len(inputs) == len(targets)
-    for start_idx in range(0, len(inputs) - batchsize + 1, batchsize):
-        excerpt = slice(start_idx, start_idx + batchsize)
-        yield inputs[excerpt], targets[excerpt]
+    # train the network
+    print("Training network...\n")
+    network.fit(data['trainingX'], data['trainingY'])
+    return network
 
+def main():
+    data = loadData()
 
-# Load the data
-xTrain, yTrain, xVal, yVal, xTest, yTest = loadData()
+    network = loadNet('videoCNN1.save')
+    network.fit(data['trainingX'], data['trainingY'])
 
-inputVar = T.tensor4('inputs')
-targetVar = T.ivector('targets')
+    # layer_info = PrintLayerInfo()
+    # layer_info(network)
 
-network = buildCNN(28, 28, inputVar)
+    testCNN(network, data['testingX'], data['testingY'])
 
-# Create loss expression for training
-prediction = lasagne.layers.get_output(network)
-loss = lasagne.objectives.categorical_crossentropy(prediction, targetVar)
-loss = loss.mean()
+    saveNet('videoCNN1.save', network)
 
-# Use Stochastic Gradient Descent with Nesterov Momentum for training
-params = lasagne.layers.get_all_params(network, trainable=True)
-updates = lasagne.updates.nesterov_momentum(loss, params, learning_rate=0.01, momentum=0.9)
+    testCNN(network, data['trainingX'], data['trainingY'])
 
-# Create a loss expression for validation/testing. The crucial difference
-# here is that we do a deterministic forward pass through the network,
-# disabling dropout layers.
-testPrediction = lasagne.layers.get_output(network, deterministic=True)
-testLoss = lasagne.objectives.categorical_crossentropy(testPrediction, targetVar)
-testLoss = testLoss.mean()
+    testCNN(network, data['validationX'], data['validationY'])
 
-# As a bonus, also create an expression for the classification accuracy:
-testAcc = T.mean(T.eq(T.argmax(testPrediction, axis=1), targetVar),
-                  dtype=theano.config.floatX)
+    plot_loss(network).show()
 
-# Compile a function performing a training step on a mini-batch (by giving
-# the updates dictionary) and returning the corresponding training loss:
-trainFn = theano.function([inputVar, targetVar], loss, updates=updates)
+    face = random.random() * data['trainingX'].shape[0]
 
-# Compile a second function computing the validation loss and accuracy:
-valFn = theano.function([inputVar, targetVar], [testLoss, testAcc])
+    plot_conv_activity(network.layers_[1], data['trainingX'][face:(face+1)]).show()
 
-# Finally, launch the training loop.
-numEpochs = 10
-print("Start training.........")
-for epoch in range(numEpochs):
-    # Train!
-    trainErr = 0
-    trainBatches = 0
-    startTime = time.time()
+    plot_conv_weights(network.layers_[1], figsize=(3, 3))
 
-
-    for batch in iterateMinibatches(xTrain, yTrain, 500):
-        inputs, targets = batch
-        trainErr += trainFn(inputs, targets)
-        trainBatches += 1
-        print(str(trainBatches) + "", end="")
-
-    # Validate!
-    valErr = 0
-    valAcc = 0
-    valBatches = 0
-    
-    for batch in iterateMinibatches(xVal, yVal, 500):
-        inputs, targets = batch
-        err, acc = valFn(inputs, targets)
-        valErr += err
-        valAcc += acc
-        valBatches += 1
-        print(str(valBatches) + "", end="")
-
-
-    # Print results
-    print("Finished epoch {} of {} in {:.3f}s".format(epoch+1, numEpochs, time.time()-startTime))
-    print("    training loss:\t\t{:.6f}".format(trainErr/trainBatches))
-    print("    validation loss:\t\t{:.6f}".format(valErr/valBatches))
-    print("    validation accuracy:\t{:.6f}".format(valAcc/valBatches))
-
-
-# Test!
-testErr = 0
-testAcc = 0
-testBatches = 0
-
-for batch in iterateMinibatches(xTest, yTest, 100):
-    inputs, targets = batch
-    err, acc = valFn(inputs, targets)
-    testErr += err
-    testAcc += acc
-    testBatches += 1
-
-print("FINAL RESULTS")
-print("   test loss:\t\t\t{:.6f}".format(testErr/testBatches))
-print("   test accuracy:\t\t\t{:.2f} %".format(testAcc/testBatches * 100))
-
+if __name__ == '__main__':
+    main()
