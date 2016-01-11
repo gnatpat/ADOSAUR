@@ -8,7 +8,16 @@
           <p><strong>Comments: </strong> {{text.comments}}</p>
         </div>
         <div class="card-action">
-          <a href="#" class="btn red">Delete</a>
+          <!-- Edit text button -->
+          <a class="btn-floating orange" ng-click="edit(text)" title="Edit text">
+            <i class="material-icons">edit</i>
+          </a>
+          <!-- Delete text button -->
+          <a class="btn-floating red"
+             ng-click="delete(texts, '_id', text._id, 'text')"
+             title="Delete text">
+            <i class="material-icons">delete</i>
+          </a>
         </div>
       </div>
     </div>

@@ -110,6 +110,9 @@
       console.log('Adding new Patient for: ' + req.params.doctor);
       var p  = req.body.patient,
         user = new User();
+      if (!p.profile_pic) {
+        p.profile_pic = "./assets/img/default_profile.png";
+      }
       // create the new patient
       user.first_name  = p.first_name;
       user.last_name   = p.last_name;
