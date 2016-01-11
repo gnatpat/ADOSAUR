@@ -49,5 +49,28 @@
           console.log('Failed to add new patient');
         });
       };
+
+      $scope.openSendTest = function (patient) {
+        $scope.patient = patient;
+        $('#send_test_modal').openModal();
+      };
+
+      $scope.sendTest = function () {
+        console.log("Sending test");
+        console.log($scope.test);
+      };
+
+      $scope.delete = function (id) {
+        console.log('Deleting: ', id);
+      };
+
+      $scope.edit = function (item) {
+        console.log('Editing: ', item);
+      };
+
+      $scope.selectText = function (textID) {
+        console.log('Selected text: ', textID);
+        $scope.test.textID = textID;
+      };
     }]);
 }());
