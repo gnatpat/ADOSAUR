@@ -37,5 +37,5 @@
 
   server = app.listen(8080, '127.0.0.1');
   console.log("ADOSAUR started at http://127.0.0.1:8080");
-  console.log("Enjoy madafaka!!");
+  console.log("Try to be a rainbow in someone's cloud!");
 }());

@@ -14,23 +14,22 @@
   <div class="parallax"><img src="assets/img/p.jpg" alt="Unsplashed background img 1" style="display: block; transform: translate3d(-50%, 189px, 0px);"></div>
 </div>
 
-<div class="center" container style="margin-top:20px">
-    
-    <form name="myForm">
-    <fieldset style="border:none">
-      Audio file (.wav):
-      <input type="file" ngf-select ng-model="audioFile" name="file"
-             accept=".wav" ngf-max-size="50MB" required>
-      <i ng-show="myForm.file.$error.required">*required</i><br>
-      <i ng-show="myForm.file.$error.maxSize">File too large
-          {{audioFile.size / 1000000|number:1}}MB: max 50M</i>
-      <button ng-click="audioFile = null" ng-show="audioFile">Remove</button>
-      <br>
-      <button ng-disabled="!myForm.$valid"
-              ng-click="uploadAudio(audioFile)">Submit</button>
-      <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
-    </fieldset>
-    <br>
+<div class="center row" container style="margin-top:20px">
+
+  <form action="/api/upload/video" method="POST" class="col s4 offset-s4">
+    <div class="file-field input-field">
+      <div>Uplad .mp4</div>
+      <div class="btn">
+        <span>File</span>
+        <input id="video" type="file"
+               title="upload .mp4 video file"
+               accept="mp4" required>
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text">
+      </div>
+    </div>
+    <div class="input-field">
+      <input class="btn" type="submit" value="upload">
+    </div>
   </form>
-  <div id="graph" style="min-width: 310px; height: 400px; margin: auto; max-width:600px; display:none" ></div>
-</div>

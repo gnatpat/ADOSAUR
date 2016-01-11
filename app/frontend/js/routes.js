@@ -10,11 +10,7 @@ adosaur.config(function ($stateProvider, $urlRouterProvider) {
       templateUrl: "components/home/home.html",
       controller: "homeCtrl"
     })
-    .state('doctorLogin', {
-      url: "/doctorLogin",
-      templateUrl: "components/realTime/realTime.html",
-      controller: "realTimeCtrl"
-    })
+
     .state('upload', {
       url: "/upload",
       templateUrl: "components/upload/upload.html",
