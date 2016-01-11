@@ -3,12 +3,12 @@ import os
 import glob
 import numpy as np
 import random
-from Utils import createLabelDict
 from collections import Counter
+from Utils import DATABASE_DIR, LABEL_FOLDER
+from Utils import createLabelDict
 
 SIZE_CHUNKS = 96000
-RAW_DATA_PATH = '../rawData/'
-RAW_AUDIO_PATH = '../rawData/RawAudio/wav/mono/16k/'
+AUDIO_FOLDER = 'RawAudio/wav/mono/16k/'
 
 def extractAudioData(audioPath):
   data = scipy.io.wavfile.read(audioPath)[1]
@@ -29,20 +29,20 @@ def splitData(dataArray):
   return finalSplitArray
 
 
-def buildAudioData(rawAudioPath=RAW_AUDIO_PATH):
+def buildAudioData(rawAudioPath=DATABASE_DIR):
   # create label dictionaries for training, dev and test sets
-  trainLabelsDict = createLabelDict(RAW_DATA_PATH + 'labels/Training/')
-  devLabelsDict   = createLabelDict(RAW_DATA_PATH + 'labels/Development/')
-  testLabelsDict  = createLabelDict(RAW_DATA_PATH + 'labels/Testing/')
+  trainLabelsDict = createLabelDict(DATABASE_DIR + LABEL_FOLDER + 'Training/')
+  devLabelsDict   = createLabelDict(DATABASE_DIR + LABEL_FOLDER +'Development/')
+  testLabelsDict  = createLabelDict(DATABASE_DIR + LABEL_FOLDER +'Testing/')
 
   currDir = os.getcwd()
 
   print "Building training data..."
-  trainingX, trainingY       = buildExamplesAndTargets(trainLabelsDict, RAW_AUDIO_PATH)
+  trainingX, trainingY       = buildExamplesAndTargets(trainLabelsDict, DATABASE_DIR + AUDIO_FOLDER)
   print "Building development data..."
-  developmentX, developmentY = buildExamplesAndTargets(devLabelsDict, RAW_AUDIO_PATH)
+  developmentX, developmentY = buildExamplesAndTargets(devLabelsDict, DATABASE_DIR + AUDIO_FOLDER)
   print "Building test data..."
-  testX, testY               = buildExamplesAndTargets(testLabelsDict, RAW_AUDIO_PATH)
+  testX, testY               = buildExamplesAndTargets(testLabelsDict, DATABASE_DIR + AUDIO_FOLDER)
 
   os.chdir(currDir)
   return trainingX, trainingY, developmentX, developmentY, testX, testY
@@ -109,3 +109,14 @@ def augmentData(trainingX, trainingY, developmentX, developmentY):
         developmentY = np.append(developmentY, np.array(label))
 
   return trainingX, trainingY, developmentX, developmentY
+
+# takes an path to the audio file and a network and returns an array containing
+# the number of times it predicted each label for the different chunks
+def predictAudio(audioFilePath, network):
+    # extract the audio data for the current file
+    audioData = extractAudioData(audioFilePath)
+    # split the audio data into arrays of size SIZE_CHUNKS
+    splitArray = splitData(audioData)
+    # predict using the network
+    predictions = network.predict(splitArray);
+    return dict(Counter(predictions))

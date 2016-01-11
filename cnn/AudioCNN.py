@@ -54,7 +54,7 @@ def buildCNN():
 
 
 # Loads the audio data sets (training, validation and test) in a dictionary
-def loadAudioData():
+def loadData():
     # initialise dictionary
     data = {}
     # build the audio data and augment it
@@ -73,7 +73,7 @@ def loadAudioData():
 
 
 def main():
-    data = loadAudioData()
+    data = loadData()
 
     print "Building the network..."
     network = buildCNN()
