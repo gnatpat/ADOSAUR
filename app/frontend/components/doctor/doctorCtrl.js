@@ -60,6 +60,19 @@
       $scope.sendTest = function () {
         console.log("Sending test");
         console.log($scope.test);
+        var response = $http({
+          method: 'PUT',
+          url: '/api/test/send',
+          data: {
+            test   : $scope.test,
+            patient: $scope.patient._id,
+            to     : $scope.patient.email,
+            doctor : $scope.user.user._id
+          }
+        });
+        response.error(function (data, status, headers, config) {
+          console.log('Failed to send test to patient');
+        });
       };
 
       // delete a user (from database)
