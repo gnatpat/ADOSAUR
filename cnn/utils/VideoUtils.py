@@ -12,7 +12,7 @@ from scipy.ndimage.interpolation import zoom
 from Utils import createLabelDict
 
 
-DATABASE_DIR = '/media/np1213/WD SACHA/rawData/'
+DATABASE_DIR = '/media/nathan/WD SACHA/rawData/'
 VIDEO_FOLDER = 'rawVideo/'
 LABEL_FOLDER = 'labels/'
 
@@ -99,6 +99,7 @@ def getCNNdata(CNNfolder='./'):
     print(trainingX.shape)
     trainingX = trainingX.reshape(-1, 1, trainingX.shape[1], trainingX.shape[2])
 
+
     print '\n\nLoading validation data...'
     [validationDir] \
         = glob(CNNfolder + DATABASE_DIR + VIDEO_FOLDER + 'Development')
@@ -133,7 +134,7 @@ def loadSingleVideo(videoPath, locks, images, labels, directory, labelsDict):
         print 'Extracting data for ' + filename
         rawImages = extractImagesfromVideo(videoPath)
         print 'Normalising ' + filename
-        rawImages = 1 - (rawImages/255)
+        rawImages = 1 - (rawImages/255.0)
         print 'Scaling ' + filename
         curImages = [zoom(image, 0.2) for image in rawImages]
         print 'Pickling data in ' + picklePath
