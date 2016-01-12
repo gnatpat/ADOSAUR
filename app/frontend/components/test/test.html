@@ -1,1 +1,29 @@
-TEST PAGE
+<div class="center row" style="padding-top:10px">
+  <div class="col s6">
+    <p>
+      <video poster="assets/img/out.gif" id="camera-preview" muted width="640" height="480" autoplay></video>
+    </p>
+
+    <div>
+        <a id="start-recording" class="waves-effect waves-light btn">Start Recording</a>
+        <a id="stop-recording" class="waves-effect waves-light btn">Stop Recording</a>
+    </div>
+  </div>
+
+  <div class="col s6">
+    TEXT or QUESTIONS will go here
+  </div>
+</div>
+
+<div id="sentTest" class="modal">
+  <div class="modal-content">
+    <p>Uploading your recording...</p>
+    <p></p>
+    <p id="thank-you" style="visibility:hidden">Thank you for taking the test, your results will be sent
+      to your doctor, you may now close this page</p>
+
+  </div>
+  <div style="visibility:hidden" id="exit" class="center modal-footer">
+    <a href="/#/home" class=" modal-action modal-close waves-effect waves-green btn-flat">Finish</a>
+  </div>
+</div>

@@ -18,7 +18,7 @@
         if (err) {
           res.status(500).json({error: 'Failed to create test'});
         }
-        var link = 'http://127.0.0.1/#/test/' + test._id;
+        var link = 'http://127.0.0.1:8080/#/test/' + test._id;
         mailer.sendMail({
           to: req.body.to,
           subject: 'Test',

@@ -9,15 +9,16 @@
     passport     = require('passport'), // for authentification
     session      = require('express-session'), // for authentification
     models       = require('./models/models.js'), /* Setup mongoose models */
+    fs           = require('fs'),
     app          = express(),
     server;
 
   /* Logging http requests*/
   app.use('/api/', morgan('dev'));
   /* to read json */
-  app.use(bp.json());
+  app.use(bp.json({ limit:'50mb' }));
   /* parse application/x-www-form-urlencoded */
-  app.use(bp.urlencoded({ extended: false }));
+  app.use(bp.urlencoded({ extended: false, limit:'50mb' }));
   /* to read cookies */
   app.use(cookieParser());
   /* connect to the mongodb database */

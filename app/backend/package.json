@@ -20,7 +20,8 @@
     "morgan": "^1.6.1",
     "nodemailer": "^1.11.0",
     "passport": "^0.3.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "recordrtc-nodejs": "^1.0.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
