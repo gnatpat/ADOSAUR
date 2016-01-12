@@ -35,7 +35,7 @@
   express.dirname = __dirname;
   require('./routes/routes.js')(app, express, models, passport);
 
-  server = app.listen(8080, '127.0.0.1');
+  server = app.listen(8080);
   console.log("ADOSAUR started at http://127.0.0.1:8080");
   console.log("Try to be a rainbow in someone's cloud!");
 }());
