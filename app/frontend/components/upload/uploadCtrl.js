@@ -6,7 +6,7 @@
       "0": "Minimal depression",
       "1": "Mild depression",
       "2": "Moderate depression",
-      "3": "Severe depressions"
+      "3": "Severe depression"
     };
     $scope.prediction = dlevels[$location.search().prediction];
 
