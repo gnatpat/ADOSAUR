@@ -1,12 +1,14 @@
 (function () {
   'use strict';
 
-  var mailer = require('../email.js'); // to send emails
+  var mailer = require('../email.js'), // to send emails
+      ip     = require('ip')
 
   module.exports = function (router, models, passport) {
     var Test = models.test;
 
     router.put('/test/send/', function (req, res) {
+      console.log(ip.address());
       var test = new Test();
       test.doctor  = req.body.doctor;
       test.patient = req.body.patient;
@@ -18,7 +20,7 @@
         if (err) {
           res.status(500).json({error: 'Failed to create test'});
         }
-        var link = 'http://127.0.0.1:8080/#/test/' + test._id;
+        var link = 'http://' + ip.address() + ':8080/#/test/' + test._id;
         mailer.sendMail({
           to: req.body.to,
           subject: 'Test',

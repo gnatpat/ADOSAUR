@@ -10,6 +10,7 @@
     session      = require('express-session'), // for authentification
     models       = require('./models/models.js'), /* Setup mongoose models */
     fs           = require('fs'),
+    ip           = require('ip'),
     app          = express(),
     server;
 
@@ -37,6 +38,7 @@
   require('./routes/routes.js')(app, express, models, passport);
 
   server = app.listen(8080);
-  console.log("ADOSAUR started at http://127.0.0.1:8080");
+  console.log("ADOSAUR started at http://localhost:8080");
   console.log("Try to be a rainbow in someone's cloud!");
+  console.log("Ip address is: " + ip.address())
 }());
