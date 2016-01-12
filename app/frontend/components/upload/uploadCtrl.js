@@ -2,8 +2,13 @@
   'use strict';
   var adosaur = angular.module('adosaur')
   adosaur.controller('uploadCtrl', ['$scope', 'Upload', '$timeout', '$location', function ($scope, Upload, $timeout, $location) {
-
-    $scope.prediction = $location.search().prediction;
+    var dlevels = {
+      "0": "Minimal depression",
+      "1": "Mild depression",
+      "2": "Moderate depression",
+      "3": "Severe depressions"
+    };
+    $scope.prediction = dlevels[$location.search().prediction];
 
   }]);
 }());

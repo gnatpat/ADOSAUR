@@ -19,7 +19,6 @@
     require('./loginRoutes.js')(router, models, passport);
     require('./userRoutes.js')(router, models, passport);
     require('./textRoutes.js')(router, models, passport);
-    require('./recordRoutes.js')(router, models, passport);
     require('./testRoutes.js')(router, models, passport);
     require('./uploadRoutes.js')(router, models, passport);
 
