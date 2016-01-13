@@ -60,23 +60,26 @@
       form.parse(req, function (err, fields, files) {
           var videoFilePath = files.video.path;
           var audioFilePath = '../../tmp/audio.wav'
+          var newVideoFilePath = '../../tmp/video.mp4'
 
-          exec('avconv -i ' + videoFilePath + ' -ar 16000 -ac 1 ' + audioFilePath, function(err,stdout,stderr) {
-              exec('python ../../cnn/predict.py ' + videoFilePath + ' ' + audioFilePath, function(err,stdout,stderr) {
-              if (err) {
-                console.log('Child process exited with error code', err.code);
-                return
-              }
-              var results = stdout.split('\n')
-              var audioResult = results[0].replace(/\s+/g, '');
-              var videoResult = results[1].replace(/\s+/g, '');
+          exec('avconv -i ' + videoFilePath + ' -vf scale=640:480 ' + newVideoFilePath, function(err, stdout, stderr) {
+            exec('avconv -i ' + videoFilePath + ' -ar 16000 -ac 1 ' + audioFilePath, function(err,stdout,stderr) {
+                exec('python ../../cnn/predict.py ' + newVideoFilePath + ' ' + audioFilePath, function(err,stdout,stderr) {
+                if (err) {
+                  console.log('Child process exited with error code', err.code);
+                  return
+                }
+                var results = stdout.split('\n')
+                var audioResult = results[0].replace(/\s+/g, '');
+                var videoResult = results[1].replace(/\s+/g, '');
 
-              var resultArr = majorityVote(audioResult, videoResult);
+                var resultArr = majorityVote(audioResult, videoResult);
 
-              var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
-              res.redirect('/#/upload?prediction=' + prediction);
-              });
-          });          
+                var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
+                res.redirect('/#/upload?prediction=' + prediction);
+                });
+            });
+          });
       });
     });
 
@@ -152,19 +155,19 @@
                   if (err) {
                     res.status(500).json({error: "Failed to update test result"});
                   }
-                });                
+                });
 
                 mailer.sendMail({
                   to: docEmail,
                   subject: 'Test results',
-                  text: "Patient " + patient.first_name + " " + patient.last_name + 
+                  text: "Patient " + patient.first_name + " " + patient.last_name +
                   " finished his test. His estimated depression level is: " + prediction + " " + dlevels[prediction]
                 });
-                
+
                 res.status(200).json({message: "Sent tests results to doctor"});
                 });
             });
-          }); 
+          });
 
     });
   };
