@@ -11,6 +11,26 @@
   </div>
 
   <div class="col s6">
+    <div class="row" style="">
+      <div class="col s3">
+        <strong>Test set by:</strong>
+      </div>
+      <div class="col s3">
+        <div class="chip">
+          <img ng-src="{{doctor.profile_pic}}" alt="Contact Person">
+          {{doctor.first_name}} {{doctor.last_name}}
+        </div>
+      </div>
+      <div class="col s3">
+        <strong>For patient:</strong>
+      </div>
+      <div class="col s3">
+        <div class="chip">
+          <img ng-src="{{patient.profile_pic}}" alt="Contact Person">
+          {{patient.first_name}} {{patient.last_name}}
+        </div>
+      </div>
+    </div>
     <div class="row teal lighten-5" style="font-size: 16px">
       <div class="col s3">
         <strong>Instructions:</strong>
