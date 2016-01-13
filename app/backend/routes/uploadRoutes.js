@@ -2,6 +2,7 @@
   'use strict';
   var formidable = require('formidable'),
     fs         = require('fs'),
+    mailer     = require('../email.js')
     child_process = require('child_process'),
     exec = child_process.exec;
 
@@ -73,10 +74,12 @@
       });
     });
 
-    router.post('/upload/test/:testID', function(req, res) {
+    router.post('/upload/test/:testID', function (req, res) {
       // save the video file
-      var file = req.body.files.video;
-      var testID = req.params.testID;
+      var file = req.body.files.video,
+        testID = req.params.testID,
+        docEmail = req.body.docEmail,
+        patient = req.body.patient;
 
       var fileRootName = file.name.split('.').shift(),
        fileExtension = file.name.split('.').pop(),
@@ -125,6 +128,12 @@
           }
         });
 
+        mailer.sendMail({
+          to: docEmail,
+          subject: 'Test results',
+          text: "Patient " + patient.first_name + " " + patient.last_name + 
+          " finished his test. His estimated depression level is: 1 (mild depression)"
+        });
         // TODO: feed the video and audio files to cnn and get output and save
         // the tests results and notify the doctor
         res.status(200).json({message: "Sent tests results to doctor"});

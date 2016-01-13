@@ -11,6 +11,8 @@
       $scope.test = data.test;
       console.log(data);
       $scope.text = data.text;
+      $scope.doctor = data.doctor;
+      $scope.patient = data.patient;
     });
     rp.error(function (data, status, headers, config) {
       console.log('failed to get test');
@@ -111,11 +113,11 @@
         files.isFirefox = isFirefox;
 
         cameraPreview.src = '';
-
+        console.log($scope.patient);
         var response = $http({
           method: 'POST',
           url: '/api/upload/test/' + $scope.testID,
-          data: {files: files}
+          data: {files: files, docEmail: $scope.doctor.email, patient: $scope.patient}
         });
 
         response.success(function (data, status, headers, config) {
