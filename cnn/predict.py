@@ -5,14 +5,19 @@ import utils.Utils as utils
 import utils.AudioUtils as AU
 import utils.VideoUtils as VU
 import os
+import glob
+
 
 videoFilePath = sys.argv[1]
 audioFilePath = sys.argv[2]
 
+# print videoFilePath
+# print audioFilePath
+
 # print "Loading audio network..."
 network = utils.loadNet('../../cnn/audioCNN13.pickle')
 
-# print "Prediciting audio..."
+# print "Predicting audio..."
 audioPrediction = AU.predictAudio(audioFilePath, network)
 
 print audioPrediction
@@ -20,11 +25,16 @@ print audioPrediction
 # print "Loading video network..."
 network = utils.loadNet('../../cnn/videoCNN1.save')
 
-# print "Prediciting video..."
+# print "Predicting video..."
 videoPrediction = VU.predictVideo(videoFilePath, network)
 
 print videoPrediction
 
-os.remove(videoFilePath)
-os.remove(audioFilePath)
+filelist = glob.glob("../../tmp/*.mp4")
+for f in filelist:
+    os.remove(f)
+
+filelist = glob.glob("../../tmp/*.wav")
+for f in filelist:
+    os.remove(f)
 

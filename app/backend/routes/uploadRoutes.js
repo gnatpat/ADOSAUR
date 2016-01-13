@@ -4,7 +4,13 @@
     fs         = require('fs'),
     mailer     = require('../email.js'),
     child_process = require('child_process'),
-    exec = child_process.exec;
+    exec = child_process.exec,
+    dlevels = {
+      "0": "Minimal depression",
+      "1": "Mild depression",
+      "2": "Moderate depression",
+      "3": "Severe depression"
+    };
 
   function majorityVote(audioResult, videoResult) {
       var resultArr = [0,0,0,0];
@@ -85,12 +91,12 @@
        fileExtension = file.name.split('.').pop(),
        filePathBase =  '../../tmp/',
        fileRootNameWithBase = filePathBase + fileRootName,
-       filePath = fileRootNameWithBase + '.' + fileExtension,
+       videoFilePath = fileRootNameWithBase + '.' + fileExtension,
        fileID = 2,
        fileBuffer;
 
-       while (fs.existsSync(filePath)) {
-           filePath = fileRootNameWithBase + '(' + fileID + ').' + fileExtension;
+       while (fs.existsSync(videoFilePath)) {
+           videoFilePath = fileRootNameWithBase + '(' + fileID + ').' + fileExtension;
            fileID += 1;
        }
 
@@ -98,7 +104,7 @@
 
        fileBuffer = new Buffer(file.contents, "base64");
 
-       fs.writeFileSync(filePath, fileBuffer);
+       fs.writeFileSync(videoFilePath, fileBuffer);
 
        //  save the audio file
        var file = req.body.files.audio;
@@ -107,12 +113,12 @@
         fileExtension = file.name.split('.').pop(),
         filePathBase =  '../../tmp/',
         fileRootNameWithBase = filePathBase + fileRootName,
-        filePath = fileRootNameWithBase + '.' + fileExtension,
+        audioFilePath = fileRootNameWithBase + '.' + fileExtension,
         fileID = 2,
         fileBuffer;
 
-        while (fs.existsSync(filePath)) {
-            filePath = fileRootNameWithBase + '(' + fileID + ').' + fileExtension;
+        while (fs.existsSync(audioFilePath)) {
+            audioFilePath = fileRootNameWithBase + '(' + fileID + ').' + fileExtension;
             fileID += 1;
         }
 
@@ -120,24 +126,45 @@
 
         fileBuffer = new Buffer(file.contents, "base64");
 
-        fs.writeFileSync(filePath, fileBuffer);
+        fs.writeFileSync(audioFilePath, fileBuffer);
 
-        Test.findByIdAndUpdate(testID, {$set: {"result": 1} }, function (err) {
-          if (err) {
-            res.status(500).json({error: "Failed to update test result"});
-          }
-        });
+        var newVideoFilePath = '../../tmp/video.mp4'
+        var newAudioFilePath = '../../tmp/audio.wav'
 
-        mailer.sendMail({
-          to: docEmail,
-          subject: 'Test results',
-          text: "Patient " + patient.first_name + " " + patient.last_name + 
-          " finished his test. His estimated depression level is: 1 (mild depression)"
-        });
+        exec('avconv -i ' + videoFilePath + ' -vf scale=640:480 ' + newVideoFilePath, function(err,stdout,stderr) {
+          exec('avconv -i ' + audioFilePath + ' -ar 16000 -ac 1 ' + newAudioFilePath, function(err, stdout, stderr) {
+              exec('python ../../cnn/predict.py ' + newVideoFilePath + ' ' + newAudioFilePath, function(err,stdout,stderr) {
+                if (err) {
+                  console.log('Child process exited with error code', err.code);
+                  console.log(stderr)
+                  return
+                }
+                var results = stdout.split('\n')
 
-        // TODO: feed the video and audio files to cnn and get output and save
-        // the tests results and notify the doctor
-        res.status(200).json({message: "Sent tests results to doctor"});
+                var audioResult = results[0].replace(/\s+/g, '');
+                var videoResult = results[1].replace(/\s+/g, '');
+
+                var resultArr = majorityVote(audioResult, videoResult);
+
+                var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
+
+                Test.findByIdAndUpdate(testID, {$set: {"result": 1} }, function (err) {
+                  if (err) {
+                    res.status(500).json({error: "Failed to update test result"});
+                  }
+                });                
+
+                mailer.sendMail({
+                  to: docEmail,
+                  subject: 'Test results',
+                  text: "Patient " + patient.first_name + " " + patient.last_name + 
+                  " finished his test. His estimated depression level is: " + prediction + " " + dlevels[prediction]
+                });
+                
+                res.status(200).json({message: "Sent tests results to doctor"});
+                });
+            });
+          }); 
 
     });
   };
