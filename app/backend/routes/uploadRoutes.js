@@ -2,7 +2,7 @@
   'use strict';
   var formidable = require('formidable'),
     fs         = require('fs'),
-    mailer     = require('../email.js')
+    mailer     = require('../email.js'),
     child_process = require('child_process'),
     exec = child_process.exec;
 
@@ -134,6 +134,7 @@
           text: "Patient " + patient.first_name + " " + patient.last_name + 
           " finished his test. His estimated depression level is: 1 (mild depression)"
         });
+
         // TODO: feed the video and audio files to cnn and get output and save
         // the tests results and notify the doctor
         res.status(200).json({message: "Sent tests results to doctor"});
