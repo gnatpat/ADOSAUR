@@ -7,40 +7,33 @@
   module.exports = function (router, models, passport) {
     var Test = models.test,
       User   = models.user,
-      Text   = models.text,
-      findDoc;
+      Text   = models.text;
 
-    findDoc = function (id, type) {
-      console.log('ID: ', id);
-      var res;
-      if (type === "user") {
-        User.findOne({"_id": id}, function (err, user) {
-          if (err) { return -1; }
-          res = user;
-          console.log('User (res): ', res);
-        });
-      } else {
-        Text.findOne({"_id": id}, function (err, text) {
-          if (err) { return -1; }
-          res = text;
-        });
-      }
-      return res;
-    };
-
+    // create new test and send link by email
     router.put('/test/send/', function (req, res) {
-      console.log(ip.address());
       var test = new Test();
       test.doctor  = req.body.doctor;
       test.patient = req.body.patient;
       test.text    = req.body.test.textID;
       test.type    = req.body.test.type;
-      test.result  = 5;
+      test.result  = -1;
+      test.seen    = false;
+      test.done    = false;
 
       test.save(function (err, test) {
         if (err) {
           res.status(500).json({error: 'Failed to create test'});
         }
+        // add the test id to the patient's tests list
+        User.findByIdAndUpdate(test.patient,
+          { $push: {"tests": test._id}},
+          {safe: true, upsert: true, new : true},
+          function (err) {
+            if (err) {
+              res.status(500).json({error: "Failed to push test to patient's list"});
+            }
+          });
+        // send test link to patient
         var link = 'http://' + ip.address() + ':8080/#/test/' + test._id;
         mailer.sendMail({
           to: req.body.to,
@@ -51,6 +44,19 @@
       });
     });
 
+    router.get('/patient/tests/:patID', function (req, res) {
+      User.findOne({"_id": req.params.patID}, function (err, patient) {
+        if (err) {
+          res.status(500).json({error: "Failed to find patient in find tests"});
+        }
+        Test.find({"_id": {$in: patient.tests}}, function (err, tests) {
+          if (err) {
+            res.status(500).json({error: "Failed to retrieve patient's tests"});
+          }
+          res.status(200).json({tests: tests});
+        });
+      });
+    });
     // find test and return it with its real fields (not pointers)
     router.get('/test/:testID', function (req, res) {
       var testID = req.params.testID;
@@ -84,6 +90,16 @@
           });
         });
       });
+    });
+
+    router.get('test/update/:testID', function (req, res) {
+      Test.findByIdAndUpdate(req.params.testID, {$set: req.body},
+        function (err) {
+          if (err) {
+            res.status(500).json({error: "Failed to update test"});
+          }
+          res.status(200).json({message: "Update test successfully"});
+        });
     });
   };
 }());

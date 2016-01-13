@@ -8,7 +8,7 @@ adosaur.config(function ($stateProvider, $urlRouterProvider) {
     .state('home', {
       url: "/home",
       templateUrl: "components/home/home.html",
-      controller: "homeCtrl"
+      controller: "indexCtrl"
     })
 
     .state('upload', {
@@ -44,6 +44,12 @@ adosaur.config(function ($stateProvider, $urlRouterProvider) {
       url: "patients/{uid}",
       templateUrl: "components/doctor/patientsPART.html",
       controller: "doctorCtrl"
+    })
+
+    .state('doctor.patientProfile', {
+      url: "/patient/profile/{pid}",
+      templateUrl: "components/doctor/patientProfile.html",
+      controller: 'patientProfileCtrl'
     })
 
     .state('doctor.texts', {

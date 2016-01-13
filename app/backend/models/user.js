@@ -17,7 +17,7 @@
       dob         : Date,
       doctor      : Boolean,
       patients    : [ObjectId],
-      records     : [ObjectId],
+      tests       : [ObjectId],
       texts       : [ObjectId]
     });
     /*TODO: encrypt passwords */

@@ -6,7 +6,6 @@
       // if user already has a current session then redirect him to his home page
       util.getCurrentUser(function (user) {
         if (user.found) {
-          console.log('USER FOUND');
           $state.go('doctor', {uid: user.user.uid});
         }
       }, function (data) {

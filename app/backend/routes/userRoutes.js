@@ -36,7 +36,7 @@
     });
 
     /* get a single user by its uid */
-    router.get('/user/:_id', function (req, res) {
+    router.get('/user/id/:_id', function (req, res) {
       User.findOne({_id: req.params._id}, function (err, user) {
         if (err) {
           res.status(500).json({

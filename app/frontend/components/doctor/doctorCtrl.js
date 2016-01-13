@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   var adosaur = angular.module('adosaur');
-  adosaur.controller('doctorCtrl', ['$scope', '$stateParams', '$http', 'util',
-    function ($scope, $stateParams, $http, util) {
+  adosaur.controller('doctorCtrl', ['$scope', '$stateParams', '$http', 'util', '$state',
+    function ($scope, $stateParams, $http, util, $state) {
 
       // jQuery modal plugin initialisation
       $(document).ready(function () {
@@ -36,6 +36,11 @@
           if (array[i][key] === value) { return i; }
         }
         return -1;
+      };
+
+      // go to patient with _id ID's profile page
+      $scope.goToProfile = function (id) {
+        $state.go('^.patientProfile', {pid: id});
       };
 
       // adds patient to current doctor

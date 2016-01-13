@@ -1,0 +1,18 @@
+<div class="row pink lighten-5">
+    <div class="col s1 offset-s4">
+      <img ng-src="{{patient.profile_pic}}"
+           alt="Maggle"
+           class="circle responsive-img"
+           style="height: 75px"/>
+    </div>
+    <div class="col s5">
+      <div class="valign-wrapper">
+        <h5 class="valign">{{patient.first_name}} {{patient.last_name}}</h5>
+      </div>
+      {{patient.email}}
+    </div>
+</div>
+<div class="row" ng-repeat="test in tests">
+</div>
+<div class="row">
+</div>

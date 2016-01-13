@@ -9,7 +9,9 @@
       patient : ObjectId,
       text    : ObjectId,
       type    : String,
-      result  : Number
+      result  : Number,
+      done    : Boolean,
+      seen    : Boolean
     });
     return Test;
   };
