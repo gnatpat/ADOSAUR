@@ -21,7 +21,7 @@
         util.getUserPatients(user.user.patients, function (patients) {
           $scope.patients = patients.patients;
         });
-        // get current doctor's patients
+        // get current doctor's texts
         util.getUserTexts(user.user.texts, function (texts) {
           $scope.texts = texts.texts;
         });

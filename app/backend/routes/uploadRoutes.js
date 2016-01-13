@@ -1,29 +1,27 @@
 (function () {
   'use strict';
   var formidable = require('formidable'),
-      fs         = require('fs');
+    fs         = require('fs');
 
   module.exports = function (router, models, passport) {
+    var Test = models.test;
 
-  	router.post('/upload/video', function(req, res) {
+    router.post('/upload/video', function (req, res) {
 
-  		var form = new formidable.IncomingForm();
+      var form = new formidable.IncomingForm();
       form.uploadDir = '../../tmp';
 
-      form.on('file', function(name, file) {
-      });
-
-      form.on('error', function(err) {
+      form.on('error', function (err) {
         console.log(err);
       });
 
-      form.on('aborted', function() {
+      form.on('aborted', function () {
         console.log('aborted');
       });
 
       // TODO: feed the video to the cnn -
       // simulating computation by waiting 5 seconds for now
-      setTimeout(function(){
+      setTimeout(function () {
         form.parse(req, function (err, fields, files) {
 
         });
@@ -31,11 +29,12 @@
         res.redirect('/#/upload?prediction=' + prediction);
 
       }, 5000);
-  	});
+    });
 
-    router.post('/upload/test', function(req, res) {
+    router.post('/upload/test/:testID', function(req, res) {
       // save the video file
       var file = req.body.files.video;
+      var testID = req.params.testID;
 
       var fileRootName = file.name.split('.').shift(),
        fileExtension = file.name.split('.').pop(),
@@ -78,6 +77,11 @@
 
         fs.writeFileSync(filePath, fileBuffer);
 
+        Test.findByIdAndUpdate(testID, {$set: {"result": 1} }, function (err) {
+          if (err) {
+            res.status(500).json({error: "Failed to update test result"});
+          }
+        });
 
         // TODO: feed the video and audio files to cnn and get output and save
         // the tests results and notify the doctor

@@ -1,7 +1,23 @@
 (function () {
   'use strict';
   var adosaur = angular.module('adosaur');
-  adosaur.controller('testCtrl', ['$scope', '$http', function ($scope, $http) {
+  adosaur.controller('testCtrl', ['$scope', '$http', '$stateParams', function ($scope, $http, $stateParams) {
+
+    // get testID from URL
+    $scope.testID = $stateParams.testID;
+
+    var rp = $http.get('/api/test/' + $scope.testID);
+    rp.success(function (data, status, headers, config) {
+      $scope.test = data.test;
+      console.log(data);
+      $scope.text = data.text;
+    });
+    rp.error(function (data, status, headers, config) {
+      console.log('failed to get test');
+    });
+
+
+    // TO UPLOAD TEST MAGGLE
 
     var startRecording = document.getElementById('start-recording');
     var stopRecording = document.getElementById('stop-recording');
@@ -98,7 +114,7 @@
 
         var response = $http({
           method: 'POST',
-          url: '/api/upload/test',
+          url: '/api/upload/test/' + $scope.testID,
           data: {files: files}
         });
 
