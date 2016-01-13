@@ -1,7 +1,37 @@
 (function () {
   'use strict';
   var formidable = require('formidable'),
-    fs         = require('fs');
+    fs         = require('fs'),
+    child_process = require('child_process'),
+    exec = child_process.exec;
+
+  function majorityVote(audioResult, videoResult) {
+      var resultArr = [0,0,0,0];
+      var audioArr = audioResult.split('{')[1].split('}')[0].split(',');
+      var videoArr = videoResult.split('{')[1].split('}')[0].split(',');
+
+      console.log(audioArr)
+      console.log(videoArr)
+
+      var arrayLength = audioArr.length;
+      for (var i = 0; i < arrayLength; i++) {
+        var splitElem = audioArr[i].split(':');
+        var index = parseInt(splitElem[0]);
+        var result = parseInt(splitElem[1]);
+        resultArr[index] = resultArr[index] + result;
+      }
+
+      var arrayLength = videoArr.length;
+      for (var i = 0; i < arrayLength; i++) {
+        var splitElem = videoArr[i].split(':');
+        var index = parseInt(splitElem[0]);
+        var result = parseInt(splitElem[1]);
+        resultArr[index] = resultArr[index] + result;
+      }
+
+      console.log(resultArr)
+      return resultArr;
+  }
 
   module.exports = function (router, models, passport) {
     var Test = models.test;
@@ -19,16 +49,28 @@
         console.log('aborted');
       });
 
-      // TODO: feed the video to the cnn -
-      // simulating computation by waiting 5 seconds for now
-      setTimeout(function () {
-        form.parse(req, function (err, fields, files) {
 
-        });
-        var prediction = Math.floor(Math.random() * 3) + 1;
-        res.redirect('/#/upload?prediction=' + prediction);
+      form.parse(req, function (err, fields, files) {
+          var videoFilePath = files.video.path;
+          var audioFilePath = '../../tmp/audio.wav'
 
-      }, 5000);
+          exec('avconv -i ' + videoFilePath + ' -ar 16000 -ac 1 ' + audioFilePath, function(err,stdout,stderr) {
+              exec('python ../../cnn/predict.py ' + videoFilePath + ' ' + audioFilePath, function(err,stdout,stderr) {
+              if (err) {
+                console.log('Child process exited with error code', err.code);
+                return
+              }
+              var results = stdout.split('\n')
+              var audioResult = results[0].replace(/\s+/g, '');
+              var videoResult = results[1].replace(/\s+/g, '');
+
+              var resultArr = majorityVote(audioResult, videoResult);
+
+              var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
+              res.redirect('/#/upload?prediction=' + prediction);
+              });
+          });          
+      });
     });
 
     router.post('/upload/test/:testID', function(req, res) {
