@@ -12,7 +12,31 @@
       {{patient.email}}
     </div>
 </div>
-<div class="row" ng-repeat="test in tests">
+
+
+<div ng-repeat="test in tests track by $index" class="col s12 m8 offset-m2 l6 offset-l3">
+  <div class="card-panel blue lighten-5 z-depth-1 hoverable">
+    <div class="row valign-wrapper">
+      Test set by: &nbsp; &nbsp;
+      <div class="chip">
+        <img ng-src="{{doctor.profile_pic}}" alt="Contact Person">
+        {{doctor.first_name}} {{doctor.last_name}}
+      </div>
+      &nbsp; For: &nbsp; &nbsp;
+      <div class="chip">
+        <img ng-src="{{patient.profile_pic}}" alt="Contact Person">
+        {{patient.first_name}} {{patient.last_name}}
+      </div>
+    </div>
+    <div class="row valign-wrapper">
+      <h5 class="">
+        Result:&nbsp;&nbsp;
+      </h5>
+      <h5 class="">
+        {{test.result}}
+      </h5>
+    </div>
+  </div>
 </div>
-<div class="row">
 </div>
+<div>
