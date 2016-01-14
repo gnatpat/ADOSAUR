@@ -30,8 +30,13 @@
       </div>
     </div>
     <div class="input-field">
-      <input class="btn" type="submit" value="upload">
+      <input class="btn" type="submit" onclick="$('#loading-bar').show()" value="upload">
     </div>
+    
+    <div style="display:none" id="loading-bar" class="progress">
+      <div class="indeterminate"></div>
+    </div>
+        
     <div style="font-size:18px" class="section">
         Predicted depression level: {{prediction}}
     </div>
