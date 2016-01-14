@@ -76,7 +76,7 @@
               var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
               res.redirect('/#/upload?prediction=' + prediction);
               });
-          });          
+          });
       });
     });
 
@@ -148,23 +148,23 @@
 
                 var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
 
-                Test.findByIdAndUpdate(testID, {$set: {"result": 1} }, function (err) {
+                Test.findByIdAndUpdate(testID, {$set: {"result": prediction} }, function (err) {
                   if (err) {
                     res.status(500).json({error: "Failed to update test result"});
                   }
-                });                
+                });
 
                 mailer.sendMail({
                   to: docEmail,
                   subject: 'Test results',
-                  text: "Patient " + patient.first_name + " " + patient.last_name + 
+                  text: "Patient " + patient.first_name + " " + patient.last_name +
                   " finished his test. His estimated depression level is: " + prediction + " " + dlevels[prediction]
                 });
-                
+
                 res.status(200).json({message: "Sent tests results to doctor"});
                 });
             });
-          }); 
+          });
 
     });
   };
