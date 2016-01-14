@@ -30,11 +30,6 @@ videoPrediction = VU.predictVideo(videoFilePath, network)
 
 print videoPrediction
 
-filelist = glob.glob("../../tmp/*.mp4")
+filelist = glob.glob("../../tmp/*")
 for f in filelist:
     os.remove(f)
-
-filelist = glob.glob("../../tmp/*.wav")
-for f in filelist:
-    os.remove(f)
-
