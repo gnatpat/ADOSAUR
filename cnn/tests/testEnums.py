@@ -1,0 +1,10 @@
+###################
+# TEST FILE PATHS #
+###################
+
+TEST_FILES_PATH                     = 'cnn/tests/testFiles/'
+TEST_VIDEO_PATH                     = TEST_FILES_PATH + 'test.mp4'
+TEST_PICKLED_RGB_VIDEO_PATH         = TEST_FILES_PATH + 'test.mp4.rgb.pickle'
+TEST_PICKLED_GRAYSCALE_VIDEO_PATH   = TEST_FILES_PATH + 'test.mp4.grayscale.pickle'
+TEST_PICTURE_PATH                   = TEST_FILES_PATH + 'test.jpg'
+TEST_PICKLED_PICTURE_PATH           = TEST_FILES_PATH + 'test.jpg.pickle'
