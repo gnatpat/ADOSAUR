@@ -5,18 +5,18 @@
 You must have the following installed on your machine:
 * [Node.js](https://nodejs.org/en/download/) & npm (comes with Node.js)
 * [pip - the python package manager](http://pip.readthedocs.org/en/stable/installing/)
-* [openSMILE](http://www.audeering.com/research/opensmile)
+* [openCV - python package for Computer Vision](http://docs.opencv.org/)
+* [avconv - video and audio converter](https://libav.org/avconv.html)
 
 Once you have cloned the directory, navigate to the project's root directory and run the following command:
 
 > `$ ./install.sh`
 
+This script will install all the required dependencies for the web application and needed python packages.
+
+**Note:** A computer with a CUDA capable GPU compatible with Theano must be used to run the code and the web app -  we used the NVIDIA GEFORCE GTX TITAN X.
+
 ## Web App
-
-#### Coding Style
-
-We will be using the [jslint](http://www.jslint.com/) coding style so please ensure it is installed on your code editor.
-For Atom, [follow these instructions](https://atom.io/packages/jslint)
 
 #### Starting the app
 
@@ -28,29 +28,16 @@ Alternatively, if you have grunt-cli installed globally on your machine, just ru
 
 Then in a web browser, open the page at http://localhost:8080.
 
-
-## Database
-
-The depression database is structured as follows in the `database/` folder:
-
-* `audio/` contains the extracted features from the raw audio files
-* `labels/` contains the labels for this data
-
-Those 3 folders contains subfolders as the data is split into 3 sets:
-
-* `Training/` for the training data set
-* `Development/` for the development data set
-* `Testing/` for the testing data set
-
-The `audio` folder contain subfolders for the two exercises all of the participants did:
-
-* `Northwind/`  Participants read aloud an excerpt of the fable “Die Sonne und der Wind” (The North Wind and the Sun), spoken in the German language
-* `Freeform/` Participants respond to one of a number of questions such as: “What is your favourite dish?”; “What was your best gift, and why?”; “Discuss a sad childhood memory”, again in the German language
-
-So we have 150 participants along with 150 labels, each of them performing the two exercises mentioned before,  so 300 data samples.
-
 ## Raw Data
 
-The 3GB set of Raw Data should be placed in a folder named rawData, with three subfolders - labels, RawAudio and RawVideo.
+The set of Raw Data (video and audio recordings) should be placed in a folder named `rawData/`, with three subfolders - `labels/`, `RawAudio/` and `RawVideo/`.
 
+## Pickled networks
 
+The pickled audio and video convolutional neural networks named `audioCNN13.pickle` and `videoCNN1.save` should be placed in the `cnn/` directory.
+
+## Testing
+
+To run the tests, simply navigate to the root directory of `ADOSAUR` and run the following command:
+
+> `py.test -v`
