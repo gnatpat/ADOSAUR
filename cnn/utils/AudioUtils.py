@@ -3,6 +3,7 @@ import os
 import glob
 import numpy as np
 import random
+import fnmatch
 from collections import Counter
 from Utils import DATABASE_DIR, LABEL_FOLDER
 from Utils import createLabelDict
@@ -53,24 +54,24 @@ def buildExamplesAndTargets(dictionary, path):
   X = np.empty(shape=(1,1,SIZE_CHUNKS), dtype='float32')
   Y = np.empty(shape=(0), dtype='int32')
 
-  os.chdir(path)
   # iterate through the given dictionary
   for key, value in dictionary.iteritems():
     # iterate through the files corresponding to the patient (key)
-    for file in glob.glob("*" + key + "*.wav"):
-      print "Extracting data for " + file
-      # extract the audio data for the current file
-      audioData = extractAudioData(path + file)
-      # split the audio data into arrays of size 40000
-      splitArray = splitData(audioData)
-      numExamples = len(splitArray)
-      # create the corresponding labels to add
-      yLabels = np.zeros((numExamples), dtype='int32')
-      for j in range(numExamples):
-          yLabels[j] = value
-      # insert the data and labels to X and Y arrays
-      X = np.concatenate((X,splitArray))
-      Y = np.concatenate((Y, yLabels))
+    for file in os.listdir(path):
+        if fnmatch.fnmatch(file, "*" + key + "*.wav"):
+            print "Extracting data for " + file
+            # extract the audio data for the current file
+            audioData = extractAudioData(path + file)
+            # split the audio data into arrays of size 40000
+            splitArray = splitData(audioData)
+            numExamples = len(splitArray)
+            # create the corresponding labels to add
+            yLabels = np.zeros((numExamples), dtype='int32')
+            for j in range(numExamples):
+              yLabels[j] = value
+            # insert the data and labels to X and Y arrays
+            X = np.concatenate((X,splitArray))
+            Y = np.concatenate((Y, yLabels))
   # remove first element of X as this one is added when X is initialised
   # and is thus indesirable
   X = X[1:]
