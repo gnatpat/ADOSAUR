@@ -1,5 +1,11 @@
 (function () {
   'use strict';
+
+  /* Passport strategy configuration files. Configure the different
+   * authentication strategies here
+   TODO: implement other strategies? 
+   */
+
   var LocalStrategy = require('passport-local');
   module.exports = function (passport, models) {
     var User = models.user;

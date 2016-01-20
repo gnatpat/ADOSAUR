@@ -1,6 +1,6 @@
 /*jslint node: true */
 
-/* Immediately-invoked function (containing all other functions) - invokes strict mode globally */
+/* mongoose text Schema */
 (function () {
   'use strict';
 

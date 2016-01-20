@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+/* mongoose Test schema */
   module.exports = function (Schema, ObjectId) {
     var Test = new Schema();
 

@@ -43,6 +43,7 @@
     "ng-file-upload": "~10.0.2"
   },
   "devDependencies": {
+    "angularjs": "0.0.1",
     "gulp": "^3.9.0",
     "gulp-shell": "^0.5.0",
     "jasmine-core": "^2.4.1",

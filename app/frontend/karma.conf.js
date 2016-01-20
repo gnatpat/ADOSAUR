@@ -1,7 +1,8 @@
 // Karma configuration
 // Generated on Sun Jan 10 2016 14:44:11 GMT+0000 (GMT)
 
-module.exports = function(config) {
+module.exports = function (config) {
+  'use strict';
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -15,15 +16,17 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'components/**/*.js',
-      'js/*.js',
+      'node_modules/angular-ui-router/bower_components/angular/angular.min.js',
+      'js/app.js',
       'tests/*.js',
+      'tests/controllers/*.js',
       '*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
+      'Gulpfile.js'
     ],
 
 
@@ -68,5 +71,5 @@ module.exports = function(config) {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity
-  })
-}
+  });
+};

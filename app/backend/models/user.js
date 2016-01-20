@@ -1,6 +1,6 @@
 /*jslint node: true */
 
-/* Immediately-invoked function (containing all other functions) - invokes strict mode globally */
+/* mongoose User Schema */
 (function () {
   'use strict';
 
@@ -20,7 +20,8 @@
       tests       : [ObjectId],
       texts       : [ObjectId]
     });
-    /*TODO: encrypt passwords */
+
+    /*TODO: encrypt passwords with bcrypt */
     User.methods.validPassword = function (password) {
       return this.pwd === password;
     };

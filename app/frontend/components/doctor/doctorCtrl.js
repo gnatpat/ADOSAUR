@@ -3,7 +3,7 @@
   var adosaur = angular.module('adosaur');
   adosaur.controller('doctorCtrl', ['$scope', '$stateParams', '$http', 'util', '$state',
     function ($scope, $stateParams, $http, util, $state) {
-
+      $scope.test = 1;
       // jQuery modal plugin initialisation
       $(document).ready(function () {
         $('.modal-trigger').leanModal();

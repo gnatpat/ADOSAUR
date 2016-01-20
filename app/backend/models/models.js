@@ -9,6 +9,7 @@
     mongoose     = require('mongoose'),
     ObjectId     = mongoose.Schema.Types.ObjectId, /* MongoDB primary key type */
     Schema       = mongoose.Schema,
+    // get the schemas
     UserSchema   = require('./user.js')(Schema, ObjectId),
     RecordSchema = require('./record.js')(Schema, ObjectId),
     TextSchema   = require('./text.js')(Schema, ObjectId),

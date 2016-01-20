@@ -8,6 +8,7 @@
     /* gets a router instance */
     var router = express.Router();
 
+    // Default test route
     router.get('/', function (req, res) {
       res.status(200).json({
         message: 'ADOSAUR api running',
@@ -29,6 +30,8 @@
       });
     });
 
+    // prefixes all routes with '/api' e.g. to call '/test/send' in the
+    // call '/api/test/send' 
     app.use('/api', router);
   };
 }());
