@@ -21,3 +21,4 @@ pip install --user matplotlib
 pip install --user --upgrade https://github.com/Theano/Theano/archive/master.zip
 pip install --user --upgrade https://github.com/Lasagne/Lasagne.git@91aa9ec44f#egg=Lasagne==0.1.git
 pip install --user git+https://github.com/dnouri/nolearn.git@master#egg=nolearn==0.7.git
+pip install --user pytest

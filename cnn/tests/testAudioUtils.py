@@ -1,6 +1,8 @@
 import pickle
+import numpy as np
 from testEnums import *
 from ..utils import AudioUtils as AU
+from ..utils import Utils as utils
 
 
 ##################$#
@@ -8,25 +10,28 @@ from ..utils import AudioUtils as AU
 ###################$
 
 def testExtractAudioDataExtractsAnObject():
-    pass  # need data
+    actOutput = AU.extractAudioData(TEST_AUDIO_PATH)
+    assert actOutput != None
 
 def testExtractAudioDataExtractsCorrectObject():
-    pass  # need data
+    actOutput = AU.extractAudioData(TEST_AUDIO_PATH)
+    expOutput = pickle.load(open(TEST_PICKLED_AUDIO_PATH, 'r'))
+    assert np.array_equal(actOutput, expOutput)
 
 def testSplitDataSplitsDataCorrectly():
-    pass  # need data
-
-def testBuildAudioDataBuildsData():
-    pass  # need data
-
-def testBuildAudioDataBuildsCorrectData():
-    pass  # need data
+    splitData = AU.splitData(AU.extractAudioData(TEST_AUDIO_PATH))
+    actShape = (splitData.shape[1], splitData.shape[2])
+    expShape = (1, AU.SIZE_CHUNKS)
+    assert actShape == expShape
 
 def testBuildExamplesAndTargetsBuildsTwoArrays():
-    pass  # need data
+    # use toy dictionary
+    labelDict = {"203_1" : 3, "205_2" : 0, "207_2" : 1}
+    actX, actY = AU.buildExamplesAndTargets(labelDict, 'rawData/' + AU.AUDIO_FOLDER)
+    assert actX != None and actY != None
 
-def testBuildExamplesAndTargetsBuildsTwoArraysOfCorrectType():
-    pass  # need data
-
-def testBuildExamplesAndTargetsBuildsTargetArrayWithFourBins():
-    pass  # need data -- only ints 1 - 4 allowed in second array
+def testBuildExamplesAndTargetsBuildsTwoArraysOfCorrectSizes():
+    # use toy dictionary
+    labelDict = {"203_1" : 3, "205_2" : 0, "207_2" : 1}
+    actX, actY = AU.buildExamplesAndTargets(labelDict, 'rawData/' + AU.AUDIO_FOLDER)
+    assert len(actX) == len(actY)
