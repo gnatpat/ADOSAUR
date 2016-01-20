@@ -11,21 +11,10 @@ TRAINING_LABELS_PICKLE = TEST_FILES_PATH + 'trainingLabels.pickle'
 ##############$
 
 def testCreateLabelledDictReturnsAnObject():
-    actOutput = Utils.createLabelDict('../../rawData/labels/Training/')
-    expOutput = pickle.load(open(TRAINING_LABELS_PICKLE,'r'))
-    assert (actOutput == expOutput).all()
+    actOutput = Utils.createLabelDict('rawData/labels/Training/')
+    assert actOutput != None
 
 def testCreateLabelledDictReturnsCorrectObject():
-    pass  # need data
-
-def testTestCnnPrintsCorrectReportForTestNetwork():
-    pass  # check stdout is correct for test network
-
-def testLoadNetLoadsAnObject():
-    pass # need data
-
-def testSavingAndLoadingNetwork():
-    pass # build a network and save it, the load and see if the same
-
-def testLoadNetLoadsTheTestNetCorrectly():
-    pass # need data
+    actOutput = Utils.createLabelDict('rawData/labels/Training/')
+    expOutput = pickle.load(open(TRAINING_LABELS_PICKLE,'r'))
+    assert actOutput == expOutput

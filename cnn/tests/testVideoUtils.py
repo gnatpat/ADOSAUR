@@ -50,6 +50,12 @@ def testExtractImagesfromVideoExtractsRgbImage():
 # def testPredictVideo():
 #     pass
 
-def testBuildVideoData():
-    trainingX, trainingY, validationX, validationY, testingX, testingY = VU.buildVideoData('../')
-    assert trainingX == None
+# Excluded: writes 3GB of data and takes about 5 minutes
+# def testBuildVideoDataReturnsObjects():
+#     trainingX, trainingY, validationX, validationY, testingX, testingY = VU.buildVideoData('cnn/')
+#     assert trainingX == None
+#     assert trainingY == None
+#     assert validationX == None
+#     assert validationY == None
+#     assert testingX == None
+#     assert testingY == None
