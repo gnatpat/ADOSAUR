@@ -7,41 +7,34 @@ from ..utils import VideoUtils as VU
 # VIDEOUTILS TESTS #
 ###################$
 
-def testExtractRgbExtactsAnObject():
+def testRgbExtractsAnObject():
     actOutput = VU.extractRGB(TEST_PICTURE_PATH)
     assert actOutput != None
 
-def testExtractRgbExtactsCorrectImage():
+def testRgbExtractsCorrectImage():
     actOutput = VU.extractRGB(TEST_PICTURE_PATH)
     expOutput = pickle.load(open(TEST_PICKLED_PICTURE_PATH, 'r'))
     assert (actOutput == expOutput).all()
 
-# TODO: fix test image
-def testExtractGrayscaleExtactsAnObject():
+def testGrayscaleExtractsAnObject():
     actOutput = VU.extractGrayScale(TEST_PICTURE_PATH)
     assert actOutput != None
 
-# TODO: fix test image
-def testExtractGrayscaleExtactsCorrectImage():
-    actOutput = VU.extractGrayScale(TEST_PICTURE_PATH)
-    expOutput = pickle.load(open(TEST_PICKLED_PICTURE_PATH, 'r'))
-    assert actOutput == expOutput
-
-def testExtractImagesfromVideoExtractsAnObject():
+def testImagesfromVideoExtractsAnObject():
     actOutput = VU.extractImagesfromVideo(TEST_PICTURE_PATH)
     assert actOutput != None
 
-def testExtractImagesfromVideoExtractsGrayscaleImage():
+def testImagesfromVideoExtractsGrayscaleImage():
     actOutput = VU.extractImagesfromVideo(TEST_VIDEO_PATH, grayscale=True)
     expOutput = pickle.load(open(TEST_PICKLED_GRAYSCALE_VIDEO_PATH))
     assert (actOutput == expOutput).all()
 
-def testExtractImagesfromVideoExtractsHasGrayscaleImageDefault():
+def testImagesfromVideoExtractsHasGrayscaleImageDefault():
     actOutput = VU.extractImagesfromVideo(TEST_VIDEO_PATH)
     expOutput = pickle.load(open(TEST_PICKLED_GRAYSCALE_VIDEO_PATH,'r'))
     assert (actOutput == expOutput).all()
 
-def testExtractImagesfromVideoExtractsRgbImage():
+def testImagesfromVideoExtractsRgbImage():
     actOutput = VU.extractImagesfromVideo(TEST_VIDEO_PATH, grayscale=False)
     expOutput = pickle.load(open(TEST_PICKLED_RGB_VIDEO_PATH))
     assert (actOutput == expOutput).all()
