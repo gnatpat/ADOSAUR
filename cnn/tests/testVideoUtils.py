@@ -14,7 +14,7 @@ def testExtractRgbExtactsAnObject():
 def testExtractRgbExtactsCorrectImage():
     actOutput = VU.extractRGB(TEST_PICTURE_PATH)
     expOutput = pickle.load(open(TEST_PICKLED_PICTURE_PATH, 'r'))
-    assert actOutput == expOutput
+    assert (actOutput == expOutput).all()
 
 # TODO: fix test image
 def testExtractGrayscaleExtactsAnObject():
@@ -34,23 +34,22 @@ def testExtractImagesfromVideoExtractsAnObject():
 def testExtractImagesfromVideoExtractsGrayscaleImage():
     actOutput = VU.extractImagesfromVideo(TEST_VIDEO_PATH, grayscale=True)
     expOutput = pickle.load(open(TEST_PICKLED_GRAYSCALE_VIDEO_PATH))
-    assert actOutput == expOutput
+    assert (actOutput == expOutput).all()
 
 def testExtractImagesfromVideoExtractsHasGrayscaleImageDefault():
     actOutput = VU.extractImagesfromVideo(TEST_VIDEO_PATH)
     expOutput = pickle.load(open(TEST_PICKLED_GRAYSCALE_VIDEO_PATH,'r'))
-    assert actOutput == expOutput
+    assert (actOutput == expOutput).all()
 
 def testExtractImagesfromVideoExtractsRgbImage():
     actOutput = VU.extractImagesfromVideo(TEST_VIDEO_PATH, grayscale=False)
     expOutput = pickle.load(open(TEST_PICKLED_RGB_VIDEO_PATH))
-    assert actOutput == expOutput
+    assert (actOutput == expOutput).all()
 
-def testPredictVideo():
-    pass  # need to build a network -- come back
-
-def testRetrieveDataFrom():
-    pass  # need data
+# Excluded: need 700mb pickled network
+# def testPredictVideo():
+#     pass
 
 def testBuildVideoData():
-    pass # need data
+    trainingX, trainingY, validationX, validationY, testingX, testingY = VU.buildVideoData('../')
+    assert trainingX == None
