@@ -64,126 +64,161 @@
       // handle the incoming form data
       form.parse(req, function (err, fields, files) {
           // get the uploaded video path and initiliaze audio path
-          var videoFilePath = files.video.path;
-          var audioFilePath = '../../tmp/audio.wav'
+          // var videoFilePath = files.video.path;
+          // var audioFilePath = '../../tmp/audio.wav'
+          //
+          // // extract the audio from the video as wav
+          // exec('avconv -i ' + videoFilePath + ' -ar 16000 -ac 1 ' + audioFilePath, function(err,stdout,stderr) {
+          //     // run the python script to make a prediction on the video and audio files
+          //     exec('python ../../cnn/predict.py ' + videoFilePath + ' ' + audioFilePath, function(err,stdout,stderr) {
+          //     if (err) {
+          //       console.log('Child process exited with error code', err.code);
+          //       return
+          //     }
+          //     // get the results returned from the python script
+          //     var results = stdout.split('\n')
+          //     var audioResult = results[0].replace(/\s+/g, '');
+          //     var videoResult = results[1].replace(/\s+/g, '');
+          //
+          //     // majority vote the results
+          //     var resultArr = majorityVote(audioResult, videoResult);
+          //
+          //     // return the corresponding predicted depression level
+          //     var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
+          //     res.redirect('/#/upload?prediction=' + prediction);
+          //     });
+          // });
 
-          // extract the audio from the video as wav
-          exec('avconv -i ' + videoFilePath + ' -ar 16000 -ac 1 ' + audioFilePath, function(err,stdout,stderr) {
-              // run the python script to make a prediction on the video and audio files
-              exec('python ../../cnn/predict.py ' + videoFilePath + ' ' + audioFilePath, function(err,stdout,stderr) {
-              if (err) {
-                console.log('Child process exited with error code', err.code);
-                return
-              }
-              // get the results returned from the python script
-              var results = stdout.split('\n')
-              var audioResult = results[0].replace(/\s+/g, '');
-              var videoResult = results[1].replace(/\s+/g, '');
-
-              // majority vote the results
-              var resultArr = majorityVote(audioResult, videoResult);
-
-              // return the corresponding predicted depression level
-              var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
+          // FOR DEMO PURPOSES
+          // TODO: generate a random value
+          setTimeout(function(){
+              var prediction = 1;
               res.redirect('/#/upload?prediction=' + prediction);
-              });
-          });
+          },5000);
+
       });
     });
 
     router.post('/upload/test/:testID', function (req, res) {
       // save the video file
-      var file = req.body.files.video,
-        testID = req.params.testID,
-        docEmail = req.body.docEmail,
-        patient = req.body.patient;
-
-      var fileRootName = file.name.split('.').shift(),
-       fileExtension = file.name.split('.').pop(),
-       filePathBase =  '../../tmp/',
-       fileRootNameWithBase = filePathBase + fileRootName,
-       videoFilePath = fileRootNameWithBase + '.' + fileExtension,
-       fileID = 2,
-       fileBuffer;
-
-       while (fs.existsSync(videoFilePath)) {
-           videoFilePath = fileRootNameWithBase + '(' + fileID + ').' + fileExtension;
-           fileID += 1;
-       }
-
-       file.contents = file.contents.split(',').pop();
-
-       fileBuffer = new Buffer(file.contents, "base64");
-
-       fs.writeFileSync(videoFilePath, fileBuffer);
-
-       //  save the audio file
-       var file = req.body.files.audio;
-
-       var fileRootName = file.name.split('.').shift(),
-        fileExtension = file.name.split('.').pop(),
-        filePathBase =  '../../tmp/',
-        fileRootNameWithBase = filePathBase + fileRootName,
-        audioFilePath = fileRootNameWithBase + '.' + fileExtension,
-        fileID = 2,
-        fileBuffer;
-
-        while (fs.existsSync(audioFilePath)) {
-            audioFilePath = fileRootNameWithBase + '(' + fileID + ').' + fileExtension;
-            fileID += 1;
-        }
-
-        file.contents = file.contents.split(',').pop();
-
-        fileBuffer = new Buffer(file.contents, "base64");
-
-        fs.writeFileSync(audioFilePath, fileBuffer);
-
-        // initiliase the paths for the video and audio files
-        var newVideoFilePath = '../../tmp/video.mp4'
-        var newAudioFilePath = '../../tmp/audio.wav'
+      // var file = req.body.files.audio,
+      //   testID = req.params.testID,
+      //   docEmail = req.body.docEmail,
+      //   patient = req.body.patient;
+      //
+      // var fileRootName = file.name.split('.').shift(),
+      //  fileExtension = file.name.split('.').pop(),
+      //  filePathBase =  '../../tmp/',
+      //  fileRootNameWithBase = filePathBase + fileRootName,
+      //  videoFilePath = fileRootNameWithBase + '.' + fileExtension,
+      //  fileID = 2,
+      //  fileBuffer;
+      //
+      //  while (fs.existsSync(videoFilePath)) {
+      //      videoFilePath = fileRootNameWithBase + '(' + fileID + ').' + fileExtension;
+      //      fileID += 1;
+      //  }
+      //
+      //  file.contents = file.contents.split(',').pop();
+      //
+      //  fileBuffer = new Buffer(file.contents, "base64");
+      //
+      //  fs.writeFileSync(videoFilePath, fileBuffer);
+      //
+      //  //  save the audio file
+      //  var file = req.body.files.audio;
+      //
+      //  var fileRootName = file.name.split('.').shift(),
+      //   fileExtension = file.name.split('.').pop(),
+      //   filePathBase =  '../../tmp/',
+      //   fileRootNameWithBase = filePathBase + fileRootName,
+      //   audioFilePath = fileRootNameWithBase + '.' + fileExtension,
+      //   fileID = 2,
+      //   fileBuffer;
+      //
+      //   while (fs.existsSync(audioFilePath)) {
+      //       audioFilePath = fileRootNameWithBase + '(' + fileID + ').' + fileExtension;
+      //       fileID += 1;
+      //   }
+      //
+      //   file.contents = file.contents.split(',').pop();
+      //
+      //   fileBuffer = new Buffer(file.contents, "base64");
+      //
+      //   fs.writeFileSync(audioFilePath, fileBuffer);
+      //
+      //   // initiliase the paths for the video and audio files
+      //   var newVideoFilePath = '../../tmp/video.mp4'
+      //   var newAudioFilePath = '../../tmp/audio.wav'
 
         // convert the video and audio files to mp4 and wav respectively
-        exec('avconv -i ' + videoFilePath + ' -vf scale=640:480 ' + newVideoFilePath, function(err,stdout,stderr) {
-          exec('avconv -i ' + audioFilePath + ' -ar 16000 -ac 1 ' + newAudioFilePath, function(err, stdout, stderr) {
+        // exec('avconv -i ' + videoFilePath + ' -vf scale=640:480 ' + newVideoFilePath, function(err,stdout,stderr) {
+          // exec('avconv -i ' + audioFilePath + ' -ar 16000 -ac 1 ' + newAudioFilePath, function(err, stdout, stderr) {
               // run the python script to make a prediction on the video and audio files
-              exec('python ../../cnn/predict.py ' + newVideoFilePath + ' ' + newAudioFilePath, function(err,stdout,stderr) {
+              // exec('python ../../cnn/predict.py ' + newVideoFilePath + ' ' + newAudioFilePath, function(err,stdout,stderr) {
+              //   if (err) {
+              //     console.log('Child process exited with error code', err.code);
+              //     console.log(stderr)
+              //     return
+              //   }
+              //   // get the results returned from the python script
+              //   var results = stdout.split('\n')
+              //
+              //   var audioResult = results[0].replace(/\s+/g, '');
+              //   var videoResult = results[1].replace(/\s+/g, '');
+              //
+              //   // majority vote the results
+              //   var resultArr = majorityVote(audioResult, videoResult);
+              //
+              //   // get the predicted depression level
+              //   var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
+              //
+              //   // update the corresponding test result
+              //   Test.findByIdAndUpdate(testID, {$set: {"result": prediction} }, function (err) {
+              //     if (err) {
+              //       res.status(500).json({error: "Failed to update test result"});
+              //     }
+              //   });
+              //
+              //   // send an email to the doctor with result
+              //   mailer.sendMail({
+              //     to: docEmail,
+              //     subject: 'Test results',
+              //     text: "Patient " + patient.first_name + " " + patient.last_name +
+              //     " finished his test. His estimated depression level is: " + prediction + " " + dlevels[prediction]
+              //   });
+              //
+              //   res.status(200).json({message: "Sent tests results to doctor"});
+              //   });
+            // });
+          // });
+
+          // FOR DEMO PURPOSES
+          // TODO: generate a random value
+          setTimeout(function(){
+              var prediction = 1;
+
+              var testID = req.params.testID;
+              var docEmail = req.body.docEmail;
+              var patient = req.body.patient;
+
+              // update the corresponding test result
+              Test.findByIdAndUpdate(testID, {$set: {"result": prediction} }, function (err) {
                 if (err) {
-                  console.log('Child process exited with error code', err.code);
-                  console.log(stderr)
-                  return
+                  res.status(500).json({error: "Failed to update test result"});
                 }
-                // get the results returned from the python script
-                var results = stdout.split('\n')
+              });
 
-                var audioResult = results[0].replace(/\s+/g, '');
-                var videoResult = results[1].replace(/\s+/g, '');
+              // send an email to the doctor with result
+              mailer.sendMail({
+                to: docEmail,
+                subject: 'Test results',
+                text: "Patient " + patient.first_name + " " + patient.last_name +
+                " finished his test. His estimated depression level is: " + prediction + " " + dlevels[prediction]
+              });
 
-                // majority vote the results
-                var resultArr = majorityVote(audioResult, videoResult);
-
-                // get the predicted depression level
-                var prediction = resultArr.indexOf(Math.max.apply(Math, resultArr));
-
-                // update the corresponding test result
-                Test.findByIdAndUpdate(testID, {$set: {"result": prediction} }, function (err) {
-                  if (err) {
-                    res.status(500).json({error: "Failed to update test result"});
-                  }
-                });
-
-                // send an email to the doctor with result
-                mailer.sendMail({
-                  to: docEmail,
-                  subject: 'Test results',
-                  text: "Patient " + patient.first_name + " " + patient.last_name +
-                  " finished his test. His estimated depression level is: " + prediction + " " + dlevels[prediction]
-                });
-
-                res.status(200).json({message: "Sent tests results to doctor"});
-                });
-            });
-          });
+              res.status(200).json({message: "Sent tests results to doctor"});
+            }, 5000);
 
     });
   };
