@@ -92,7 +92,7 @@
           // FOR DEMO PURPOSES
           // TODO: generate a random value
           setTimeout(function(){
-              var prediction = 1;
+              var prediction = Math.floor(Math.random() * 2); // generates 0 or 1
               res.redirect('/#/upload?prediction=' + prediction);
           },5000);
 
@@ -196,7 +196,7 @@
           // FOR DEMO PURPOSES
           // TODO: generate a random value
           setTimeout(function(){
-              var prediction = 1;
+              var prediction = Math.floor(Math.random() * 2); // generates 0 or 1
 
               var testID = req.params.testID;
               var docEmail = req.body.docEmail;
